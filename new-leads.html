@@ -1,121 +1,231 @@
-<script>
-  // OPTIONAL: add your Google Maps API key to improve accuracy by snapping to the nearest panorama
-  const GOOGLE_MAPS_API_KEY = ""; // e.g. "AIzaSyA...."  (leave blank to skip pano lookup)
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>New Leads Map Viewer</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    .mapboxgl-popup { max-width: 400px; font-family: sans-serif; }
+    .mapboxgl-popup-content { padding: 15px; }
+    .property-popup h3 { margin: 0 0 10px 0; }
+    .property-popup p { margin: 5px 0; }
+    .property-popup img { border-radius: 4px; object-fit: cover; width: 100%; }
+    .nav-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: #3887be;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .nav-link:hover {
+      background-color: #2a678d;
+    }
+    #style-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1;
+      background: white;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #style-selector select {
+      padding: 5px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #loading {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 999; font-family: sans-serif;
+    }
+    #error { color: red; margin-top: 20px; text-align: center; max-width: 80%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
 
-  function clampHeading(h) {
-    const n = Number(h);
-    return Number.isFinite(n) ? ((n % 360) + 360) % 360 : 0;
-  }
+  <div id="style-selector">
+    <select id="map-style">
+      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+      <option value="mapbox://styles/mapbox/light-v11">Light</option>
+      <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
+      <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+      <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
+      <option value="mapbox://styles/mapbox/navigation-day-v1">Navigation Day</option>
+      <option value="mapbox://styles/mapbox/navigation-night-v1">Navigation Night</option>
+      <option value="3d-terrain">3D Satellite View</option>
+    </select>
+  </div>
 
-  function buildPanoUrl(lat, lng, heading) {
-    const h = clampHeading(heading);
-    return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${h}&pitch=0&fov=80`;
-  }
+  <div id="loading">
+    <div>Loading property data...</div>
+    <div id="error"></div>
+  </div>
 
-  // Bearing from pano -> target (in degrees). Uses turf, which you already load.
-  function bearingDeg(fromLng, fromLat, toLng, toLat) {
-    const b = turf.bearing(turf.point([fromLng, fromLat]), turf.point([toLng, toLat]));
-    return clampHeading(b);
-  }
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-  async function getNearestStreetViewLatLng(lat, lng, radiusMeters = 100) {
-    if (!GOOGLE_MAPS_API_KEY) return null;
-    const url = `https://maps.googleapis.com/maps/api/streetview/metadata?location=${lat},${lng}&radius=${radiusMeters}&key=${GOOGLE_MAPS_API_KEY}`;
-    try {
-      const r = await fetch(url);
-      if (!r.ok) return null;
-      const meta = await r.json();
-      if (meta && meta.status === "OK" && meta.location) {
-        return { lat: meta.location.lat, lng: meta.location.lng };
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-118.65, 34.15],
+        zoom: 13
+      });
+
+      const timestamp = new URLSearchParams(window.location.search).get('t');
+      if (!timestamp) {
+        document.getElementById('error').textContent = 'Timestamp parameter missing';
+        document.getElementById('loading').style.display = 'none';
+        return;
       }
-    } catch (_) {}
-    return null;
-  }
 
-  // Build the most reliable Street View link we can for a property.
-  // 1) Use provided pano coords if valid
-  // 2) Else try to snap to nearest pano (if API key present)
-  // 3) Else fall back to a Maps search with Street View layer
-  async function createStreetViewUrlSmart(props, propCoords /* [lng, lat] */) {
-    const propLng = Number(propCoords?.[0]);
-    const propLat = Number(propCoords?.[1]);
+      const jsonUrl = `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${timestamp}.json`;
 
-    // Case 1: you provided pano coords in the data
-    const panoLat = Number(props.pano_latitude);
-    const panoLng = Number(props.pano_longitude);
-    const havePano = Number.isFinite(panoLat) && Number.isFinite(panoLng);
-    const haveProp = Number.isFinite(propLat) && Number.isFinite(propLng);
+      fetch(jsonUrl)
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch JSON: ' + res.statusText);
+          return res.json();
+        })
+        .then(data => {
+          const geojsonData = {
+            type: "FeatureCollection",
+            features: data.map(item => ({
+              type: "Feature",
+              properties: {
+                project_name: item.project_name,
+                project_address: item.project_address,
+                photo_url: item.photo_url,
+                pano_latitude: parseFloat(item.pano_latitude),
+                pano_longitude: parseFloat(item.pano_longitude),
+                heading: parseFloat(item.heading),
+                asset_class: item.asset_class,
+                sq_ft: item.sq_ft,
+                units: item.units
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [parseFloat(item.longitude), parseFloat(item.latitude)]
+              }
+            }))
+          };
 
-    if (havePano) {
-      const heading = haveProp ? bearingDeg(panoLng, panoLat, propLng, propLat) : clampHeading(props.heading);
-      return buildPanoUrl(panoLat, panoLng, heading);
-    }
+          addMarkersToMap(geojsonData);
+          fitMapToBounds(geojsonData);
+          document.getElementById('loading').style.display = 'none';
+        })
+        .catch(err => {
+          document.getElementById('error').textContent = "Error loading map data: " + err.message;
+          document.getElementById('loading').style.display = 'none';
+        });
 
-    // Case 2: try to snap to the nearest available pano around the property
-    if (haveProp) {
-      const nearest = await getNearestStreetViewLatLng(propLat, propLng, 120); // widen to ~120m for industrial parks
-      if (nearest) {
-        const heading = bearingDeg(nearest.lng, nearest.lat, propLng, propLat);
-        return buildPanoUrl(nearest.lat, nearest.lng, heading);
+      function createGoogleMapsUrl(coords, name) {
+        return `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}&travelmode=driving&destination_place_name=${encodeURIComponent(name || 'Property')}`;
       }
 
-      // Case 3: fallback that often opens directly in SV if available
-      return `https://www.google.com/maps/search/?api=1&query=${propLat},${propLng}&layer=c`;
-    }
+      function createStreetViewUrl(panoLat, panoLng, heading) {
+        if (!panoLat || !panoLng) return null;
+        return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${panoLat},${panoLng}&heading=${heading}&pitch=0&fov=80`;
+      }
 
-    return null;
-  }
+      function createPopupHTML(props, coords) {
+        const name = props.project_name || "Unnamed";
+        const address = props.project_address || "No address provided";
+        const assetClass = props.asset_class || "";
+        const sqFt = props.sq_ft ? `${parseInt(props.sq_ft).toLocaleString()} Sq Ft` : "";
+        const units = props.units ? `${props.units} Units` : "";
+        const photoUrl = props.photo_url;
+        const streetViewUrl = createStreetViewUrl(props.pano_latitude, props.pano_longitude, props.heading);
+        const googleMapsUrl = createGoogleMapsUrl(coords, name);
 
-  // Use the smarter URL builder when adding markers/popups
-  async function addMarkersToMap(geojson) {
-    for (const feature of geojson.features) {
-      const coords = feature.geometry.coordinates;
-      const props = feature.properties;
+        const imageHtml = photoUrl && streetViewUrl
+          ? `<div style="margin-top:10px; margin-bottom:10px; max-height:180px; overflow:hidden;">
+              <a href="${streetViewUrl}" target="_blank" rel="noopener noreferrer">
+                <img src="${photoUrl}" alt="Photo of ${name}" loading="lazy">
+              </a>
+            </div>` : "";
 
-      // Build Street View URL (may call Google metadata if key provided)
-      const streetViewUrl = await createStreetViewUrlSmart(props, coords);
-      const popupHtml = createPopupHTML(props, coords, streetViewUrl);
+        return `
+          <div class="property-popup">
+            <h3>${name}</h3>
+            ${imageHtml}
+            <p><strong>Address:</strong> ${address}</p>
+            ${assetClass ? `<p><strong>Asset Class:</strong> ${assetClass}</p>` : ""}
+            ${sqFt ? `<p><strong>Sq Ft:</strong> ${sqFt}</p>` : ""}
+            ${units ? `<p><strong>Units:</strong> ${units}</p>` : ""}
+            <a href="${googleMapsUrl}" class="nav-link" target="_blank">Navigate in Google Maps</a>
+          </div>`;
+      }
 
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHtml);
-      new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
-    }
-  }
+      function addMarkersToMap(geojson) {
+        geojson.features.forEach(feature => {
+          const coords = feature.geometry.coordinates;
+          const props = feature.properties;
+          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(props, coords));
+          new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
+        });
+      }
 
-  // Update popup builder to accept the precomputed streetViewUrl
-  function createPopupHTML(props, coords, streetViewUrl) {
-    const name = props.project_name || "Unnamed";
-    const address = props.project_address || "No address provided";
-    const assetClass = props.asset_class || "";
-    const sqNum = Number(String(props.sq_ft || "").replace(/[^\d.-]/g, ""));
-    const sqFt = Number.isFinite(sqNum) ? `${Math.round(sqNum).toLocaleString()} Sq Ft` : "";
-    const units = props.units ? `${props.units} Units` : "";
-    const photoUrl = props.photo_url;
+      function fitMapToBounds(geojson) {
+        const fc = turf.featureCollection(geojson.features);
+        const buffered = turf.buffer(fc, 0.5, { units: 'miles' });
+        const boundsArray = turf.bbox(buffered);
+        const bounds = new mapboxgl.LngLatBounds(
+          [boundsArray[0], boundsArray[1]],
+          [boundsArray[2], boundsArray[3]]
+        );
 
-    const googleMapsUrl =
-      `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}&travelmode=driving&destination_place_name=${encodeURIComponent(name || 'Property')}`;
+        map.fitBounds(bounds, {
+          padding: { top: 150, bottom: 150, left: 150, right: 150 },
+          duration: 0
+        });
+      }
 
-    const imageHtml = photoUrl
-      ? `<div style="margin:10px 0; max-height:180px; overflow:hidden;">
-           ${streetViewUrl ? `<a href="${streetViewUrl}" target="_blank" rel="noopener noreferrer">` : ``}
-           <img src="${photoUrl}" alt="Photo of ${name}" loading="lazy">
-           ${streetViewUrl ? `</a>` : ``}
-         </div>`
-      : "";
-
-    const svHtml = streetViewUrl
-      ? `<a href="${streetViewUrl}" class="nav-link" target="_blank">Open Street View</a>`
-      : ``;
-
-    return `
-      <div class="property-popup">
-        <h3>${name}</h3>
-        ${imageHtml}
-        <p><strong>Address:</strong> ${address}</p>
-        ${assetClass ? `<p><strong>Asset Class:</strong> ${assetClass}</p>` : ""}
-        ${sqFt ? `<p><strong>Sq Ft:</strong> ${sqFt}</p>` : ""}
-        ${units ? `<p><strong>Units:</strong> ${units}</p>` : ""}
-        <a href="${googleMapsUrl}" class="nav-link" target="_blank">Navigate in Google Maps</a>
-        ${svHtml}
-      </div>`;
-  }
-</script>
+      document.getElementById('map-style').addEventListener('change', function () {
+        const selected = this.value;
+        if (selected === '3d-terrain') {
+          map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
+          map.once('styledata', () => {
+            map.setPitch(60);
+            map.setBearing(-17.6);
+            map.addSource('mapbox-dem', {
+              type: 'raster-dem',
+              url: 'mapbox://mapbox.terrain-rgb',
+              tileSize: 512,
+              maxzoom: 14
+            });
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+            map.addLayer({
+              id: 'sky',
+              type: 'sky',
+              paint: {
+                'sky-type': 'atmosphere',
+                'sky-atmosphere-sun': [0.0, 0.0],
+                'sky-atmosphere-sun-intensity': 15
+              }
+            });
+          });
+        } else {
+          map.setStyle(selected);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
