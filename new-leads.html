@@ -26,9 +26,7 @@
       font-weight: bold;
       transition: background-color 0.3s;
     }
-    .nav-link:hover {
-      background-color: #2a678d;
-    }
+    .nav-link:hover { background-color: #2a678d; }
     #style-selector {
       position: absolute;
       top: 10px;
@@ -117,7 +115,9 @@
                 heading: parseFloat(item.heading),
                 asset_class: item.asset_class,
                 sq_ft: item.sq_ft,
-                units: item.units
+                units: item.units,
+                // Use your provided Street View link if present (support a few key variants)
+                street_view_link: item.Street_View_Link || item.street_view_link || item.streetViewLink || null
               },
               geometry: {
                 type: "Point",
@@ -139,27 +139,36 @@
         return `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}&travelmode=driving&destination_place_name=${encodeURIComponent(name || 'Property')}`;
       }
 
+      // More robust: only build a Street View URL if coords are finite; default heading to 0
       function createStreetViewUrl(panoLat, panoLng, heading) {
-        if (!panoLat || !panoLng) return null;
-        return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${panoLat},${panoLng}&heading=${heading}&pitch=0&fov=80`;
+        if (!Number.isFinite(panoLat) || !Number.isFinite(panoLng)) return null;
+        const h = Number.isFinite(heading) ? heading : 0;
+        return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${panoLat},${panoLng}&heading=${h}&pitch=0&fov=80`;
       }
 
       function createPopupHTML(props, coords) {
         const name = props.project_name || "Unnamed";
         const address = props.project_address || "No address provided";
         const assetClass = props.asset_class || "";
-        const sqFt = props.sq_ft ? `${parseInt(props.sq_ft).toLocaleString()} Sq Ft` : "";
+        const sqFt = props.sq_ft ? `${parseInt(String(props.sq_ft).replace(/[^\d.-]/g, ''), 10).toLocaleString()} Sq Ft` : "";
         const units = props.units ? `${props.units} Units` : "";
         const photoUrl = props.photo_url;
-        const streetViewUrl = createStreetViewUrl(props.pano_latitude, props.pano_longitude, props.heading);
+
+        // Prefer provided Street_View_Link; fall back to generating one from pano coords
+        const streetViewUrl =
+          (typeof props.street_view_link === "string" && props.street_view_link.trim() ? props.street_view_link.trim() : null)
+          || createStreetViewUrl(props.pano_latitude, props.pano_longitude, props.heading);
+
         const googleMapsUrl = createGoogleMapsUrl(coords, name);
 
-        const imageHtml = photoUrl && streetViewUrl
-          ? `<div style="margin-top:10px; margin-bottom:10px; max-height:180px; overflow:hidden;">
-              <a href="${streetViewUrl}" target="_blank" rel="noopener noreferrer">
-                <img src="${photoUrl}" alt="Photo of ${name}" loading="lazy">
-              </a>
-            </div>` : "";
+        // Always show the image if available; wrap with link only if Street View URL exists
+        const imageHtml = photoUrl
+          ? `<div style="margin:10px 0; max-height:180px; overflow:hidden;">
+               ${streetViewUrl ? `<a href="${streetViewUrl}" target="_blank" rel="noopener noreferrer">` : ``}
+               <img src="${photoUrl}" alt="Photo of ${name}" loading="lazy">
+               ${streetViewUrl ? `</a>` : ``}
+             </div>`
+          : "";
 
         return `
           <div class="property-popup">
