@@ -128,25 +128,60 @@
     }
 
     function normalizeFromObject(obj) {
-      // Accepts either a plain object or a GeoJSON Feature
+      // Accepts either a plain object or a GeoJSON Feature; tolerant to key variants/casing
       if (!obj) return null;
+
+      const pickNum = (...keys) => {
+        for (const k of keys) {
+          if (k in obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return toNumber(obj[k]);
+        }
+        return undefined;
+      };
+      const pickStr = (...keys) => {
+        for (const k of keys) {
+          if (k in obj && obj[k] != null && String(obj[k]).trim() !== '') return String(obj[k]);
+        }
+        return '';
+      };
+
+      // GeoJSON Feature path
       if (obj.type === 'Feature' && obj.geometry && obj.properties) {
-        const { geometry, properties } = obj;
+        const { geometry, properties: props } = obj;
         const coords = geometry.coordinates || [];
+        const pNum = (v) => toNumber(v);
+        const pStr = (v) => (v == null ? '' : String(v));
         return {
-          name: properties.project_name || properties.name || '',
-          address: properties.project_address || properties.address || '',
-          project: properties.project || '',
+          name: pStr(props.project_name ?? props.name ?? props.Name ?? ''),
+          project: pStr(props.project ?? props.Project ?? ''),
+          address: pStr(props.project_address ?? props.address ?? props.Address ?? ''),
           longitude: toNumber(coords[0]),
           latitude: toNumber(coords[1]),
-          photo_url: properties.photo_url || properties.photo || '',
-          pano_latitude: toNumber(properties.pano_latitude),
-          pano_longitude: toNumber(properties.pano_longitude),
-          heading: toNumber(properties.heading),
-          asset_class: properties.asset_class || properties.asset || '',
-          sq_ft: toNumber(properties.sq_ft || properties.sqft),
-          units: toNumber(properties.units)
+          photo_url: pStr(props.photo_url ?? props.photo ?? props.Photo ?? ''),
+          pano_latitude: pNum(props.pano_latitude ?? props.pano_lat ?? props.NavLat ?? props.navLat),
+          pano_longitude: pNum(props.pano_longitude ?? props.pano_lng ?? props.NavLon ?? props.navLon),
+          heading: pNum(props.heading ?? props.Heading),
+          asset_class: pStr(props.asset_class ?? props.asset ?? props.Type ?? ''),
+          sq_ft: pNum(props.sq_ft ?? props.sqft ?? props['Sq Ft']),
+          units: pNum(props.units ?? props.Units)
         };
+      }
+
+      // Plain object path (your Make() payload)
+      return {
+        name: pickStr('project_name', 'name', 'Name'),
+        project: pickStr('project', 'Project'),
+        address: pickStr('project_address', 'address', 'Address'),
+        longitude: pickNum('longitude', 'lng', 'Longitude', 'Lon'),
+        latitude: pickNum('latitude', 'lat', 'Latitude', 'Lat'),
+        photo_url: pickStr('photo_url', 'photo', 'Photo'),
+        pano_latitude: pickNum('pano_latitude', 'pano_lat', 'NavLat', 'navLat'),
+        pano_longitude: pickNum('pano_longitude', 'pano_lng', 'NavLon', 'navLon'),
+        heading: pickNum('heading', 'Heading'),
+        asset_class: pickStr('asset_class', 'asset', 'Type'),
+        sq_ft: pickNum('sq_ft', 'sqft', 'Sq Ft'),
+        units: pickNum('units', 'Units')
+      };
+    };
       }
       // Plain object shape
       return {
@@ -190,7 +225,10 @@
         const res = await fetch(src);
         if (!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
         const obj = await res.json();
-        // Allow src to return { ... }, { type: 'Feature', ... }, or { features: [single] }
+        // Allow src to return [single], { ... }, { type: 'Feature', ... }, or { features: [single] }
+        if (Array.isArray(obj) && obj.length > 0) {
+          return normalizeFromObject(obj[0]);
+        }
         if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
           return normalizeFromObject(obj.features[0]);
         }
