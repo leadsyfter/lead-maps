@@ -136,6 +136,7 @@
         return {
           name: properties.project_name || properties.name || '',
           address: properties.project_address || properties.address || '',
+          project: properties.project || '',
           longitude: toNumber(coords[0]),
           latitude: toNumber(coords[1]),
           photo_url: properties.photo_url || properties.photo || '',
@@ -151,6 +152,7 @@
       return {
         name: obj.project_name || obj.name || '',
         address: obj.project_address || obj.address || '',
+        project: obj.project || '',
         longitude: toNumber(obj.longitude || obj.lng),
         latitude: toNumber(obj.latitude || obj.lat),
         photo_url: obj.photo_url || obj.photo || '',
@@ -169,6 +171,7 @@
       return normalizeFromObject({
         name: qp.name,
         address: qp.address,
+        project: qp.project,
         lat: qp.lat,
         lng: qp.lng,
         photo: qp.photo,
@@ -207,6 +210,7 @@
     function popupHTML(p) {
       const name = p.name || 'Unnamed Property';
       const address = p.address || '';
+      const projectLine = p.project ? `<p><strong>Project:</strong> ${p.project}</p>` : '';
       const asset = p.asset_class ? `<p><strong>Asset:</strong> ${p.asset_class}</p>` : '';
       const sqft = Number.isFinite(p.sq_ft) ? `<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>` : '';
       const units = Number.isFinite(p.units) ? `<p><strong>Units:</strong> ${fmtInt(p.units)}</p>` : '';
@@ -225,7 +229,7 @@
           <h3>${name}</h3>
           ${img}
           <div class="meta">
-            ${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
+            ${projectLine}${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
             ${asset}
             ${sqft}
             ${units}
