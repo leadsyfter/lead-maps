@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Single Property Map Viewer</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <style>
+    :root {
+      --primary: #003d60; /* your brand blue */
+      --primary-contrast: #ffffff;
+      --panel-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.12);
+    }
+    html, body { height: 100%; }
+    body { margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    #map { position: absolute; inset: 0; }
+
+    /* Controls */
+    .control-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      background: var(--panel-bg);
+      border-radius: 10px;
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .control-panel select {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 14px;
+    }
+
+    /* Loading & error */
+    #loading {
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.92);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 999;
+      text-align: center;
+      gap: 10px;
+    }
+    #loading h2 { margin: 0; font-weight: 600; color: #1a1a1a; }
+    #error { color: #c62828; max-width: 680px; padding: 0 16px; }
+
+    /* Popup */
+    .mapboxgl-popup { max-width: 420px; }
+    .mapboxgl-popup-content { padding: 14px 14px 16px 14px; border-radius: 12px; box-shadow: 0 8px 24px var(--shadow); }
+    .property-popup h3 { margin: 0 0 8px 0; font-size: 18px; line-height: 1.25; color: #111; }
+    .property-popup .meta { margin: 8px 0 10px; color: #333; font-size: 14px; }
+    .property-popup .meta p { margin: 4px 0; }
+    .property-popup .image { margin: 10px 0 12px; border-radius: 10px; overflow: hidden; max-height: 220px; }
+    .property-popup .image img { display: block; width: 100%; height: 220px; object-fit: cover; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; text-decoration: none; font-weight: 600; font-size: 13px;
+      padding: 8px 12px; border-radius: 999px; border: 1px solid #cdd9e5;
+      transition: transform 0.06s ease, background 0.2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: var(--primary); color: var(--primary-contrast); border-color: var(--primary); }
+    .btn.ghost { background: #fff; color: #0f172a; }
+
+    @media (max-width: 480px) {
+      .mapboxgl-popup { width: calc(100vw - 32px); }
+      .property-popup .image img { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="control-panel">
+    <label for="map-style" style="font-size:12px;color:#475569">Style</label>
+    <select id="map-style" aria-label="Map style">
+      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+      <option value="mapbox://styles/mapbox/light-v11">Light</option>
+      <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
+      <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+      <option value="mapbox://styles/mapbox/satellite-streets-v12">Sat + Streets</option>
+      <option value="3d-terrain">3D Satellite</option>
+    </select>
+  </div>
+
+  <div id="loading">
+    <h2>Loading property…</h2>
+    <div id="error"></div>
+  </div>
+
+  <script>
+    // ===================== Config =====================
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
+
+    // ===================== Utilities =====================
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+
+    const toNumber = (v) => {
+      if (v === undefined || v === null || v === '') return undefined;
+      const n = typeof v === 'number' ? v : parseFloat(String(v).trim());
+      return Number.isFinite(n) ? n : undefined;
+    };
+
+    const fmtInt = (v) => {
+      const n = toNumber(v);
+      return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : '';
+    };
+
+    function buildGoogleMapsDirections({ lng, lat, name }) {
+      const place = encodeURIComponent(name || 'Property');
+      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${place}`;
+    }
+
+    function buildStreetView({ pano_latitude, pano_longitude, heading }) {
+      const lat = toNumber(pano_latitude);
+      const lng = toNumber(pano_longitude);
+      const head = toNumber(heading) ?? 0;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
+    }
+
+    function normalizeFromObject(obj) {
+      // Accepts either a plain object or a GeoJSON Feature
+      if (!obj) return null;
+      if (obj.type === 'Feature' && obj.geometry && obj.properties) {
+        const { geometry, properties } = obj;
+        const coords = geometry.coordinates || [];
+        return {
+          name: properties.project_name || properties.name || '',
+          address: properties.project_address || properties.address || '',
+          longitude: toNumber(coords[0]),
+          latitude: toNumber(coords[1]),
+          photo_url: properties.photo_url || properties.photo || '',
+          pano_latitude: toNumber(properties.pano_latitude),
+          pano_longitude: toNumber(properties.pano_longitude),
+          heading: toNumber(properties.heading),
+          asset_class: properties.asset_class || properties.asset || '',
+          sq_ft: toNumber(properties.sq_ft || properties.sqft),
+          units: toNumber(properties.units)
+        };
+      }
+      // Plain object shape
+      return {
+        name: obj.project_name || obj.name || '',
+        address: obj.project_address || obj.address || '',
+        longitude: toNumber(obj.longitude || obj.lng),
+        latitude: toNumber(obj.latitude || obj.lat),
+        photo_url: obj.photo_url || obj.photo || '',
+        pano_latitude: toNumber(obj.pano_latitude || obj.pano_lat),
+        pano_longitude: toNumber(obj.pano_longitude || obj.pano_lng),
+        heading: toNumber(obj.heading),
+        asset_class: obj.asset_class || obj.asset || '',
+        sq_ft: toNumber(obj.sq_ft || obj.sqft),
+        units: toNumber(obj.units)
+      };
+    }
+
+    function fromQueryParams() {
+      // Supports: name, address, lat, lng, photo, pano_lat, pano_lng, heading, asset, sqft, units
+      const qp = Object.fromEntries(params.entries());
+      return normalizeFromObject({
+        name: qp.name,
+        address: qp.address,
+        lat: qp.lat,
+        lng: qp.lng,
+        photo: qp.photo,
+        pano_lat: qp.pano_lat,
+        pano_lng: qp.pano_lng,
+        heading: qp.heading,
+        asset: qp.asset,
+        sqft: qp.sqft,
+        units: qp.units
+      });
+    }
+
+    async function loadProperty() {
+      const src = params.get('src'); // URL to JSON with a SINGLE property or a single GeoJSON Feature
+      if (src) {
+        const res = await fetch(src);
+        if (!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
+        const obj = await res.json();
+        // Allow src to return { ... }, { type: 'Feature', ... }, or { features: [single] }
+        if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
+          return normalizeFromObject(obj.features[0]);
+        }
+        return normalizeFromObject(obj);
+      }
+      // Fallback to query params
+      const p = fromQueryParams();
+      return p;
+    }
+
+    function validateProperty(p) {
+      if (!p) return 'No property data found. Provide a ?src=<url> to a single property JSON or pass lat/lng in the query string.';
+      if (!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return 'Missing or invalid lat/lng. Include lat and lng in the URL or in the JSON.';
+      return null;
+    }
+
+    function popupHTML(p) {
+      const name = p.name || 'Unnamed Property';
+      const address = p.address || '';
+      const asset = p.asset_class ? `<p><strong>Asset:</strong> ${p.asset_class}</p>` : '';
+      const sqft = Number.isFinite(p.sq_ft) ? `<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>` : '';
+      const units = Number.isFinite(p.units) ? `<p><strong>Units:</strong> ${fmtInt(p.units)}</p>` : '';
+
+      const sv = buildStreetView(p);
+      const nav = buildGoogleMapsDirections({ lng: p.longitude, lat: p.latitude, name });
+
+      const img = p.photo_url
+        ? `<div class="image">${sv ? `<a href="${sv}" target="_blank" rel="noopener noreferrer">` : ''}
+             <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
+           ${sv ? '</a>' : ''}</div>`
+        : '';
+
+      return `
+        <div class="property-popup">
+          <h3>${name}</h3>
+          ${img}
+          <div class="meta">
+            ${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
+            ${asset}
+            ${sqft}
+            ${units}
+          </div>
+          <div class="actions">
+            ${sv ? `<a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Street View</a>` : ''}
+            <a class="btn primary" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a>
+          </div>
+        </div>`;
+    }
+
+    function enableStyleSelector(map) {
+      const sel = $('map-style');
+      sel.addEventListener('change', () => {
+        const val = sel.value;
+        if (val === '3d-terrain') {
+          map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
+          map.once('styledata', () => {
+            map.setPitch(60);
+            map.setBearing(-17.6);
+            if (!map.getSource('mapbox-dem')) {
+              map.addSource('mapbox-dem', {
+                type: 'raster-dem',
+                url: 'mapbox://mapbox.terrain-rgb',
+                tileSize: 512,
+                maxzoom: 14
+              });
+              map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+            }
+            if (!map.getLayer('sky')) {
+              map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-type': 'atmosphere', 'sky-atmosphere-sun': [0.0, 0.0], 'sky-atmosphere-sun-intensity': 15 } });
+            }
+          });
+        } else {
+          map.setTerrain(null);
+          if (map.getLayer('sky')) map.removeLayer('sky');
+          if (map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
+          map.setStyle(val);
+        }
+      });
+    }
+
+    (async function init() {
+      try {
+        const prop = await loadProperty();
+        const err = validateProperty(prop);
+        if (err) throw new Error(err);
+
+        const map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [prop.longitude, prop.latitude],
+          zoom: toNumber(params.get('z')) ?? 16
+        });
+
+        map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
+        map.addControl(new mapboxgl.FullscreenControl());
+
+        const popup = new mapboxgl.Popup({ offset: 18 }).setHTML(popupHTML(prop));
+        new mapboxgl.Marker({ color: '#3887be' })
+          .setLngLat([prop.longitude, prop.latitude])
+          .setPopup(popup)
+          .addTo(map);
+
+        // Auto-open popup on load for single property
+        map.once('load', () => popup.addTo(map));
+
+        enableStyleSelector(map);
+        $('loading').style.display = 'none';
+      } catch (e) {
+        $('error').textContent = e.message || String(e);
+        $('loading').style.display = 'flex';
+      }
+    })();
+  </script>
+</body>
+</html>
