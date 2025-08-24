@@ -1,231 +1,369 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>New Property Map Viewer</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>Single Property Map Viewer</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
-    body { margin: 0; padding: 0; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    .mapboxgl-popup { max-width: 400px; font-family: sans-serif; }
-    .mapboxgl-popup-content { padding: 15px; }
-    .property-popup h3 { margin: 0 0 10px 0; }
-    .property-popup p { margin: 5px 0; }
-    .property-popup img { border-radius: 4px; object-fit: cover; width: 100%; }
-    .nav-link {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 15px;
-      background-color: #3887be;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: background-color 0.3s;
+    :root {
+      --primary: #003d60; /* your brand blue */
+      --primary-contrast: #ffffff;
+      --panel-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.12);
     }
-    .nav-link:hover {
-      background-color: #2a678d;
-    }
-    #style-selector {
+    html, body { height: 100%; }
+    body { margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    #map { position: absolute; inset: 0; }
+
+    /* Controls */
+    .control-panel {
       position: absolute;
       top: 10px;
       right: 10px;
-      z-index: 1;
-      background: white;
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 2;
+      background: var(--panel-bg);
+      border-radius: 10px;
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    #style-selector select {
-      padding: 5px;
+    .control-panel select {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 6px 8px;
       font-size: 14px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
     }
+
+    /* Loading & error */
     #loading {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.9);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      z-index: 999; font-family: sans-serif;
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.92);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 999;
+      text-align: center;
+      gap: 10px;
     }
-    #error { color: red; margin-top: 20px; text-align: center; max-width: 80%; }
+    #loading h2 { margin: 0; font-weight: 600; color: #1a1a1a; }
+    #error { color: #c62828; max-width: 680px; padding: 0 16px; }
+
+    /* Popup */
+    .mapboxgl-popup { max-width: 420px; }
+    .mapboxgl-popup-content { padding: 14px 14px 16px 14px; border-radius: 12px; box-shadow: 0 8px 24px var(--shadow); }
+    .property-popup h3 { margin: 0 0 8px 0; font-size: 18px; line-height: 1.25; color: #111; }
+    .property-popup .meta { margin: 8px 0 10px; color: #333; font-size: 14px; }
+    .property-popup .meta p { margin: 4px 0; }
+    .property-popup .image { margin: 10px 0 12px; border-radius: 10px; overflow: hidden; max-height: 220px; }
+    .property-popup .image img { display: block; width: 100%; height: 220px; object-fit: cover; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; text-decoration: none; font-weight: 600; font-size: 13px;
+      padding: 8px 12px; border-radius: 999px; border: 1px solid #cdd9e5;
+      transition: transform 0.06s ease, background 0.2s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: var(--primary); color: var(--primary-contrast); border-color: var(--primary); }
+    .btn.ghost { background: #fff; color: #0f172a; }
+
+    @media (max-width: 480px) {
+      .mapboxgl-popup { width: calc(100vw - 32px); }
+      .property-popup .image img { height: 180px; }
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
 
-  <div id="style-selector">
-    <select id="map-style">
+  <div class="control-panel">
+    <label for="map-style" style="font-size:12px;color:#475569">Style</label>
+    <select id="map-style" aria-label="Map style">
       <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
       <option value="mapbox://styles/mapbox/light-v11">Light</option>
       <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
       <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
       <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
-      <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
-      <option value="mapbox://styles/mapbox/navigation-day-v1">Navigation Day</option>
-      <option value="mapbox://styles/mapbox/navigation-night-v1">Navigation Night</option>
-      <option value="3d-terrain">3D Satellite View</option>
+      <option value="mapbox://styles/mapbox/satellite-streets-v12">Sat + Streets</option>
+      <option value="3d-terrain">3D Satellite</option>
     </select>
   </div>
 
   <div id="loading">
-    <div>Loading property data...</div>
+    <h2>Loading property…</h2>
     <div id="error"></div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
+    // ===================== Config =====================
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-118.65, 34.15],
-        zoom: 13
+    // ===================== Utilities =====================
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+
+    const toNumber = (v) => {
+      if (v === undefined || v === null || v === '') return undefined;
+      const n = typeof v === 'number' ? v : parseFloat(String(v).trim());
+      return Number.isFinite(n) ? n : undefined;
+    };
+
+    const fmtInt = (v) => {
+      const n = toNumber(v);
+      return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : '';
+    };
+
+    function buildGoogleMapsDirections({ lng, lat, name }) {
+      const place = encodeURIComponent(name || 'Property');
+      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${place}`;
+    }
+
+    function buildStreetView({ pano_latitude, pano_longitude, heading }) {
+      const lat = toNumber(pano_latitude);
+      const lng = toNumber(pano_longitude);
+      const head = toNumber(heading) ?? 0;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
+    }
+
+    function normalizeFromObject(obj) {
+      // Accepts either a plain object or a GeoJSON Feature; tolerant to key variants/casing
+      if (!obj) return null;
+
+      const pickNum = (...keys) => {
+        for (const k of keys) {
+          if (k in obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return toNumber(obj[k]);
+        }
+        return undefined;
+      };
+      const pickStr = (...keys) => {
+        for (const k of keys) {
+          if (k in obj && obj[k] != null && String(obj[k]).trim() !== '') return String(obj[k]);
+        }
+        return '';
+      };
+
+      // GeoJSON Feature path
+      if (obj.type === 'Feature' && obj.geometry && obj.properties) {
+        const { geometry, properties: props } = obj;
+        const coords = geometry.coordinates || [];
+        const pNum = (v) => toNumber(v);
+        const pStr = (v) => (v == null ? '' : String(v));
+        return {
+          name: pStr(props.project_name ?? props.name ?? props.Name ?? ''),
+          project: pStr(props.project ?? props.Project ?? ''),
+          address: pStr(props.project_address ?? props.address ?? props.Address ?? ''),
+          longitude: toNumber(coords[0]),
+          latitude: toNumber(coords[1]),
+          photo_url: pStr(props.photo_url ?? props.photo ?? props.Photo ?? ''),
+          pano_latitude: pNum(props.pano_latitude ?? props.pano_lat ?? props.NavLat ?? props.navLat),
+          pano_longitude: pNum(props.pano_longitude ?? props.pano_lng ?? props.NavLon ?? props.navLon),
+          heading: pNum(props.heading ?? props.Heading),
+          asset_class: pStr(props.asset_class ?? props.asset ?? props.Type ?? ''),
+          sq_ft: pNum(props.sq_ft ?? props.sqft ?? props['Sq Ft']),
+          units: pNum(props.units ?? props.Units)
+        };
+      }
+
+      // Plain object path (your Make() payload)
+      return {
+        name: pickStr('project_name', 'name', 'Name'),
+        project: pickStr('project', 'Project'),
+        address: pickStr('project_address', 'address', 'Address'),
+        longitude: pickNum('longitude', 'lng', 'Longitude', 'Lon'),
+        latitude: pickNum('latitude', 'lat', 'Latitude', 'Lat'),
+        photo_url: pickStr('photo_url', 'photo', 'Photo'),
+        pano_latitude: pickNum('pano_latitude', 'pano_lat', 'NavLat', 'navLat'),
+        pano_longitude: pickNum('pano_longitude', 'pano_lng', 'NavLon', 'navLon'),
+        heading: pickNum('heading', 'Heading'),
+        asset_class: pickStr('asset_class', 'asset', 'Type'),
+        sq_ft: pickNum('sq_ft', 'sqft', 'Sq Ft'),
+        units: pickNum('units', 'Units')
+      };
+    };
+      }
+      // Plain object shape
+      return {
+        name: obj.project_name || obj.name || '',
+        address: obj.project_address || obj.address || '',
+        project: obj.project || '',
+        longitude: toNumber(obj.longitude || obj.lng),
+        latitude: toNumber(obj.latitude || obj.lat),
+        photo_url: obj.photo_url || obj.photo || '',
+        pano_latitude: toNumber(obj.pano_latitude || obj.pano_lat),
+        pano_longitude: toNumber(obj.pano_longitude || obj.pano_lng),
+        heading: toNumber(obj.heading),
+        asset_class: obj.asset_class || obj.asset || '',
+        sq_ft: toNumber(obj.sq_ft || obj.sqft),
+        units: toNumber(obj.units)
+      };
+    }
+
+    function fromQueryParams() {
+      // Supports: name, address, lat, lng, photo, pano_lat, pano_lng, heading, asset, sqft, units
+      const qp = Object.fromEntries(params.entries());
+      return normalizeFromObject({
+        name: qp.name,
+        address: qp.address,
+        project: qp.project,
+        lat: qp.lat,
+        lng: qp.lng,
+        photo: qp.photo,
+        pano_lat: qp.pano_lat,
+        pano_lng: qp.pano_lng,
+        heading: qp.heading,
+        asset: qp.asset,
+        sqft: qp.sqft,
+        units: qp.units
       });
+    }
 
-      const timestamp = new URLSearchParams(window.location.search).get('t');
-      if (!timestamp) {
-        document.getElementById('error').textContent = 'Timestamp parameter missing';
-        document.getElementById('loading').style.display = 'none';
-        return;
+    async function loadProperty() {
+      // Accepts either ?src=<url> (single object / single Feature / array[0])
+      // or legacy ?t=<timestamp> to auto-point to projects_<t>.json
+      // Optional ?i=<index> selects an element when the source is an array
+      let src = params.get('src');
+      const t = params.get('t');
+      const iParam = toNumber(params.get('i'));
+      const index = Number.isFinite(iParam) ? Math.max(0, Math.floor(iParam)) : 0;
+
+      if (!src && t) {
+        src = `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${t}.json`;
       }
 
-      const jsonUrl = `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${timestamp}.json`;
-
-      fetch(jsonUrl)
-        .then(res => {
-          if (!res.ok) throw new Error('Failed to fetch JSON: ' + res.statusText);
-          return res.json();
-        })
-        .then(data => {
-          const geojsonData = {
-            type: "FeatureCollection",
-            features: data.map(item => ({
-              type: "Feature",
-              properties: {
-                project_name: item.project_name,
-                project_address: item.project_address,
-                photo_url: item.photo_url,
-                pano_latitude: parseFloat(item.pano_latitude),
-                pano_longitude: parseFloat(item.pano_longitude),
-                heading: parseFloat(item.heading),
-                asset_class: item.asset_class,
-                sq_ft: item.sq_ft,
-                units: item.units
-              },
-              geometry: {
-                type: "Point",
-                coordinates: [parseFloat(item.longitude), parseFloat(item.latitude)]
-              }
-            }))
-          };
-
-          addMarkersToMap(geojsonData);
-          fitMapToBounds(geojsonData);
-          document.getElementById('loading').style.display = 'none';
-        })
-        .catch(err => {
-          document.getElementById('error').textContent = "Error loading map data: " + err.message;
-          document.getElementById('loading').style.display = 'none';
-        });
-
-      function createGoogleMapsUrl(coords, name) {
-        return `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}&travelmode=driving&destination_place_name=${encodeURIComponent(name || 'Property')}`;
+      if (src) {
+        const res = await fetch(src);
+        if (!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
+        const obj = await res.json();
+        // Allow src to return [single], { ... }, { type: 'Feature', ... }, or { features: [single] }
+        if (Array.isArray(obj) && obj.length > 0) {
+          const safeIdx = Math.min(index, obj.length - 1);
+          return normalizeFromObject(obj[safeIdx]);
+        }
+        if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
+          const safeIdx = Math.min(index, obj.features.length - 1);
+          return normalizeFromObject(obj.features[safeIdx]);
+        }
+        return normalizeFromObject(obj);
       }
-
-      function createStreetViewUrl(panoLat, panoLng, heading) {
-        if (!panoLat || !panoLng) return null;
-        return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${panoLat},${panoLng}&heading=${heading}&pitch=0&fov=80`;
+      // Fallback to query params
+      return fromQueryParams();
+    }
+        if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
+          return normalizeFromObject(obj.features[0]);
+        }
+        return normalizeFromObject(obj);
       }
+      // Fallback to query params
+      const p = fromQueryParams();
+      return p;
+    }
 
-      function createPopupHTML(props, coords) {
-        const name = props.project_name || "Unnamed";
-        const address = props.project_address || "No address provided";
-        const assetClass = props.asset_class || "";
-        const sqFt = props.sq_ft ? `${parseInt(props.sq_ft).toLocaleString()} Sq Ft` : "";
-        const units = props.units ? `${props.units} Units` : "";
-        const photoUrl = props.photo_url;
-        const streetViewUrl = createStreetViewUrl(props.pano_latitude, props.pano_longitude, props.heading);
-        const googleMapsUrl = createGoogleMapsUrl(coords, name);
+    function validateProperty(p) {
+      if (!p) return 'No property data found. Provide a ?src=<url> to a single property JSON or pass lat/lng in the query string.';
+      if (!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return 'Missing or invalid lat/lng. Include lat and lng in the URL or in the JSON.';
+      return null;
+    }
 
-        const imageHtml = photoUrl && streetViewUrl
-          ? `<div style="margin-top:10px; margin-bottom:10px; max-height:180px; overflow:hidden;">
-              <a href="${streetViewUrl}" target="_blank" rel="noopener noreferrer">
-                <img src="${photoUrl}" alt="Photo of ${name}" loading="lazy">
-              </a>
-            </div>` : "";
+    function popupHTML(p) {
+      const name = p.name || 'Unnamed Property';
+      const address = p.address || '';
+      const projectLine = p.project ? `<p><strong>Project:</strong> ${p.project}</p>` : '';
+      const asset = p.asset_class ? `<p><strong>Asset:</strong> ${p.asset_class}</p>` : '';
+      const sqft = Number.isFinite(p.sq_ft) ? `<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>` : '';
+      const units = Number.isFinite(p.units) ? `<p><strong>Units:</strong> ${fmtInt(p.units)}</p>` : '';
 
-        return `
-          <div class="property-popup">
-            <h3>${name}</h3>
-            ${imageHtml}
-            <p><strong>Address:</strong> ${address}</p>
-            ${assetClass ? `<p><strong>Asset Class:</strong> ${assetClass}</p>` : ""}
-            ${sqFt ? `<p><strong>Sq Ft:</strong> ${sqFt}</p>` : ""}
-            ${units ? `<p><strong>Units:</strong> ${units}</p>` : ""}
-            <a href="${googleMapsUrl}" class="nav-link" target="_blank">Navigate in Google Maps</a>
-          </div>`;
-      }
+      const sv = buildStreetView(p);
+      const nav = buildGoogleMapsDirections({ lng: p.longitude, lat: p.latitude, name });
 
-      function addMarkersToMap(geojson) {
-        geojson.features.forEach(feature => {
-          const coords = feature.geometry.coordinates;
-          const props = feature.properties;
-          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(props, coords));
-          new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
-        });
-      }
+      const img = p.photo_url
+        ? `<div class="image">${sv ? `<a href="${sv}" target="_blank" rel="noopener noreferrer">` : ''}
+             <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
+           ${sv ? '</a>' : ''}</div>`
+        : '';
 
-      function fitMapToBounds(geojson) {
-        const fc = turf.featureCollection(geojson.features);
-        const buffered = turf.buffer(fc, 0.5, { units: 'miles' });
-        const boundsArray = turf.bbox(buffered);
-        const bounds = new mapboxgl.LngLatBounds(
-          [boundsArray[0], boundsArray[1]],
-          [boundsArray[2], boundsArray[3]]
-        );
+      return `
+        <div class="property-popup">
+          <h3>${name}</h3>
+          ${img}
+          <div class="meta">
+            ${projectLine}${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
+            ${asset}
+            ${sqft}
+            ${units}
+          </div>
+          <div class="actions">
+            ${sv ? `<a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Street View</a>` : ''}
+            <a class="btn primary" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a>
+          </div>
+        </div>`;
+    }
 
-        map.fitBounds(bounds, {
-          padding: { top: 150, bottom: 150, left: 150, right: 150 },
-          duration: 0
-        });
-      }
-
-      document.getElementById('map-style').addEventListener('change', function () {
-        const selected = this.value;
-        if (selected === '3d-terrain') {
+    function enableStyleSelector(map) {
+      const sel = $('map-style');
+      sel.addEventListener('change', () => {
+        const val = sel.value;
+        if (val === '3d-terrain') {
           map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
           map.once('styledata', () => {
             map.setPitch(60);
             map.setBearing(-17.6);
-            map.addSource('mapbox-dem', {
-              type: 'raster-dem',
-              url: 'mapbox://mapbox.terrain-rgb',
-              tileSize: 512,
-              maxzoom: 14
-            });
-            map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-            map.addLayer({
-              id: 'sky',
-              type: 'sky',
-              paint: {
-                'sky-type': 'atmosphere',
-                'sky-atmosphere-sun': [0.0, 0.0],
-                'sky-atmosphere-sun-intensity': 15
-              }
-            });
+            if (!map.getSource('mapbox-dem')) {
+              map.addSource('mapbox-dem', {
+                type: 'raster-dem',
+                url: 'mapbox://mapbox.terrain-rgb',
+                tileSize: 512,
+                maxzoom: 14
+              });
+              map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+            }
+            if (!map.getLayer('sky')) {
+              map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-type': 'atmosphere', 'sky-atmosphere-sun': [0.0, 0.0], 'sky-atmosphere-sun-intensity': 15 } });
+            }
           });
         } else {
-          map.setStyle(selected);
+          map.setTerrain(null);
+          if (map.getLayer('sky')) map.removeLayer('sky');
+          if (map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
+          map.setStyle(val);
         }
       });
-    });
+    }
+
+    (async function init() {
+      try {
+        const prop = await loadProperty();
+        const err = validateProperty(prop);
+        if (err) throw new Error(err);
+
+        const map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [prop.longitude, prop.latitude],
+          zoom: toNumber(params.get('z')) ?? 16
+        });
+
+        map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
+        map.addControl(new mapboxgl.FullscreenControl());
+
+        const popup = new mapboxgl.Popup({ offset: 18 }).setHTML(popupHTML(prop));
+        new mapboxgl.Marker({ color: '#3887be' })
+          .setLngLat([prop.longitude, prop.latitude])
+          .setPopup(popup)
+          .addTo(map);
+
+        // Auto-open popup on load for single property
+        map.once('load', () => popup.addTo(map));
+
+        enableStyleSelector(map);
+        $('loading').style.display = 'none';
+      } catch (e) {
+        $('error').textContent = e.message || String(e);
+        $('loading').style.display = 'flex';
+      }
+    })();
   </script>
 </body>
 </html>
+
