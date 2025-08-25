@@ -21,8 +21,21 @@
     .property-popup .image{margin:10px 0 12px;border-radius:10px;overflow:hidden;max-height:220px}
     .property-popup .image img{display:block;width:100%;height:220px;object-fit:cover}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{display:inline-block;text-decoration:none;font-weight:600;font-size:13px;padding:8px 12px;border-radius:999px;border:1px solid #cdd9e5;transition:transform .06s ease,background .2s ease}
-    .btn:active{transform:translateY(1px)} .btn.primary{background:var(--primary);color:var(--primary-contrast);border-color:var(--primary)} .btn.ghost{background:#fff;color:#0f172a}
+
+    /* Restore original nav-link button style */
+    .nav-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: #3887be;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .nav-link:hover { background-color: #2a678d; }
+
     @media (max-width:480px){.mapboxgl-popup{width:calc(100vw - 32px)} .property-popup .image img{height:180px}}
   </style>
 </head>
@@ -58,10 +71,11 @@
     const fmtInt = v => { const n = toNumber(v); return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : ''; };
     const buildNav = ({lng,lat,name}) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${encodeURIComponent(name||'Property')}`;
     const buildSV  = ({pano_latitude,pano_longitude,heading}) => { const lat=toNumber(pano_latitude), lng=toNumber(pano_longitude), head=toNumber(heading)??0; if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null; return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`; };
+    const cleanUrl = (u) => { if (u == null) return ''; const s = String(u).trim(); return (s && s !== 'null' && s !== 'undefined') ? s : ''; };
 
     function normalizeFromObject(obj){
       if(!obj) return null;
-      const pickNum=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && obj[k]!=='') return toNumber(obj[k]); } };
+      const pickNum=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && obj[k]!=='' ) return toNumber(obj[k]); } };
       const pickStr=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && String(obj[k]).trim()!=='') return String(obj[k]); } return ''; };
 
       if(obj.type==='Feature' && obj.geometry && obj.properties){
@@ -73,7 +87,7 @@
           address:pStr(props.project_address??props.address??props.Address??''),
           longitude:toNumber(coords[0]),
           latitude:toNumber(coords[1]),
-          photo_url:pStr(props.photo_url??props.photo??props.Photo??''),
+          photo_url: cleanUrl(props.photo_url ?? props.photo ?? props.Photo ?? ''),
           pano_latitude:pNum(props.pano_latitude??props.pano_lat??props.NavLat??props.navLat),
           pano_longitude:pNum(props.pano_longitude??props.pano_lng??props.NavLon??props.navLon),
           heading:pNum(props.heading??props.Heading),
@@ -88,7 +102,7 @@
         address:pickStr('project_address','address','Address'),
         longitude:pickNum('longitude','lng','Longitude','Lon'),
         latitude:pickNum('latitude','lat','Latitude','Lat'),
-        photo_url:pickStr('photo_url','photo','Photo'),
+        photo_url: cleanUrl(pickStr('photo_url','photo','Photo')),
         pano_latitude:pickNum('pano_latitude','pano_lat','NavLat','navLat'),
         pano_longitude:pickNum('pano_longitude','pano_lng','NavLon','navLon'),
         heading:pickNum('heading','Heading'),
@@ -125,7 +139,7 @@
         if(obj && typeof obj==='object' && typeof obj.json==='string'){ try{ obj=JSON.parse(obj.json);}catch{} }
 
         if(Array.isArray(obj) && obj.length>0){ return normalizeFromObject(obj[Math.min(index,obj.length-1)]); }
-        if(obj && Array.isArray(obj.features) && obj.features.length>0){ return normalizeFromObject(obj[Math.min(index,obj.features.length-1)]); }
+        if(obj && Array.isArray(obj.features) && obj.features.length>0){ return normalizeFromObject(obj.features[Math.min(index,obj.features.length-1)]); }
         return normalizeFromObject(obj);
       }
       return fromQueryParams();
@@ -146,8 +160,21 @@
       const units=Number.isFinite(p.units)?`<p><strong>Units:</strong> ${fmtInt(p.units)}</p>`:'';
       const sv=buildSV(p);
       const nav=buildNav({lng:p.longitude,lat:p.latitude,name});
-      const img=p.photo_url?`<div class="image">${sv?`<a href="${sv}" target="_blank" rel="noopener">`:''}<img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />${sv?'</a>':''}</div>`:'';
-      return `<div class="property-popup"><h3>${name}</h3>${img}<div class="meta">${projectLine}${address?`<p><strong>Address:</strong> ${address}</p>`:''}${asset}${sqft}${units}</div><div class="actions">${sv?`<a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Street View</a>`:''}<a class="btn primary" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a></div></div>`;
+
+      // If we have a photo, show it. If we also have Street View, make the photo a link.
+      let img='';
+      if(p.photo_url){
+        img = `<div class="image">${sv?`<a href="${sv}" target="_blank" rel="noopener noreferrer">`:''}
+               <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
+               ${sv?'</a>':''}</div>`;
+      }
+
+      // Show a Street View button ONLY when we don't have a photo to click
+      const streetViewBtn = (!p.photo_url && sv)
+        ? `<a class="nav-link" href="${sv}" target="_blank" rel="noopener">Street View</a>`
+        : '';
+
+      return `<div class="property-popup"><h3>${name}</h3>${img}<div class="meta">${projectLine}${address?`<p><strong>Address:</strong> ${address}</p>`:''}${asset}${sqft}${units}</div><div class="actions">${streetViewBtn}<a class="nav-link" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a></div></div>`;
     }
 
     function enableStyleSelector(map){
