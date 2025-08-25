@@ -7,71 +7,23 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
   <style>
-    :root {
-      --primary: #003d60; /* your brand blue */
-      --primary-contrast: #ffffff;
-      --panel-bg: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.12);
-    }
-    html, body { height: 100%; }
-    body { margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
-    #map { position: absolute; inset: 0; }
-
-    /* Controls */
-    .control-panel {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 2;
-      background: var(--panel-bg);
-      border-radius: 10px;
-      box-shadow: 0 6px 20px var(--shadow);
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .control-panel select {
-      border: 1px solid #d0d7de;
-      border-radius: 8px;
-      padding: 6px 8px;
-      font-size: 14px;
-    }
-
-    /* Loading & error */
-    #loading {
-      position: absolute; inset: 0;
-      background: rgba(255,255,255,0.92);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 999;
-      text-align: center;
-      gap: 10px;
-    }
-    #loading h2 { margin: 0; font-weight: 600; color: #1a1a1a; }
-    #error { color: #c62828; max-width: 680px; padding: 0 16px; }
-
-    /* Popup */
-    .mapboxgl-popup { max-width: 420px; }
-    .mapboxgl-popup-content { padding: 14px 14px 16px 14px; border-radius: 12px; box-shadow: 0 8px 24px var(--shadow); }
-    .property-popup h3 { margin: 0 0 8px 0; font-size: 18px; line-height: 1.25; color: #111; }
-    .property-popup .meta { margin: 8px 0 10px; color: #333; font-size: 14px; }
-    .property-popup .meta p { margin: 4px 0; }
-    .property-popup .image { margin: 10px 0 12px; border-radius: 10px; overflow: hidden; max-height: 220px; }
-    .property-popup .image img { display: block; width: 100%; height: 220px; object-fit: cover; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn {
-      display: inline-block; text-decoration: none; font-weight: 600; font-size: 13px;
-      padding: 8px 12px; border-radius: 999px; border: 1px solid #cdd9e5;
-      transition: transform 0.06s ease, background 0.2s ease;
-    }
-    .btn:active { transform: translateY(1px); }
-    .btn.primary { background: var(--primary); color: var(--primary-contrast); border-color: var(--primary); }
-    .btn.ghost { background: #fff; color: #0f172a; }
-
-    @media (max-width: 480px) {
-      .mapboxgl-popup { width: calc(100vw - 32px); }
-      .property-popup .image img { height: 180px; }
-    }
+    :root { --primary:#003d60; --primary-contrast:#fff; --panel-bg:#fff; --shadow:rgba(0,0,0,.12); }
+    html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    #map{position:absolute;inset:0}
+    .control-panel{position:absolute;top:10px;right:10px;z-index:2;background:var(--panel-bg);border-radius:10px;box-shadow:0 6px 20px var(--shadow);padding:10px 12px;display:flex;gap:10px;align-items:center}
+    .control-panel select{border:1px solid #d0d7de;border-radius:8px;padding:6px 8px;font-size:14px}
+    #loading{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;text-align:center;gap:10px}
+    #loading h2{margin:0;font-weight:600;color:#1a1a1a}
+    #error{color:#c62828;max-width:720px;padding:0 16px;white-space:pre-wrap}
+    .mapboxgl-popup{max-width:420px}.mapboxgl-popup-content{padding:14px;border-radius:12px;box-shadow:0 8px 24px var(--shadow)}
+    .property-popup h3{margin:0 0 8px;font-size:18px;line-height:1.25;color:#111}
+    .property-popup .meta{margin:8px 0 10px;color:#333;font-size:14px}.property-popup .meta p{margin:4px 0}
+    .property-popup .image{margin:10px 0 12px;border-radius:10px;overflow:hidden;max-height:220px}
+    .property-popup .image img{display:block;width:100%;height:220px;object-fit:cover}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{display:inline-block;text-decoration:none;font-weight:600;font-size:13px;padding:8px 12px;border-radius:999px;border:1px solid #cdd9e5;transition:transform .06s ease,background .2s ease}
+    .btn:active{transform:translateY(1px)} .btn.primary{background:var(--primary);color:var(--primary-contrast);border-color:var(--primary)} .btn.ghost{background:#fff;color:#0f172a}
+    @media (max-width:480px){.mapboxgl-popup{width:calc(100vw - 32px)} .property-popup .image img{height:180px}}
   </style>
 </head>
 <body>
@@ -96,274 +48,161 @@
   </div>
 
   <script>
-    // ===================== Config =====================
+    // ---- Config ----
     mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-    // ===================== Utilities =====================
-    const $ = (id) => document.getElementById(id);
+    // ---- Helpers ----
+    const $ = id => document.getElementById(id);
     const params = new URLSearchParams(location.search);
+    const toNumber = v => { if (v === undefined || v === null || v === '') return undefined; const n = typeof v === 'number' ? v : parseFloat(String(v).trim()); return Number.isFinite(n) ? n : undefined; };
+    const fmtInt = v => { const n = toNumber(v); return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : ''; };
+    const buildNav = ({lng,lat,name}) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${encodeURIComponent(name||'Property')}`;
+    const buildSV  = ({pano_latitude,pano_longitude,heading}) => { const lat=toNumber(pano_latitude), lng=toNumber(pano_longitude), head=toNumber(heading)??0; if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null; return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`; };
 
-    const toNumber = (v) => {
-      if (v === undefined || v === null || v === '') return undefined;
-      const n = typeof v === 'number' ? v : parseFloat(String(v).trim());
-      return Number.isFinite(n) ? n : undefined;
-    };
+    function normalizeFromObject(obj){
+      if(!obj) return null;
+      const pickNum=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && obj[k]!=='') return toNumber(obj[k]); } };
+      const pickStr=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && String(obj[k]).trim()!=='') return String(obj[k]); } return ''; };
 
-    const fmtInt = (v) => {
-      const n = toNumber(v);
-      return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : '';
-    };
-
-    function buildGoogleMapsDirections({ lng, lat, name }) {
-      const place = encodeURIComponent(name || 'Property');
-      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${place}`;
-    }
-
-    function buildStreetView({ pano_latitude, pano_longitude, heading }) {
-      const lat = toNumber(pano_latitude);
-      const lng = toNumber(pano_longitude);
-      const head = toNumber(heading) ?? 0;
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
-    }
-
-    function normalizeFromObject(obj) {
-      // Accepts either a plain object or a GeoJSON Feature; tolerant to key variants/casing
-      if (!obj) return null;
-
-      const pickNum = (...keys) => {
-        for (const k of keys) {
-          if (k in obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return toNumber(obj[k]);
-        }
-        return undefined;
-      };
-      const pickStr = (...keys) => {
-        for (const k of keys) {
-          if (k in obj && obj[k] != null && String(obj[k]).trim() !== '') return String(obj[k]);
-        }
-        return '';
-      };
-
-      // GeoJSON Feature path
-      if (obj.type === 'Feature' && obj.geometry && obj.properties) {
-        const { geometry, properties: props } = obj;
-        const coords = geometry.coordinates || [];
-        const pNum = (v) => toNumber(v);
-        const pStr = (v) => (v == null ? '' : String(v));
+      if(obj.type==='Feature' && obj.geometry && obj.properties){
+        const {geometry, properties:props}=obj; const coords=geometry.coordinates||[];
+        const pNum=v=>toNumber(v), pStr=v=>v==null?'':String(v);
         return {
-          name: pStr(props.project_name ?? props.name ?? props.Name ?? ''),
-          project: pStr(props.project ?? props.Project ?? ''),
-          address: pStr(props.project_address ?? props.address ?? props.Address ?? ''),
-          longitude: toNumber(coords[0]),
-          latitude: toNumber(coords[1]),
-          photo_url: pStr(props.photo_url ?? props.photo ?? props.Photo ?? ''),
-          pano_latitude: pNum(props.pano_latitude ?? props.pano_lat ?? props.NavLat ?? props.navLat),
-          pano_longitude: pNum(props.pano_longitude ?? props.pano_lng ?? props.NavLon ?? props.navLon),
-          heading: pNum(props.heading ?? props.Heading),
-          asset_class: pStr(props.asset_class ?? props.asset ?? props.Type ?? ''),
-          sq_ft: pNum(props.sq_ft ?? props.sqft ?? props['Sq Ft']),
-          units: pNum(props.units ?? props.Units)
+          name:pStr(props.project_name??props.name??props.Name??''),
+          project:pStr(props.project??props.Project??''),
+          address:pStr(props.project_address??props.address??props.Address??''),
+          longitude:toNumber(coords[0]),
+          latitude:toNumber(coords[1]),
+          photo_url:pStr(props.photo_url??props.photo??props.Photo??''),
+          pano_latitude:pNum(props.pano_latitude??props.pano_lat??props.NavLat??props.navLat),
+          pano_longitude:pNum(props.pano_longitude??props.pano_lng??props.NavLon??props.navLon),
+          heading:pNum(props.heading??props.Heading),
+          asset_class:pStr(props.asset_class??props.asset??props.Type??''),
+          sq_ft:pNum(props.sq_ft??props.sqft??props['Sq Ft']),
+          units:pNum(props.units??props.Units)
         };
       }
-
-      // Plain object path (your Make() payload)
       return {
-        name: pickStr('project_name', 'name', 'Name'),
-        project: pickStr('project', 'Project'),
-        address: pickStr('project_address', 'address', 'Address'),
-        longitude: pickNum('longitude', 'lng', 'Longitude', 'Lon'),
-        latitude: pickNum('latitude', 'lat', 'Latitude', 'Lat'),
-        photo_url: pickStr('photo_url', 'photo', 'Photo'),
-        pano_latitude: pickNum('pano_latitude', 'pano_lat', 'NavLat', 'navLat'),
-        pano_longitude: pickNum('pano_longitude', 'pano_lng', 'NavLon', 'navLon'),
-        heading: pickNum('heading', 'Heading'),
-        asset_class: pickStr('asset_class', 'asset', 'Type'),
-        sq_ft: pickNum('sq_ft', 'sqft', 'Sq Ft'),
-        units: pickNum('units', 'Units')
-      };
-    };
-      }
-      // Plain object shape
-      return {
-        name: obj.project_name || obj.name || '',
-        address: obj.project_address || obj.address || '',
-        project: obj.project || '',
-        longitude: toNumber(obj.longitude || obj.lng),
-        latitude: toNumber(obj.latitude || obj.lat),
-        photo_url: obj.photo_url || obj.photo || '',
-        pano_latitude: toNumber(obj.pano_latitude || obj.pano_lat),
-        pano_longitude: toNumber(obj.pano_longitude || obj.pano_lng),
-        heading: toNumber(obj.heading),
-        asset_class: obj.asset_class || obj.asset || '',
-        sq_ft: toNumber(obj.sq_ft || obj.sqft),
-        units: toNumber(obj.units)
+        name:pickStr('project_name','name','Name'),
+        project:pickStr('project','Project'),
+        address:pickStr('project_address','address','Address'),
+        longitude:pickNum('longitude','lng','Longitude','Lon'),
+        latitude:pickNum('latitude','lat','Latitude','Lat'),
+        photo_url:pickStr('photo_url','photo','Photo'),
+        pano_latitude:pickNum('pano_latitude','pano_lat','NavLat','navLat'),
+        pano_longitude:pickNum('pano_longitude','pano_lng','NavLon','navLon'),
+        heading:pickNum('heading','Heading'),
+        asset_class:pickStr('asset_class','asset','Type'),
+        sq_ft:pickNum('sq_ft','sqft','Sq Ft'),
+        units:pickNum('units','Units')
       };
     }
 
-    function fromQueryParams() {
-      // Supports: name, address, lat, lng, photo, pano_lat, pano_lng, heading, asset, sqft, units
-      const qp = Object.fromEntries(params.entries());
+    function fromQueryParams(){
+      const qp=Object.fromEntries(params.entries());
       return normalizeFromObject({
-        name: qp.name,
-        address: qp.address,
-        project: qp.project,
-        lat: qp.lat,
-        lng: qp.lng,
-        photo: qp.photo,
-        pano_lat: qp.pano_lat,
-        pano_lng: qp.pano_lng,
-        heading: qp.heading,
-        asset: qp.asset,
-        sqft: qp.sqft,
-        units: qp.units
+        name:qp.name, project:qp.project, address:qp.address,
+        lat:qp.lat, lng:qp.lng, photo:qp.photo,
+        pano_lat:qp.pano_lat, pano_lng:qp.pano_lng, heading:qp.heading,
+        asset:qp.asset, sqft:qp.sqft, units:qp.units
       });
     }
 
-    async function loadProperty() {
-      // Accepts either ?src=<url> (single object / single Feature / array[0])
-      // or legacy ?t=<timestamp> to auto-point to projects_<t>.json
-      // Optional ?i=<index> selects an element when the source is an array
-      let src = params.get('src');
-      const t = params.get('t');
-      const iParam = toNumber(params.get('i'));
-      const index = Number.isFinite(iParam) ? Math.max(0, Math.floor(iParam)) : 0;
+    async function loadProperty(){
+      // supports ?src=, legacy ?t=, and optional ?i=
+      let src=params.get('src');
+      const t=params.get('t');
+      const i=toNumber(params.get('i')); const index=Number.isFinite(i)?Math.max(0,Math.floor(i)):0;
+      if(!src && t){ src=`https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${t}.json`; }
 
-      if (!src && t) {
-        src = `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${t}.json`;
-      }
+      if(src){
+        const res=await fetch(src);
+        if(!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
+        let obj=await res.json();
 
-      if (src) {
-        const res = await fetch(src);
-        if (!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
-        const obj = await res.json();
-        // Allow src to return [single], { ... }, { type: 'Feature', ... }, or { features: [single] }
-        if (Array.isArray(obj) && obj.length > 0) {
-          const safeIdx = Math.min(index, obj.length - 1);
-          return normalizeFromObject(obj[safeIdx]);
-        }
-        if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
-          const safeIdx = Math.min(index, obj.features.length - 1);
-          return normalizeFromObject(obj.features[safeIdx]);
-        }
+        // tolerate double-encoded or wrapped JSON
+        if(typeof obj==='string'){ try{ obj=JSON.parse(obj);}catch{} }
+        if(obj && typeof obj==='object' && typeof obj.json==='string'){ try{ obj=JSON.parse(obj.json);}catch{} }
+
+        if(Array.isArray(obj) && obj.length>0){ return normalizeFromObject(obj[Math.min(index,obj.length-1)]); }
+        if(obj && Array.isArray(obj.features) && obj.features.length>0){ return normalizeFromObject(obj[Math.min(index,obj.features.length-1)]); }
         return normalizeFromObject(obj);
       }
-      // Fallback to query params
       return fromQueryParams();
     }
-        if (obj && Array.isArray(obj.features) && obj.features.length > 0) {
-          return normalizeFromObject(obj.features[0]);
-        }
-        return normalizeFromObject(obj);
-      }
-      // Fallback to query params
-      const p = fromQueryParams();
-      return p;
-    }
 
-    function validateProperty(p) {
-      if (!p) return 'No property data found. Provide a ?src=<url> to a single property JSON or pass lat/lng in the query string.';
-      if (!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return 'Missing or invalid lat/lng. Include lat and lng in the URL or in the JSON.';
+    function validateProperty(p){
+      if(!p) return 'No property data found. Provide ?src=<url>, ?t=<timestamp>, or pass lat/lng in the query string.';
+      if(!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return 'Missing or invalid lat/lng.';
       return null;
     }
 
-    function popupHTML(p) {
-      const name = p.name || 'Unnamed Property';
-      const address = p.address || '';
-      const projectLine = p.project ? `<p><strong>Project:</strong> ${p.project}</p>` : '';
-      const asset = p.asset_class ? `<p><strong>Asset:</strong> ${p.asset_class}</p>` : '';
-      const sqft = Number.isFinite(p.sq_ft) ? `<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>` : '';
-      const units = Number.isFinite(p.units) ? `<p><strong>Units:</strong> ${fmtInt(p.units)}</p>` : '';
-
-      const sv = buildStreetView(p);
-      const nav = buildGoogleMapsDirections({ lng: p.longitude, lat: p.latitude, name });
-
-      const img = p.photo_url
-        ? `<div class="image">${sv ? `<a href="${sv}" target="_blank" rel="noopener noreferrer">` : ''}
-             <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
-           ${sv ? '</a>' : ''}</div>`
-        : '';
-
-      return `
-        <div class="property-popup">
-          <h3>${name}</h3>
-          ${img}
-          <div class="meta">
-            ${projectLine}${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
-            ${asset}
-            ${sqft}
-            ${units}
-          </div>
-          <div class="actions">
-            ${sv ? `<a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Street View</a>` : ''}
-            <a class="btn primary" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a>
-          </div>
-        </div>`;
+    function popupHTML(p){
+      const name=p.name||'Unnamed Property';
+      const address=p.address||'';
+      const projectLine=p.project?`<p><strong>Project:</strong> ${p.project}</p>`:'';
+      const asset=p.asset_class?`<p><strong>Asset:</strong> ${p.asset_class}</p>`:'';
+      const sqft=Number.isFinite(p.sq_ft)?`<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>`:'';
+      const units=Number.isFinite(p.units)?`<p><strong>Units:</strong> ${fmtInt(p.units)}</p>`:'';
+      const sv=buildSV(p);
+      const nav=buildNav({lng:p.longitude,lat:p.latitude,name});
+      const img=p.photo_url?`<div class="image">${sv?`<a href="${sv}" target="_blank" rel="noopener">`:''}<img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />${sv?'</a>':''}</div>`:'';
+      return `<div class="property-popup"><h3>${name}</h3>${img}<div class="meta">${projectLine}${address?`<p><strong>Address:</strong> ${address}</p>`:''}${asset}${sqft}${units}</div><div class="actions">${sv?`<a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Street View</a>`:''}<a class="btn primary" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a></div></div>`;
     }
 
-    function enableStyleSelector(map) {
-      const sel = $('map-style');
-      sel.addEventListener('change', () => {
-        const val = sel.value;
-        if (val === '3d-terrain') {
+    function enableStyleSelector(map){
+      const sel=$('map-style');
+      sel.addEventListener('change',()=>{
+        const val=sel.value;
+        if(val==='3d-terrain'){
           map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
-          map.once('styledata', () => {
-            map.setPitch(60);
-            map.setBearing(-17.6);
-            if (!map.getSource('mapbox-dem')) {
-              map.addSource('mapbox-dem', {
-                type: 'raster-dem',
-                url: 'mapbox://mapbox.terrain-rgb',
-                tileSize: 512,
-                maxzoom: 14
-              });
-              map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+          map.once('styledata',()=>{
+            map.setPitch(60); map.setBearing(-17.6);
+            if(!map.getSource('mapbox-dem')){
+              map.addSource('mapbox-dem',{type:'raster-dem',url:'mapbox://mapbox.terrain-rgb',tileSize:512,maxzoom:14});
+              map.setTerrain({source:'mapbox-dem',exaggeration:1.5});
             }
-            if (!map.getLayer('sky')) {
-              map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-type': 'atmosphere', 'sky-atmosphere-sun': [0.0, 0.0], 'sky-atmosphere-sun-intensity': 15 } });
+            if(!map.getLayer('sky')){
+              map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15}});
             }
           });
-        } else {
+        }else{
           map.setTerrain(null);
-          if (map.getLayer('sky')) map.removeLayer('sky');
-          if (map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
+          if(map.getLayer('sky')) map.removeLayer('sky');
+          if(map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
           map.setStyle(val);
         }
       });
     }
 
-    (async function init() {
-      try {
+    // surface JS errors on the page so you can see them
+    window.addEventListener('error', e => { $('error').textContent = 'Script error: ' + e.message; });
+    window.addEventListener('unhandledrejection', e => { $('error').textContent = 'Promise error: ' + (e.reason && e.reason.message || e.reason); });
+
+    (async function init(){
+      try{
         const prop = await loadProperty();
         const err = validateProperty(prop);
-        if (err) throw new Error(err);
+        if(err) throw new Error(err);
 
         const map = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/mapbox/streets-v12',
-          center: [prop.longitude, prop.latitude],
-          zoom: toNumber(params.get('z')) ?? 16
+          container:'map', style:'mapbox://styles/mapbox/streets-v12',
+          center:[prop.longitude, prop.latitude], zoom: toNumber(params.get('z')) ?? 16
         });
-
-        map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
+        map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}));
         map.addControl(new mapboxgl.FullscreenControl());
 
-        const popup = new mapboxgl.Popup({ offset: 18 }).setHTML(popupHTML(prop));
-        new mapboxgl.Marker({ color: '#3887be' })
-          .setLngLat([prop.longitude, prop.latitude])
-          .setPopup(popup)
-          .addTo(map);
-
-        // Auto-open popup on load for single property
-        map.once('load', () => popup.addTo(map));
+        const popup = new mapboxgl.Popup({offset:18}).setHTML(popupHTML(prop));
+        new mapboxgl.Marker({color:'#3887be'}).setLngLat([prop.longitude,prop.latitude]).setPopup(popup).addTo(map);
+        map.once('load',()=>popup.addTo(map));
 
         enableStyleSelector(map);
-        $('loading').style.display = 'none';
-      } catch (e) {
-        $('error').textContent = e.message || String(e);
-        $('loading').style.display = 'flex';
+        $('loading').style.display='none';
+      }catch(e){
+        $('error').textContent = (e && e.message) ? e.message : String(e);
+        $('loading').style.display='flex';
       }
     })();
   </script>
 </body>
 </html>
-
