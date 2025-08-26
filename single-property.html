@@ -2,285 +2,217 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Single Property Map Viewer</title>
+  <title>Property / Comps Map</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
-    :root { --primary:#003d60; --panel-bg:#fff; --shadow:rgba(0,0,0,.16); }
-    html,body{height:100%}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    #map{position:absolute;inset:0}
+    html, body { height: 100%; margin: 0; }
+    #map { position: absolute; inset: 0; }
 
-    .control-panel{
-      position:absolute;top:10px;right:10px;z-index:2;background:var(--panel-bg);
-      border-radius:10px;box-shadow:0 6px 20px var(--shadow);
-      padding:10px 12px;display:flex;gap:10px;align-items:center
+    /* Popup layout */
+    .mapboxgl-popup { max-width: 420px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .mapboxgl-popup-content { display: flex; flex-direction: column; border-radius: 16px; }
+    .property-popup h3 { margin: 6px 0 8px; line-height: 1.2; }
+    .eyebrow {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+      letter-spacing: .2px;
     }
-    .control-panel select{border:1px solid #d0d7de;border-radius:8px;padding:6px 8px;font-size:14px}
+    /* Eyebrow color mapping (by assetType) */
+    .eyebrow--building { background:#E9F3FF; color:#155FA0; }   /* Building Comp. */
+    .eyebrow--condo    { background:#FDEEEE; color:#B42318; }   /* Condo Comp. */
+    .eyebrow--lead     { background:#EBF8F1; color:#166A46; }   /* Lead / Deal */
+    .eyebrow--random   { background:#F7F5FF; color:#4B2BBF; }   /* Random Loc. */
 
-    #loading{position:absolute;inset:0;background:rgba(255,255,255,.92);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;text-align:center;gap:10px}
-    #loading h2{margin:0;font-weight:600;color:#1a1a1a}
-    #error{color:#c62828;max-width:720px;padding:0 16px;white-space:pre-wrap}
+    /* Wide Street View image block (~browser aspect) */
+    .property-photo { width: 100%; aspect-ratio: 2 / 1; overflow: hidden; border-radius: 12px; background: #eee; margin: 8px 0 12px; }
+    .property-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-    .mapboxgl-popup{max-width:440px}
-    .mapboxgl-popup-content{
-      padding:18px 18px 16px;border-radius:14px;
-      box-shadow:0 10px 28px var(--shadow)
+    .property-link { display:inline-block; margin-bottom:10px; text-decoration:none; color:#1a73e8; }
+    .property-link:hover { text-decoration:underline; }
+
+    .kv { margin: 6px 0; }
+    .kv b { font-weight: 700; }
+
+    /* Full-width CTA button affixed to bottom of content */
+    .popup-cta { margin-top: auto; }
+    .popup-cta .btn {
+      display: block; width: 100%;
+      padding: 12px 16px; border: 0; border-radius: 12px;
+      font-weight: 700; text-align: center; color: #fff;
+      background: #2b6cb0; cursor: pointer; text-decoration: none;
     }
-    .property-popup h3{margin:0 0 10px;font-size:18px;line-height:1.3;color:#111}
-    .property-popup .image{margin:10px 0 12px;border-radius:12px;overflow:hidden;max-height:230px;border:1px solid #e5e7eb}
-    .property-popup .image img{display:block;width:100%;height:230px;object-fit:cover}
-    .meta{margin:8px 0 12px;color:#2b2b2b;font-size:14px}
-    .meta p{margin:6px 0}
-    .meta a{color:#0b5cab;text-decoration:none}
-    .meta a:hover{text-decoration:underline}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .popup-cta .btn:hover { opacity: 0.92; }
 
-    .btn{
-      display:inline-block;padding:9px 14px;border-radius:8px;
-      font-weight:600;text-decoration:none;background:#3887be;color:#fff
-    }
-    .btn:hover{background:#2a678d}
-
-    @media (max-width:480px){
-      .mapboxgl-popup{width:calc(100vw - 32px)}
-      .property-popup .image img{height:190px}
-    }
+    /* Marker dots (if using HTML markers) */
+    .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
   </style>
 </head>
 <body>
   <div id="map"></div>
 
-  <div class="control-panel">
-    <label for="map-style" style="font-size:12px;color:#475569">Style</label>
-    <select id="map-style" aria-label="Map style">
-      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
-      <option value="mapbox://styles/mapbox/light-v11">Light</option>
-      <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
-      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
-      <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
-      <option value="mapbox://styles/mapbox/satellite-streets-v12">Sat + Streets</option>
-      <option value="3d-terrain">3D Satellite</option>
-    </select>
-  </div>
-
-  <div id="loading">
-    <h2>Loading property…</h2>
-    <div id="error"></div>
-  </div>
-
   <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
+    // ======= CONFIG =======
+    mapboxgl.accessToken = "YOUR_MAPBOX_TOKEN";
 
-    const $ = id => document.getElementById(id);
-    const params = new URLSearchParams(location.search);
-    const toNumber = v => {
-      if (v === undefined || v === null || v === '') return undefined;
-      const n = typeof v === 'number' ? v : parseFloat(String(v).trim());
-      return Number.isFinite(n) ? n : undefined;
-    };
-    const fmtInt = v => {
-      const n = toNumber(v);
-      return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : '';
-    };
-    const cleanUrl = (u) => {
-      if (u == null) return '';
-      const s = String(u).trim();
-      return (s && s !== 'null' && s !== 'undefined') ? s : '';
-    };
-    const buildSV  = ({pano_latitude,pano_longitude,heading}) => {
-      const lat=toNumber(pano_latitude), lng=toNumber(pano_longitude), head=toNumber(heading)??0;
-      if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null;
-      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
+    // Status-based colors for COMPS (independent from eyebrow colors)
+    const statusColors = {
+      "Active": "#1f9d55",   // green
+      "Escrow": "#f59e0b",   // orange
+      "Sold":   "#dc2626",   // red
+      // fallback
+      "Default": "#3b82f6"
     };
 
-    // ----- NORMALIZATION (adds googleUrl + airtableUrl support) -----
-    function normalizeFromObject(obj){
-      if(!obj) return null;
-      const pickNum=(...keys)=>{ for(const k of keys){ if(k in obj && obj[k]!=null && obj[k]!=='' ) return toNumber(obj[k]); } };
-      const pickStr=(...keys)=>{ for(const k of keys){ if(k in obj && obj[k]!=null && String(obj[k]).trim()!=='') return String(obj[k]); } return ''; };
-
-      // If GeoJSON Feature
-      if(obj.type==='Feature' && obj.geometry && obj.properties){
-        const {geometry, properties:props}=obj; const coords=geometry.coordinates||[];
-        const p=v=>v==null?'':String(v);
-        const pN=v=>toNumber(v);
-        // try to assemble Airtable URL if only ids are provided
-        const baseId = p(props.airtableBaseId), tblId = p(props.airtableTableId), recId = p(props.recordId);
-        const builtAirtable = (baseId && tblId && recId) ? `https://airtable.com/${baseId}/${tblId}/${recId}` : '';
-        return {
-          name: p(props.propertyName ?? props.project_name ?? props.name ?? ''),
-          project: p(props.project ?? ''),
-          address: p(props.propertyAddress ?? props.address ?? ''),
-          longitude: toNumber(coords[0]),
-          latitude: toNumber(coords[1]),
-          photo_url: cleanUrl(props.photoUrl ?? props.photo_url ?? ''),
-          pano_latitude: pN(props.navLat ?? props.pano_latitude),
-          pano_longitude: pN(props.navLon ?? props.pano_longitude),
-          heading: pN(props.heading),
-          asset_class: p(props.assetType ?? props.asset_class ?? ''),
-          sq_ft: pN(props.sqft ?? props.sq_ft),
-          units: pN(props.units),
-          google_url: cleanUrl(props.googleUrl ?? props.gmapsUrl ?? props.addressUrl ?? ''),
-          airtable_url: cleanUrl(props.airtableUrl ?? props.recordUrl ?? props.airtableRecordUrl ?? builtAirtable)
-        };
-      }
-
-      // Plain object (Make bundle)
-      const baseId = pickStr('airtableBaseId'), tblId = pickStr('airtableTableId'), recId = pickStr('recordId');
-      const builtAirtable = (baseId && tblId && recId) ? `https://airtable.com/${baseId}/${tblId}/${recId}` : '';
-
-      return {
-        name: pickStr('propertyName','project_name','name'),
-        project: pickStr('project'),
-        address: pickStr('propertyAddress','address'),
-        longitude: pickNum('longitude','lng'),
-        latitude: pickNum('latitude','lat'),
-        photo_url: cleanUrl(pickStr('photoUrl','photo_url','photo')),
-        pano_latitude: pickNum('navLat','pano_latitude'),
-        pano_longitude: pickNum('navLon','pano_longitude'),
-        heading: pickNum('heading'),
-        asset_class: pickStr('assetType','asset_class','asset'),
-        sq_ft: pickNum('sqft','sq_ft'),
-        units: pickNum('units'),
-        google_url: cleanUrl(pickStr('googleUrl','gmapsUrl','addressUrl')),
-        airtable_url: cleanUrl(pickStr('airtableUrl','recordUrl','airtableRecordUrl')) || builtAirtable
-      };
+    // Eyebrow class by assetType (new field)
+    function eyebrowClass(assetType) {
+      const t = (assetType || "").toLowerCase();
+      if (t.includes("building comp")) return "eyebrow--building";
+      if (t.includes("condo comp"))    return "eyebrow--condo";
+      if (t.includes("lead") || t.includes("deal")) return "eyebrow--lead";
+      if (t.includes("random"))        return "eyebrow--random";
+      return "eyebrow--lead"; // default styling
     }
 
-    function fromQueryParams(){
-      const qp=Object.fromEntries(params.entries());
-      return normalizeFromObject({
-        propertyName: qp.name,
-        project: qp.project,
-        propertyAddress: qp.address,
-        latitude: qp.lat,
-        longitude: qp.lng,
-        photoUrl: qp.photo,
-        navLat: qp.pano_lat,
-        navLon: qp.pano_lng,
-        heading: qp.heading,
-        assetType: qp.asset,
-        sqft: qp.sqft,
-        units: qp.units,
-        googleUrl: qp.gurl,
-        airtableUrl: qp.record
+    // Build a Google Maps link; add &layer=c to hint Street View layer
+    function buildGmapsUrl(addr) {
+      const q = encodeURIComponent(addr || "");
+      return `https://www.google.com/maps?q=${q}`;
+    }
+    function buildStreetViewUrl(addr) {
+      const q = encodeURIComponent(addr || "");
+      return `https://www.google.com/maps?q=${q}&layer=c`;
+    }
+
+    // Load GeoJSON from ?src= URL param (expects FeatureCollection/Feature(s))
+    async function loadData() {
+      const params = new URLSearchParams(location.search);
+      const src = params.get("src");
+      if (!src) throw new Error("Missing ?src= URL to GeoJSON");
+      const res = await fetch(src, { cache: "no-cache" });
+      if (!res.ok) throw new Error(`Failed to load data: ${res.status}`);
+      return await res.json();
+    }
+
+    function toFeatureCollection(data) {
+      if (!data) return { type: "FeatureCollection", features: [] };
+      if (data.type === "FeatureCollection") return data;
+      if (data.type === "Feature") return { type: "FeatureCollection", features: [data] };
+      if (Array.isArray(data)) return { type: "FeatureCollection", features: data };
+      throw new Error("Unsupported data format");
+    }
+
+    function markerColorFor(feature) {
+      const p = feature.properties || {};
+      const status = (p.saleStatus || p.status || "").trim();
+      return statusColors[status] || statusColors.Default;
+    }
+
+    function popupHtml(p) {
+      // Required fields (by your latest spec):
+      // p.assetCategory (replaces old assetType)
+      // p.assetType (NEW: "Building Comp.", "Condo Comp.", "Lead / Deal", "Random Loc.")
+      // Optional: p.title / p.projectName, p.address, p.photoUrl, p.streetViewUrl, p.propertyDataUrl, p.sqft, p.units, p.saleStatus
+      const title = p.title || p.projectName || p.address || "Property";
+      const eyebrow = p.assetType || ""; // new classification
+      const eyebrowCls = eyebrowClass(eyebrow);
+
+      const addr = p.address || "";
+      const mapLink = p.mapUrl || buildGmapsUrl(addr);
+      const svUrl = p.streetViewUrl || buildStreetViewUrl(addr);
+
+      const photoUrl = p.photoUrl || p.imageUrl || ""; // image displayed & clickable to Street View
+      const propertyDataUrl = p.propertyDataUrl || p.dataUrl || mapLink;
+
+      const rows = [
+        p.assetCategory ? `<p class="kv"><b>Asset:</b> ${escapeHtml(p.assetCategory)}</p>` : "",
+        p.sqft ? `<p class="kv"><b>Sq Ft:</b> ${numberFmt(p.sqft)}</p>` : "",
+        p.units ? `<p class="kv"><b>Units:</b> ${numberFmt(p.units)}</p>` : "",
+        p.saleStatus ? `<p class="kv"><b>Status:</b> ${escapeHtml(p.saleStatus)}</p>` : ""
+      ].join("");
+
+      return `
+        <div class="property-popup">
+          ${eyebrow ? `<div class="eyebrow ${eyebrowCls}">${escapeHtml(eyebrow)}</div>` : ""}
+          <h3>${escapeHtml(title)}</h3>
+
+          ${photoUrl ? `
+            <a class="property-photo" href="${svUrl}" target="_blank" rel="noopener">
+              <img src="${photoUrl}" alt="Street View" />
+            </a>` : ""}
+
+          ${addr ? `<a class="property-link" href="${mapLink}" target="_blank" rel="noopener">${escapeHtml(addr)}</a>` : ""}
+
+          ${rows}
+
+          <div class="popup-cta">
+            <a class="btn" href="${propertyDataUrl}" target="_blank" rel="noopener">Property Data</a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Simple HTML escaper
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+    function numberFmt(n) {
+      const x = typeof n === "number" ? n : parseFloat(String(n).replace(/[, ]/g, ""));
+      if (isNaN(x)) return escapeHtml(n);
+      return x.toLocaleString();
+    }
+
+    // Create a small HTML marker dot
+    function makeDot(color) {
+      const el = document.createElement("div");
+      el.className = "dot";
+      el.style.background = color;
+      return el;
+    }
+
+    // ======= BOOT =======
+    (async function init() {
+      const data = await loadData();
+      const fc = toFeatureCollection(data);
+
+      // If no bbox, auto fit to features
+      const bbox = turf.bbox(fc);
+
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [(bbox[0]+bbox[2])/2, (bbox[1]+bbox[3])/2],
+        zoom: 10
       });
-    }
 
-    async function loadProperty(){
-      let src=params.get('src');
-      const t=params.get('t');
-      const i=toNumber(params.get('i')); const index=Number.isFinite(i)?Math.max(0,Math.floor(i)):0;
-      if(!src && t){ src=`https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${t}.json`; }
+      map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-      if(src){
-        const res=await fetch(src);
-        if(!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
-        let obj=await res.json();
-        if(typeof obj==='string'){ try{ obj=JSON.parse(obj);}catch{} }
-        if(obj && typeof obj==='object' && typeof obj.json==='string'){ try{ obj=JSON.parse(obj.json);}catch{} }
-        if(Array.isArray(obj) && obj.length>0){ return normalizeFromObject(obj[Math.min(index,obj.length-1)]); }
-        if(obj && Array.isArray(obj.features) && obj.features.length>0){ return normalizeFromObject(obj.features[Math.min(index,obj.features.length-1)]); }
-        return normalizeFromObject(obj);
-      }
-      return fromQueryParams();
-    }
-
-    function validateProperty(p){
-      if(!p) return 'No property data found. Provide ?src=<url>, ?t=<timestamp>, or pass lat/lng in the query string.';
-      if(!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return 'Missing or invalid lat/lng.';
-      return null;
-    }
-
-    function popupHTML(p){
-      const name=p.name||'Unnamed Property';
-      const address=p.address||'';
-      const addrLink = p.google_url ? `<p><a href="${p.google_url}" target="_blank" rel="noopener noreferrer">${address}</a></p>`
-                                    : (address ? `<p>${address}</p>` : '');
-      const asset=p.asset_class?`<p><strong>Asset:</strong> ${p.asset_class}</p>`:'';
-      const sqft=Number.isFinite(p.sq_ft)?`<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>`:'';
-      const units=Number.isFinite(p.units)?`<p><strong>Units:</strong> ${fmtInt(p.units)}</p>`:'';
-      const sv=buildSV(p);
-
-      let img='';
-      if(p.photo_url){
-        img = `<div class="image">${sv?`<a href="${sv}" target="_blank" rel="noopener noreferrer">`:''}
-                 <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
-               ${sv?'</a>':''}</div>`;
-      }
-
-      const airtableBtn = p.airtable_url
-        ? `<a class="btn" href="${p.airtable_url}" target="_blank" rel="noopener">Property Data</a>`
-        : '';
-
-      return `<div class="property-popup">
-        <h3>${name}</h3>
-        ${img}
-        <div class="meta">
-          ${addrLink}
-          ${asset}${sqft}${units}
-        </div>
-        <div class="actions">
-          ${airtableBtn}
-        </div>
-      </div>`;
-    }
-
-    function enableStyleSelector(map){
-      const sel=$('map-style');
-      sel.addEventListener('change',()=>{
-        const val=sel.value;
-        if(val==='3d-terrain'){
-          map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
-          map.once('styledata',()=>{
-            map.setPitch(60); map.setBearing(-17.6);
-            if(!map.getSource('mapbox-dem')){
-              map.addSource('mapbox-dem',{type:'raster-dem',url:'mapbox://mapbox.terrain-rgb',tileSize:512,maxzoom:14});
-              map.setTerrain({source:'mapbox-dem',exaggeration:1.5});
-            }
-            if(!map.getLayer('sky')){
-              map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15}});
-            }
-          });
-        }else{
-          map.setTerrain(null);
-          if(map.getLayer('sky')) map.removeLayer('sky');
-          if(map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
-          map.setStyle(val);
+      map.on("load", () => {
+        // Fit bounds with padding if multiple features
+        if (fc.features.length) {
+          map.fitBounds(bbox, { padding: 60, duration: 0, maxZoom: 16 });
         }
-      });
-    }
 
-    window.addEventListener('error', e => { $('error').textContent = 'Script error: ' + e.message; });
-    window.addEventListener('unhandledrejection', e => { $('error').textContent = 'Promise error: ' + (e.reason && e.reason.message || e.reason); });
-
-    (async function init(){
-      try{
-        const prop = await loadProperty();
-        const err = validateProperty(prop);
-        if(err) throw new Error(err);
-
-        const map = new mapboxgl.Map({
-          container:'map', style:'mapbox://styles/mapbox/streets-v12',
-          center:[prop.longitude, prop.latitude], zoom: toNumber(params.get('z')) ?? 16
+        // Add markers + popups
+        fc.features.forEach(f => {
+          const p = f.properties || {};
+          const color = markerColorFor(f);
+          const marker = new mapboxgl.Marker({ element: makeDot(color), anchor: "center" })
+            .setLngLat(f.geometry.coordinates)
+            .setPopup(new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml(p)))
+            .addTo(map);
         });
-        map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}));
-        map.addControl(new mapboxgl.FullscreenControl());
-
-        const popup = new mapboxgl.Popup({offset:18}).setHTML(popupHTML(prop));
-        new mapboxgl.Marker({color:'#3887be'}).setLngLat([prop.longitude,prop.latitude]).setPopup(popup).addTo(map);
-        map.once('load',()=>popup.addTo(map));
-
-        enableStyleSelector(map);
-        $('loading').style.display='none';
-      }catch(e){
-        $('error').textContent = (e && e.message) ? e.message : String(e);
-        $('loading').style.display='flex';
-      }
-    })();
+      });
+    })().catch(err => {
+      console.error(err);
+      alert(err.message || err);
+    });
   </script>
 </body>
 </html>
