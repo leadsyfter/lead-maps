@@ -7,23 +7,47 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
   <style>
-    :root { --primary:#003d60; --primary-contrast:#fff; --panel-bg:#fff; --shadow:rgba(0,0,0,.12); }
-    html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    :root { --primary:#003d60; --panel-bg:#fff; --shadow:rgba(0,0,0,.16); }
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     #map{position:absolute;inset:0}
-    .control-panel{position:absolute;top:10px;right:10px;z-index:2;background:var(--panel-bg);border-radius:10px;box-shadow:0 6px 20px var(--shadow);padding:10px 12px;display:flex;gap:10px;align-items:center}
+
+    .control-panel{
+      position:absolute;top:10px;right:10px;z-index:2;background:var(--panel-bg);
+      border-radius:10px;box-shadow:0 6px 20px var(--shadow);
+      padding:10px 12px;display:flex;gap:10px;align-items:center
+    }
     .control-panel select{border:1px solid #d0d7de;border-radius:8px;padding:6px 8px;font-size:14px}
-    #loading{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;text-align:center;gap:10px}
+
+    #loading{position:absolute;inset:0;background:rgba(255,255,255,.92);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;text-align:center;gap:10px}
     #loading h2{margin:0;font-weight:600;color:#1a1a1a}
     #error{color:#c62828;max-width:720px;padding:0 16px;white-space:pre-wrap}
-    .mapboxgl-popup{max-width:420px}.mapboxgl-popup-content{padding:14px;border-radius:12px;box-shadow:0 8px 24px var(--shadow)}
-    .property-popup h3{margin:0 0 8px;font-size:18px;line-height:1.25;color:#111}
-    .property-popup .meta{margin:8px 0 10px;color:#333;font-size:14px}.property-popup .meta p{margin:4px 0}
-    .property-popup .image{margin:10px 0 12px;border-radius:10px;overflow:hidden;max-height:220px}
-    .property-popup .image img{display:block;width:100%;height:220px;object-fit:cover}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .nav-link{display:inline-block;margin-top:10px;padding:8px 15px;background:#3887be;color:#fff;text-decoration:none;border-radius:4px;font-weight:700;transition:background-color .3s}
-    .nav-link:hover{background:#2a678d}
-    @media (max-width:480px){.mapboxgl-popup{width:calc(100vw - 32px)} .property-popup .image img{height:180px}}
+
+    .mapboxgl-popup{max-width:440px}
+    .mapboxgl-popup-content{
+      padding:18px 18px 16px;border-radius:14px;
+      box-shadow:0 10px 28px var(--shadow)
+    }
+    .property-popup h3{margin:0 0 10px;font-size:18px;line-height:1.3;color:#111}
+    .property-popup .image{margin:10px 0 12px;border-radius:12px;overflow:hidden;max-height:230px;border:1px solid #e5e7eb}
+    .property-popup .image img{display:block;width:100%;height:230px;object-fit:cover}
+    .meta{margin:8px 0 12px;color:#2b2b2b;font-size:14px}
+    .meta p{margin:6px 0}
+    .meta a{color:#0b5cab;text-decoration:none}
+    .meta a:hover{text-decoration:underline}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+    .btn{
+      display:inline-block;padding:9px 14px;border-radius:8px;
+      font-weight:600;text-decoration:none;background:#3887be;color:#fff
+    }
+    .btn:hover{background:#2a678d}
+
+    @media (max-width:480px){
+      .mapboxgl-popup{width:calc(100vw - 32px)}
+      .property-popup .image img{height:190px}
+    }
   </style>
 </head>
 <body>
@@ -48,10 +72,8 @@
   </div>
 
   <script>
-    // ---- Config ----
     mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-    // ---- Helpers ----
     const $ = id => document.getElementById(id);
     const params = new URLSearchParams(location.search);
     const toNumber = v => {
@@ -63,60 +85,68 @@
       const n = toNumber(v);
       return Number.isFinite(n) ? new Intl.NumberFormat().format(Math.round(n)) : '';
     };
-    const buildNav = ({lng,lat,name}) =>
-      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving&destination_place_name=${encodeURIComponent(name||'Property')}`;
-    const buildSV  = ({pano_latitude,pano_longitude,heading}) => {
-      const lat=toNumber(pano_latitude), lng=toNumber(pano_longitude), head=toNumber(heading)??0;
-      if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null;
-      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
-    };
     const cleanUrl = (u) => {
       if (u == null) return '';
       const s = String(u).trim();
       return (s && s !== 'null' && s !== 'undefined') ? s : '';
     };
+    const buildSV  = ({pano_latitude,pano_longitude,heading}) => {
+      const lat=toNumber(pano_latitude), lng=toNumber(pano_longitude), head=toNumber(heading)??0;
+      if(!Number.isFinite(lat)||!Number.isFinite(lng)) return null;
+      return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=${head}&pitch=0&fov=80`;
+    };
 
-    // ---- Normalization (updated to accept Make.com keys) ----
+    // ----- NORMALIZATION (adds googleUrl + airtableUrl support) -----
     function normalizeFromObject(obj){
       if(!obj) return null;
+      const pickNum=(...keys)=>{ for(const k of keys){ if(k in obj && obj[k]!=null && obj[k]!=='' ) return toNumber(obj[k]); } };
+      const pickStr=(...keys)=>{ for(const k of keys){ if(k in obj && obj[k]!=null && String(obj[k]).trim()!=='') return String(obj[k]); } return ''; };
 
-      const pickNum=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && obj[k]!=='' ) return toNumber(obj[k]); } };
-      const pickStr=(...keys)=>{ for(const k of keys){ if(Object.prototype.hasOwnProperty.call(obj,k) && obj[k]!=null && String(obj[k]).trim()!=='') return String(obj[k]); } return ''; };
-
-      // GeoJSON Feature support
+      // If GeoJSON Feature
       if(obj.type==='Feature' && obj.geometry && obj.properties){
         const {geometry, properties:props}=obj; const coords=geometry.coordinates||[];
-        const pNum=v=>toNumber(v), pStr=v=>v==null?'':String(v);
+        const p=v=>v==null?'':String(v);
+        const pN=v=>toNumber(v);
+        // try to assemble Airtable URL if only ids are provided
+        const baseId = p(props.airtableBaseId), tblId = p(props.airtableTableId), recId = p(props.recordId);
+        const builtAirtable = (baseId && tblId && recId) ? `https://airtable.com/${baseId}/${tblId}/${recId}` : '';
         return {
-          name: pStr(props.propertyName ?? props.project_name ?? props.name ?? props.Name ?? ''),
-          project: pStr(props.project ?? props.Project ?? ''),
-          address: pStr(props.propertyAddress ?? props.project_address ?? props.address ?? props.Address ?? ''),
+          name: p(props.propertyName ?? props.project_name ?? props.name ?? ''),
+          project: p(props.project ?? ''),
+          address: p(props.propertyAddress ?? props.address ?? ''),
           longitude: toNumber(coords[0]),
           latitude: toNumber(coords[1]),
-          photo_url: cleanUrl(props.photoUrl ?? props.photo_url ?? props.photo ?? props.Photo ?? ''),
-          pano_latitude: pNum(props.navLat ?? props.pano_latitude ?? props.pano_lat),
-          pano_longitude: pNum(props.navLon ?? props.pano_longitude ?? props.pano_lng),
-          heading: pNum(props.heading ?? props.Heading),
-          asset_class: pStr(props.assetType ?? props.asset_class ?? props.asset ?? props.Type ?? ''),
-          sq_ft: pNum(props.sqft ?? props.sq_ft ?? props['Sq Ft']),
-          units: pNum(props.units ?? props.Units)
+          photo_url: cleanUrl(props.photoUrl ?? props.photo_url ?? ''),
+          pano_latitude: pN(props.navLat ?? props.pano_latitude),
+          pano_longitude: pN(props.navLon ?? props.pano_longitude),
+          heading: pN(props.heading),
+          asset_class: p(props.assetType ?? props.asset_class ?? ''),
+          sq_ft: pN(props.sqft ?? props.sq_ft),
+          units: pN(props.units),
+          google_url: cleanUrl(props.googleUrl ?? props.gmapsUrl ?? props.addressUrl ?? ''),
+          airtable_url: cleanUrl(props.airtableUrl ?? props.recordUrl ?? props.airtableRecordUrl ?? builtAirtable)
         };
       }
 
-      // Plain object (Make.com bundle) support
+      // Plain object (Make bundle)
+      const baseId = pickStr('airtableBaseId'), tblId = pickStr('airtableTableId'), recId = pickStr('recordId');
+      const builtAirtable = (baseId && tblId && recId) ? `https://airtable.com/${baseId}/${tblId}/${recId}` : '';
+
       return {
-        name: pickStr('propertyName','project_name','name','Name'),
-        project: pickStr('project','Project'),
-        address: pickStr('propertyAddress','project_address','address','Address'),
-        longitude: pickNum('longitude','lng','Longitude','Lon'),
-        latitude: pickNum('latitude','lat','Latitude','Lat'),
-        photo_url: cleanUrl(pickStr('photoUrl','photo_url','photo','Photo')),
-        pano_latitude: pickNum('navLat','pano_latitude','pano_lat'),
-        pano_longitude: pickNum('navLon','pano_longitude','pano_lng'),
-        heading: pickNum('heading','Heading'),
-        asset_class: pickStr('assetType','asset_class','asset','Type'),
-        sq_ft: pickNum('sqft','sq_ft','Sq Ft'),
-        units: pickNum('units','Units')
+        name: pickStr('propertyName','project_name','name'),
+        project: pickStr('project'),
+        address: pickStr('propertyAddress','address'),
+        longitude: pickNum('longitude','lng'),
+        latitude: pickNum('latitude','lat'),
+        photo_url: cleanUrl(pickStr('photoUrl','photo_url','photo')),
+        pano_latitude: pickNum('navLat','pano_latitude'),
+        pano_longitude: pickNum('navLon','pano_longitude'),
+        heading: pickNum('heading'),
+        asset_class: pickStr('assetType','asset_class','asset'),
+        sq_ft: pickNum('sqft','sq_ft'),
+        units: pickNum('units'),
+        google_url: cleanUrl(pickStr('googleUrl','gmapsUrl','addressUrl')),
+        airtable_url: cleanUrl(pickStr('airtableUrl','recordUrl','airtableRecordUrl')) || builtAirtable
       };
     }
 
@@ -134,12 +164,13 @@
         heading: qp.heading,
         assetType: qp.asset,
         sqft: qp.sqft,
-        units: qp.units
+        units: qp.units,
+        googleUrl: qp.gurl,
+        airtableUrl: qp.record
       });
     }
 
     async function loadProperty(){
-      // supports ?src=, legacy ?t=, and optional ?i=
       let src=params.get('src');
       const t=params.get('t');
       const i=toNumber(params.get('i')); const index=Number.isFinite(i)?Math.max(0,Math.floor(i)):0;
@@ -149,11 +180,8 @@
         const res=await fetch(src);
         if(!res.ok) throw new Error(`Failed to fetch src: ${res.status} ${res.statusText}`);
         let obj=await res.json();
-
-        // tolerate double-encoded or wrapped JSON
         if(typeof obj==='string'){ try{ obj=JSON.parse(obj);}catch{} }
         if(obj && typeof obj==='object' && typeof obj.json==='string'){ try{ obj=JSON.parse(obj.json);}catch{} }
-
         if(Array.isArray(obj) && obj.length>0){ return normalizeFromObject(obj[Math.min(index,obj.length-1)]); }
         if(obj && Array.isArray(obj.features) && obj.features.length>0){ return normalizeFromObject(obj.features[Math.min(index,obj.features.length-1)]); }
         return normalizeFromObject(obj);
@@ -170,34 +198,33 @@
     function popupHTML(p){
       const name=p.name||'Unnamed Property';
       const address=p.address||'';
-      const projectLine=p.project?`<p><strong>Project:</strong> ${p.project}</p>`:'';
+      const addrLink = p.google_url ? `<p><a href="${p.google_url}" target="_blank" rel="noopener noreferrer">${address}</a></p>`
+                                    : (address ? `<p>${address}</p>` : '');
       const asset=p.asset_class?`<p><strong>Asset:</strong> ${p.asset_class}</p>`:'';
       const sqft=Number.isFinite(p.sq_ft)?`<p><strong>Sq Ft:</strong> ${fmtInt(p.sq_ft)}</p>`:'';
       const units=Number.isFinite(p.units)?`<p><strong>Units:</strong> ${fmtInt(p.units)}</p>`:'';
       const sv=buildSV(p);
-      const nav=buildNav({lng:p.longitude,lat:p.latitude,name});
 
       let img='';
       if(p.photo_url){
         img = `<div class="image">${sv?`<a href="${sv}" target="_blank" rel="noopener noreferrer">`:''}
-               <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
+                 <img src="${p.photo_url}" alt="Photo of ${name}" loading="lazy" />
                ${sv?'</a>':''}</div>`;
       }
-      const streetViewBtn = (!p.photo_url && sv)
-        ? `<a class="nav-link" href="${sv}" target="_blank" rel="noopener">Street View</a>`
+
+      const airtableBtn = p.airtable_url
+        ? `<a class="btn" href="${p.airtable_url}" target="_blank" rel="noopener">Property Data</a>`
         : '';
 
       return `<div class="property-popup">
         <h3>${name}</h3>
         ${img}
         <div class="meta">
-          ${projectLine}
-          ${address?`<p><strong>Address:</strong> ${address}</p>`:''}
+          ${addrLink}
           ${asset}${sqft}${units}
         </div>
         <div class="actions">
-          ${streetViewBtn}
-          <a class="nav-link" href="${nav}" target="_blank" rel="noopener">Navigate in Google Maps</a>
+          ${airtableBtn}
         </div>
       </div>`;
     }
@@ -227,7 +254,6 @@
       });
     }
 
-    // surface JS errors on the page so you can see them
     window.addEventListener('error', e => { $('error').textContent = 'Script error: ' + e.message; });
     window.addEventListener('unhandledrejection', e => { $('error').textContent = 'Promise error: ' + (e.reason && e.reason.message || e.reason); });
 
