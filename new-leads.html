@@ -10,25 +10,38 @@
   <style>
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
     .mapboxgl-popup { max-width: 460px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content { padding: 0; border-radius: 10px; overflow: hidden; }
+
     .popup-header { padding: 14px 16px 8px 16px; }
     .eyebrow { font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 6px 0; }
     .title { margin: 0; font-size: 18px; line-height: 1.25; }
     .addr a { color: #003d60; text-decoration: none; }
     .addr a:hover { text-decoration: underline; }
-    .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; }
+
+    /* padded wrapper around the photo */
+    .photo-section { padding: 12px 16px; }
+    .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
-    .meta { padding: 10px 16px 6px 16px; color:#333; font-size:13px; display:grid; grid-template-columns: 1fr 1fr; gap:6px 14px; }
-    .meta div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .btnbar { display:flex; }
-    .btn { flex:1; text-align:center; padding:12px 10px; text-decoration:none; font-weight:600; border-top:1px solid #e6e6e6; }
-    .btn-primary { background:#003d60; color:#fff; }
+
+    /* STACKED meta list */
+    .meta { padding: 8px 16px 4px 16px; color:#333; font-size:13px; }
+    .meta-row { display:block; margin: 6px 0; }
+    .meta-label { font-weight:700; }
+    .meta-value { margin-left: 6px; }
+
+    /* inset the button row and equal padding on button */
+    .btnbar { display:flex; padding: 12px 16px 16px 16px; border-top:1px solid #e6e6e6; }
+    .btn { flex:1; text-align:center; padding:12px; text-decoration:none; font-weight:600; }
+    .btn-primary { background:#003d60; color:#fff; border-radius:8px; }
+
     #style-selector {
       position: absolute; top: 10px; right: 10px; z-index: 1; background: white;
       padding: 10px; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     #style-selector select { padding: 5px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; }
+
     #loading {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
@@ -61,7 +74,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // YOUR actual token (per your original file)
+      // Your original token
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
       const map = new mapboxgl.Map({
@@ -71,7 +84,7 @@
         zoom: 13
       });
 
-      // Prefer ?src=URL, else fall back to your original ?t=TIMESTAMP in the images repo.
+      // ?src= (preferred) or ?t=
       const qs = new URLSearchParams(window.location.search);
       const src = qs.get('src');
       const timestamp = qs.get('t');
@@ -101,23 +114,15 @@
         })
         .catch(err => setError("Error loading map data: " + err.message));
 
-      // -------- Normalization to one feature shape --------
+      // -------- Normalization --------
       function toFeatures(raw) {
-        // Accept:
-        // 1) Array of legacy items with project_* keys
-        // 2) Object with leadName[] (your screenshot) + top-level fields
-        // 3) Array of new-style items with fields like propertyAddress, photoUrl, etc.
-        const arr = Array.isArray(raw)
-          ? raw
-          : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
-
+        const arr = Array.isArray(raw) ? raw : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
         const parent = Array.isArray(raw) ? {} : (raw || {});
         const out = [];
 
         for (const item of arr) {
           const isLegacy = ('project_name' in item) || ('photo_url' in item);
           if (isLegacy) {
-            // Legacy mapping (your original file)
             const lon = num(item.longitude);
             const lat = num(item.latitude);
             if (!isFinite(lat) || !isFinite(lon)) continue;
@@ -135,7 +140,6 @@
                 photoUrl: item.photo_url || "",
                 addressUrl: createGoogleMapsUrl([lon, lat], item.project_name || "Property"),
                 leadUrl: "",
-                // for street view, legacy uses pano_* on each item
                 navLat: num(item.pano_latitude),
                 navLon: num(item.pano_longitude),
                 heading: num(item.heading)
@@ -145,7 +149,7 @@
             continue;
           }
 
-          // New mapping (screenshot + new keys)
+          // New mapping
           const lon = num(item.longitude ?? parent.longitude);
           const lat = num(item.latitude ?? parent.latitude);
           if (!isFinite(lat) || !isFinite(lon)) continue;
@@ -182,10 +186,10 @@
       // -------- UI helpers --------
       function assetTypeColor(type){
         const t = String(type || '').toLowerCase();
-        if (t.includes('lead'))         return '#2563eb'; // blue
-        if (t.includes('condo'))        return '#a21caf'; // purple
-        if (t.includes('building'))     return '#16a34a'; // green
-        if (t.includes('random'))       return '#f59e0b'; // orange
+        if (t.includes('lead'))         return '#2563eb';
+        if (t.includes('condo'))        return '#a21caf';
+        if (t.includes('building'))     return '#16a34a';
+        if (t.includes('random'))       return '#f59e0b';
         return '#6b7280';
       }
 
@@ -205,10 +209,12 @@
         const clickUrl = streetViewUrl || props.addressUrl || createGoogleMapsUrl(coords, props.title);
 
         const photo = props.photoUrl
-          ? `<div class="photo-wrap">
-               <a href="${safe(clickUrl)}" target="_blank" rel="noopener">
-                 <img src="${safe(props.photoUrl)}" alt="Street View"/>
-               </a>
+          ? `<div class="photo-section">
+               <div class="photo-wrap">
+                 <a href="${safe(clickUrl)}" target="_blank" rel="noopener">
+                   <img src="${safe(props.photoUrl)}" alt="Street View">
+                 </a>
+               </div>
              </div>`
           : '';
 
@@ -273,15 +279,15 @@
         }
       });
 
-      // ---- small helpers ----
+      // helpers
       function num(v){ const n = Number(v); return isFinite(n) ? n : undefined; }
       function safe(s){ return (s ?? '').toString()
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
       function val(label, v){
-        if (v === null || v === undefined || v === '') return '<div></div>';
+        if (v === null || v === undefined || v === '') return '';
         const txt = (typeof v === 'number') ? v.toLocaleString() : String(v);
-        return `<div><strong>${label}:</strong> ${safe(txt)}</div>`;
+        return `<div class="meta-row"><span class="meta-label">${safe(label)}:</span><span class="meta-value">${safe(txt)}</span></div>`;
       }
       function setError(msg){
         document.getElementById('error').textContent = msg;
