@@ -17,21 +17,25 @@
     .popup-header { padding: 14px 16px 8px 16px; }
     .eyebrow { font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 6px 0; }
     .title { margin: 0; font-size: 18px; line-height: 1.25; }
-    .addr a { color: #003d60; text-decoration: none; }
-    .addr a:hover { text-decoration: underline; }
 
-    /* padded wrapper around the photo */
-    .photo-section { padding: 12px 16px; }
+    /* photo area with side padding */
+    .photo-section { padding: 12px 16px 6px 16px; }
     .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* STACKED meta list */
-    .meta { padding: 8px 16px 4px 16px; color:#333; font-size:13px; }
+    /* address under photo */
+    .address-section { padding: 6px 16px 12px 16px; }
+    .address-section a { color: #003d60; text-decoration: none; }
+    .address-section a:hover { text-decoration: underline; }
+    .divider { border-top: 1px solid #e6e6e6; }
+
+    /* stacked meta list */
+    .meta { padding: 10px 16px 6px 16px; color:#333; font-size:13px; }
     .meta-row { display:block; margin: 6px 0; }
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
-    /* inset the button row and equal padding on button */
+    /* bottom button row */
     .btnbar { display:flex; padding: 12px 16px 16px 16px; border-top:1px solid #e6e6e6; }
     .btn { flex:1; text-align:center; padding:12px; text-decoration:none; font-weight:600; }
     .btn-primary { background:#003d60; color:#fff; border-radius:8px; }
@@ -139,6 +143,7 @@
                 buildings: "",
                 photoUrl: item.photo_url || "",
                 addressUrl: createGoogleMapsUrl([lon, lat], item.project_name || "Property"),
+                airtableUrl: "",
                 leadUrl: "",
                 navLat: num(item.pano_latitude),
                 navLon: num(item.pano_longitude),
@@ -173,7 +178,9 @@
               buildings: item.buildings ?? parent.buildings,
               photoUrl: item.photoUrl ?? parent.photoUrl ?? "",
               addressUrl: addrUrl,
-              leadUrl: parent.leadUrl || item.leadUrl || "",
+              // prefer explicit Airtable URL, then legacy leadUrl
+              airtableUrl: item.airtableUrl ?? parent.airtableUrl ?? item.leadUrl ?? parent.leadUrl ?? "",
+              leadUrl: item.leadUrl ?? parent.leadUrl ?? "",
               navLat, navLon, heading
             },
             geometry: { type: "Point", coordinates: [lon, lat] }
@@ -218,25 +225,34 @@
              </div>`
           : '';
 
+        // address is now under the photo, then a divider
+        const addressBlock = props.address
+          ? `<div class="address-section"><a href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a></div><div class="divider"></div>`
+          : `<div class="divider"></div>`;
+
+        // Meta (stacked). Order: Category, Type, Sq Ft, Buildings, Units.
         const meta = `
           <div class="meta">
             ${val('Category', props.assetCategory)}
             ${val('Type', props.assetType)}
             ${val('Sq Ft', props.sqft)}
-            ${val('Units', props.units)}
             ${val('Buildings', props.buildings)}
+            ${val('Units', props.units)}
           </div>`;
+
+        // Button to Airtable (fallback to leadUrl if needed)
+        const dataUrl = props.airtableUrl || props.leadUrl || '#';
 
         return `
           <div class="popup-header">
             <div class="eyebrow" style="color:${eyebrowColor}">${safe(props.assetType || 'Lead')}</div>
             <h3 class="title">${safe(props.title || 'Property')}</h3>
-            ${props.address ? `<div class="addr"><a href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a></div>` : ''}
           </div>
           ${photo}
+          ${addressBlock}
           ${meta}
           <div class="btnbar">
-            <a class="btn btn-primary" href="${safe(props.addressUrl || createGoogleMapsUrl(coords, props.title))}" target="_blank" rel="noopener">Navigate in Google Maps</a>
+            <a class="btn btn-primary" href="${safe(dataUrl)}" target="_blank" rel="noopener">View Property Data</a>
           </div>
         `;
       }
