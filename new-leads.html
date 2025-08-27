@@ -1,214 +1,296 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>New Leads Map Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
-    html, body { margin:0; padding:0; height:100%; }
-    #map { position:absolute; inset:0; }
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
     .mapboxgl-popup { max-width: 460px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content { padding: 0; border-radius: 10px; overflow: hidden; }
-    .popup-header { padding: 14px 16px 6px 16px; }
+    .popup-header { padding: 14px 16px 8px 16px; }
     .eyebrow { font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 6px 0; }
     .title { margin: 0; font-size: 18px; line-height: 1.25; }
+    .addr a { color: #003d60; text-decoration: none; }
+    .addr a:hover { text-decoration: underline; }
     .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
-    .meta { padding: 10px 16px 2px 16px; color:#333; font-size:13px; display:grid; grid-template-columns: 1fr 1fr; gap:6px 14px; }
+    .meta { padding: 10px 16px 6px 16px; color:#333; font-size:13px; display:grid; grid-template-columns: 1fr 1fr; gap:6px 14px; }
     .meta div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .row { padding: 4px 16px 12px 16px; font-size:13px; color:#333; }
     .btnbar { display:flex; }
     .btn { flex:1; text-align:center; padding:12px 10px; text-decoration:none; font-weight:600; border-top:1px solid #e6e6e6; }
-    .btn:first-child { border-right:1px solid #e6e6e6; }
     .btn-primary { background:#003d60; color:#fff; }
-    .btn-light { background:#fafafa; color:#003d60; }
-    .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-weight:700; font-size:11px; line-height:18px; }
+    #style-selector {
+      position: absolute; top: 10px; right: 10px; z-index: 1; background: white;
+      padding: 10px; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #style-selector select { padding: 5px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; }
+    #loading {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
+      justify-content: center; align-items: center; z-index: 999; font-family: sans-serif;
+    }
+    #error { color: red; margin-top: 20px; text-align: center; max-width: 80%; }
   </style>
 </head>
 <body>
-<div id="map"></div>
+  <div id="map"></div>
 
-<script>
-  // 1) Set your token
-  mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+  <div id="style-selector">
+    <select id="map-style">
+      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+      <option value="mapbox://styles/mapbox/light-v11">Light</option>
+      <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
+      <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+      <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
+      <option value="mapbox://styles/mapbox/navigation-day-v1">Navigation Day</option>
+      <option value="mapbox://styles/mapbox/navigation-night-v1">Navigation Night</option>
+      <option value="3d-terrain">3D Satellite View</option>
+    </select>
+  </div>
 
-  // 2) Helper: read ?src=
-  const params = new URLSearchParams(location.search);
-  const src = params.get('src');
+  <div id="loading">
+    <div>Loading property data...</div>
+    <div id="error"></div>
+  </div>
 
-  if (!src) {
-    document.body.innerHTML = '<p style="padding:16px;font-family:sans-serif;">Add a <code>?src=</code> URL to a JSON feed.</p>';
-  } else {
-    fetch(src).then(r => r.json()).then(raw => init(normalize(raw))).catch(err => {
-      console.error(err);
-      alert('Failed to load data. Check the ?src URL and JSON format.');
-    });
-  }
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // YOUR actual token (per your original file)
+      mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-  // 3) Normalize your screenshot’s structure into an array of items
-  function normalize(raw) {
-    // Cases supported:
-    //  A) raw is already an array of lead objects
-    //  B) raw is a single object with fields and a `leadName` array (your screenshot)
-    //  C) raw is a single object representing one item
-    const asArray = Array.isArray(raw) ? raw : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
-
-    // Carry top-level coordinates if children don’t have them
-    const topLat  = raw.latitude  ?? raw.navLat  ?? null;
-    const topLon  = raw.longitude ?? raw.navLon  ?? null;
-
-    return asArray.map(item => {
-      const lat = item.latitude  ?? topLat;
-      const lon = item.longitude ?? topLon;
-      return {
-        latitude:        num(lat),
-        longitude:       num(lon),
-        navLat:          num(item.navLat ?? raw.navLat),
-        navLon:          num(item.navLon ?? raw.navLon),
-        heading:         num(item.heading ?? raw.heading),
-        photoUrl:        item.photoUrl ?? raw.photoUrl ?? null,
-        addressUrl:      item.addressUrl ?? raw.addressUrl ?? null,
-        assetType:       item.assetType ?? raw.assetType ?? null,
-        assetCategory:   item.assetCategory ?? raw.assetCategory ?? null,
-        propertyName:    item.propertyName ?? raw.propertyName ?? null,
-        propertyAddress: item.propertyAddress ?? raw.propertyAddress ?? null,
-        sqft:            item.sqft ?? raw.sqft ?? null,
-        year:            item.year ?? raw.year ?? null,
-        units:           item.units ?? raw.units ?? null,
-        buildings:       item.buildings ?? raw.buildings ?? null,
-        leadUrl:         item.leadUrl ?? raw.leadUrl ?? null
-      };
-    }).filter(p => isFinite(p.latitude) && isFinite(p.longitude));
-  }
-
-  function num(v){ const n = Number(v); return isFinite(n) ? n : undefined; }
-
-  // 4) Color for the eyebrow by assetType
-  function assetTypeColor(type){
-    if(!type) return '#6b7280';
-    const t = String(type).toLowerCase();
-    if (t.includes('lead'))         return '#2563eb'; // blue
-    if (t.includes('condo'))        return '#a21caf'; // purple
-    if (t.includes('building'))     return '#16a34a'; // green
-    if (t.includes('random'))       return '#f59e0b'; // amber
-    return '#6b7280';
-  }
-
-  // 5) Marker color (keep simple, one style for all “lead” pins)
-  function markerColor(){ return '#003d60'; }
-
-  // 6) Build the map & features
-  function init(items){
-    // Center: first item or its nav coords
-    const first = items[0];
-    const center = [
-      (isFinite(first.navLon) ? first.navLon : first.longitude),
-      (isFinite(first.navLat) ? first.navLat : first.latitude)
-    ];
-
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center,
-      zoom: 12
-    });
-
-    map.on('load', () => {
-      // Add a simple circle layer for markers
-      const fc = {
-        type: 'FeatureCollection',
-        features: items.map((p, i) => ({
-          type: 'Feature',
-          properties: {
-            idx: i,
-            color: markerColor()
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [p.longitude, p.latitude]
-          }
-        }))
-      };
-
-      map.addSource('leads', { type: 'geojson', data: fc });
-      map.addLayer({
-        id: 'leads-circles',
-        type: 'circle',
-        source: 'leads',
-        paint: {
-          'circle-radius': 7,
-          'circle-color': ['get', 'color'],
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 1.5
-        }
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-118.65, 34.15],
+        zoom: 13
       });
 
-      // Popups
-      map.on('click', 'leads-circles', (e) => {
-        const feature = e.features[0];
-        const idx = feature.properties.idx;
-        const p = items[idx];
+      // Prefer ?src=URL, else fall back to your original ?t=TIMESTAMP in the images repo.
+      const qs = new URLSearchParams(window.location.search);
+      const src = qs.get('src');
+      const timestamp = qs.get('t');
 
-        const eyebrowColor = assetTypeColor(p.assetType);
+      if (!src && !timestamp) {
+        setError('Missing data source. Provide either ?src=<url> or ?t=<timestamp>.');
+        return;
+      }
 
-        const title = [
-          p.propertyAddress || '',
-          p.propertyName && p.propertyAddress ? ` — ${p.propertyName}` : (p.propertyName || '')
-        ].join('');
+      const jsonUrl = src
+        ? src
+        : `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${timestamp}.json`;
 
-        const photo = p.photoUrl
-          ? `<div class="photo-wrap"><a href="${safe(p.addressUrl) || '#'}" target="_blank" rel="noopener"><img src="${safe(p.photoUrl)}" alt="Street view"/></a></div>`
+      fetch(jsonUrl, { cache: 'no-store' })
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch JSON: ' + res.status + ' ' + res.statusText);
+          return res.json();
+        })
+        .then(raw => {
+          const features = toFeatures(raw);
+          if (!features.length) throw new Error('No mappable features found.');
+
+          const geojsonData = { type: "FeatureCollection", features };
+          addMarkersToMap(geojsonData);
+          fitMapToBounds(geojsonData);
+          hideLoading();
+        })
+        .catch(err => setError("Error loading map data: " + err.message));
+
+      // -------- Normalization to one feature shape --------
+      function toFeatures(raw) {
+        // Accept:
+        // 1) Array of legacy items with project_* keys
+        // 2) Object with leadName[] (your screenshot) + top-level fields
+        // 3) Array of new-style items with fields like propertyAddress, photoUrl, etc.
+        const arr = Array.isArray(raw)
+          ? raw
+          : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
+
+        const parent = Array.isArray(raw) ? {} : (raw || {});
+        const out = [];
+
+        for (const item of arr) {
+          const isLegacy = ('project_name' in item) || ('photo_url' in item);
+          if (isLegacy) {
+            // Legacy mapping (your original file)
+            const lon = num(item.longitude);
+            const lat = num(item.latitude);
+            if (!isFinite(lat) || !isFinite(lon)) continue;
+
+            out.push({
+              type: "Feature",
+              properties: {
+                title: item.project_name || "Unnamed",
+                address: item.project_address || "",
+                assetType: item.asset_class || "",
+                assetCategory: "",
+                sqft: item.sq_ft,
+                units: item.units,
+                buildings: "",
+                photoUrl: item.photo_url || "",
+                addressUrl: createGoogleMapsUrl([lon, lat], item.project_name || "Property"),
+                leadUrl: "",
+                // for street view, legacy uses pano_* on each item
+                navLat: num(item.pano_latitude),
+                navLon: num(item.pano_longitude),
+                heading: num(item.heading)
+              },
+              geometry: { type: "Point", coordinates: [lon, lat] }
+            });
+            continue;
+          }
+
+          // New mapping (screenshot + new keys)
+          const lon = num(item.longitude ?? parent.longitude);
+          const lat = num(item.latitude ?? parent.latitude);
+          if (!isFinite(lat) || !isFinite(lon)) continue;
+
+          const title = item.propertyName || parent.propertyName || "Property";
+          const address = item.propertyAddress || parent.propertyAddress || "";
+          const addrUrl = item.addressUrl || parent.addressUrl || createGoogleMapsUrl([lon, lat], title);
+          const navLat = num(item.navLat ?? parent.navLat);
+          const navLon = num(item.navLon ?? parent.navLon);
+          const heading = num(item.heading ?? parent.heading);
+
+          out.push({
+            type: "Feature",
+            properties: {
+              title,
+              address,
+              assetType: item.assetType ?? parent.assetType ?? "Lead / Deal",
+              assetCategory: item.assetCategory ?? parent.assetCategory ?? "",
+              sqft: item.sqft ?? parent.sqft,
+              units: item.units ?? parent.units,
+              buildings: item.buildings ?? parent.buildings,
+              photoUrl: item.photoUrl ?? parent.photoUrl ?? "",
+              addressUrl: addrUrl,
+              leadUrl: parent.leadUrl || item.leadUrl || "",
+              navLat, navLon, heading
+            },
+            geometry: { type: "Point", coordinates: [lon, lat] }
+          });
+        }
+
+        return out;
+      }
+
+      // -------- UI helpers --------
+      function assetTypeColor(type){
+        const t = String(type || '').toLowerCase();
+        if (t.includes('lead'))         return '#2563eb'; // blue
+        if (t.includes('condo'))        return '#a21caf'; // purple
+        if (t.includes('building'))     return '#16a34a'; // green
+        if (t.includes('random'))       return '#f59e0b'; // orange
+        return '#6b7280';
+      }
+
+      function createGoogleMapsUrl(coords, name) {
+        return `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}&travelmode=driving&destination_place_name=${encodeURIComponent(name || 'Property')}`;
+      }
+
+      function createStreetViewUrl(panoLat, panoLng, heading) {
+        if (!isFinite(panoLat) || !isFinite(panoLng)) return null;
+        const h = isFinite(heading) ? heading : 0;
+        return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${panoLat},${panoLng}&heading=${h}&pitch=0&fov=80`;
+      }
+
+      function createPopupHTML(props, coords) {
+        const eyebrowColor = assetTypeColor(props.assetType);
+        const streetViewUrl = createStreetViewUrl(props.navLat, props.navLon, props.heading);
+        const clickUrl = streetViewUrl || props.addressUrl || createGoogleMapsUrl(coords, props.title);
+
+        const photo = props.photoUrl
+          ? `<div class="photo-wrap">
+               <a href="${safe(clickUrl)}" target="_blank" rel="noopener">
+                 <img src="${safe(props.photoUrl)}" alt="Street View"/>
+               </a>
+             </div>`
           : '';
 
         const meta = `
           <div class="meta">
-            ${val('Category', p.assetCategory)}
-            ${val('Type', p.assetType)}
-            ${val('Sq Ft', p.sqft)}
-            ${val('Units', p.units)}
-            ${val('Buildings', p.buildings)}
-            ${val('Year', p.year)}
+            ${val('Category', props.assetCategory)}
+            ${val('Type', props.assetType)}
+            ${val('Sq Ft', props.sqft)}
+            ${val('Units', props.units)}
+            ${val('Buildings', props.buildings)}
           </div>`;
 
-        const links = `
-          <div class="btnbar">
-            <a class="btn btn-light" href="${safe(p.leadUrl) || '#'}" target="_blank" rel="noopener">Open Lead</a>
-            <a class="btn btn-primary" href="${safe(p.addressUrl) || '#'}" target="_blank" rel="noopener">Open in Google Maps</a>
-          </div>`;
-
-        const html = `
+        return `
           <div class="popup-header">
-            <div class="eyebrow" style="color:${eyebrowColor}">${safe(p.assetType || 'Lead')}</div>
-            <h3 class="title">${safe(title || 'Property')}</h3>
+            <div class="eyebrow" style="color:${eyebrowColor}">${safe(props.assetType || 'Lead')}</div>
+            <h3 class="title">${safe(props.title || 'Property')}</h3>
+            ${props.address ? `<div class="addr"><a href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a></div>` : ''}
           </div>
           ${photo}
           ${meta}
-          ${p.propertyAddress ? `<div class="row">${safe(p.propertyAddress)}</div>` : ''}
-          ${links}
+          <div class="btnbar">
+            <a class="btn btn-primary" href="${safe(props.addressUrl || createGoogleMapsUrl(coords, props.title))}" target="_blank" rel="noopener">Navigate in Google Maps</a>
+          </div>
         `;
+      }
 
-        new mapboxgl.Popup({ offset: 12, closeOnClick: true })
-          .setLngLat(feature.geometry.coordinates)
-          .setHTML(html)
-          .addTo(map);
+      function addMarkersToMap(geojson) {
+        geojson.features.forEach(feature => {
+          const coords = feature.geometry.coordinates;
+          const props = feature.properties;
+          const popup = new mapboxgl.Popup({ offset: 12 }).setHTML(createPopupHTML(props, coords));
+          new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
+        });
+      }
+
+      function fitMapToBounds(geojson) {
+        const fc = turf.featureCollection(geojson.features);
+        const buffered = turf.buffer(fc, 0.5, { units: 'miles' });
+        const b = turf.bbox(buffered);
+        const bounds = new mapboxgl.LngLatBounds([b[0], b[1]], [b[2], b[3]]);
+        map.fitBounds(bounds, { padding: { top: 150, bottom: 150, left: 150, right: 150 }, duration: 0 });
+      }
+
+      document.getElementById('map-style').addEventListener('change', function () {
+        const selected = this.value;
+        if (selected === '3d-terrain') {
+          map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
+          map.once('styledata', () => {
+            map.setPitch(60);
+            map.setBearing(-17.6);
+            map.addSource('mapbox-dem', { type: 'raster-dem', url: 'mapbox://mapbox.terrain-rgb', tileSize: 512, maxzoom: 14 });
+            map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+            if (!map.getLayer('sky')) {
+              map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-type': 'atmosphere', 'sky-atmosphere-sun': [0.0, 0.0], 'sky-atmosphere-sun-intensity': 15 } });
+            }
+          });
+        } else {
+          map.setTerrain(null);
+          map.setPitch(0);
+          map.setBearing(0);
+          map.setStyle(selected);
+        }
       });
 
-      map.on('mouseenter', 'leads-circles', () => map.getCanvas().style.cursor = 'pointer');
-      map.on('mouseleave', 'leads-circles', () => map.getCanvas().style.cursor = '');
+      // ---- small helpers ----
+      function num(v){ const n = Number(v); return isFinite(n) ? n : undefined; }
+      function safe(s){ return (s ?? '').toString()
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+      function val(label, v){
+        if (v === null || v === undefined || v === '') return '<div></div>';
+        const txt = (typeof v === 'number') ? v.toLocaleString() : String(v);
+        return `<div><strong>${label}:</strong> ${safe(txt)}</div>`;
+      }
+      function setError(msg){
+        document.getElementById('error').textContent = msg;
+        document.getElementById('loading').style.display = 'none';
+      }
+      function hideLoading(){
+        document.getElementById('loading').style.display = 'none';
+      }
     });
-  }
-
-  // small helpers
-  function safe(s){ return (s ?? '').toString()
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-
-  function val(label, v){
-    if (v === null || v === undefined || v === '') return '<div></div>';
-    return `<div><strong>${label}:</strong> ${safe(v)}</div>`;
-  }
-</script>
+  </script>
 </body>
 </html>
