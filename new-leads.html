@@ -9,7 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
     :root{
-      --pad: 16px;          /* single spacing value used everywhere */
+      --pad: 16px;          /* primary spacing */
+      --pad-tight: 8px;     /* tighter spacing just before the bottom divider */
       --radius: 10px;
       --line: #e6e6e6;
       --brand: #003d60;
@@ -19,16 +20,11 @@
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
     /* Wider popup */
-    .mapboxgl-popup { max-width: 600px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .mapboxgl-popup { max-width: 760px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content { padding: 0; border-radius: var(--radius); overflow: hidden; }
 
     /* Header with uniform vertical rhythm */
-    .popup-header {
-      padding: var(--pad);
-      display: flex;
-      flex-direction: column;
-      gap: var(--pad);
-    }
+    .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: var(--pad); }
     .eyebrow {
       font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -38,31 +34,28 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Photo area with same vertical pad (top gap provided by header) */
+    /* Photo area — a bit taller now (3:2) */
     .photo-section { padding: var(--pad); padding-top: 0; }
-    .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
+    .photo-wrap { width: 100%; aspect-ratio: 3 / 2; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* Address below photo with same pad, single line + ellipsis, then divider */
+    /* Address below photo — allow wrapping */
     .address-section { padding: var(--pad); padding-top: 0; }
-    .address-link { color: var(--brand); text-decoration: none; display:block;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .address-link {
+      color: var(--brand); text-decoration: none; display:block;
+      overflow-wrap: anywhere; /* wrap long addresses instead of truncating */
+    }
     .address-link:hover { text-decoration: underline; }
     .divider { border-top: 1px solid var(--line); }
 
-    /* Stacked meta list with same vertical pad */
-    .meta { padding: var(--pad); }
+    /* Stacked meta list; smaller bottom pad to tighten space before the button divider */
+    .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); }
     .meta-row { display:block; margin: 6px 0; }
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
-    /* Bottom button block: equal pad above/below the divider and content */
-    .btnbar {
-      display:flex;
-      margin-top: var(--pad);            /* space ABOVE the divider (equal to --pad) */
-      padding: var(--pad);               /* space BELOW the divider and around button */
-      border-top: 1px solid var(--line); /* the divider itself */
-    }
+    /* Bottom button block — no extra margin above; divider sits tight to meta */
+    .btnbar { display:flex; padding: var(--pad); border-top: 1px solid var(--line); margin-top: 0; }
     .btn { flex:1; text-align:center; padding: 12px; text-decoration:none; font-weight:600; }
     .btn-primary { background: var(--brand); color:#fff; border-radius:8px; }
 
@@ -269,11 +262,10 @@
              <div class="divider"></div>`
           : `<div class="divider"></div>`;
 
-        // Meta (stacked). Order: Category, Type, Sq Ft, Buildings, Units.
+        /* Meta (stacked). Order: Category, Sq Ft, Buildings, Units. (Type removed) */
         const meta = `
           <div class="meta">
             ${val('Category', props.assetCategory)}
-            ${val('Type', props.assetType)}
             ${val('Sq Ft', props.sqft)}
             ${val('Buildings', props.buildings)}
             ${val('Units', props.units)}
