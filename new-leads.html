@@ -10,7 +10,7 @@
   <style>
     :root{
       --pad: 16px;          /* primary spacing */
-      --pad-tight: 4px;     /* tighter spacing right before the button divider */
+      --pad-tight: 4px;     /* slightly tighter spacing before button divider */
       --radius: 10px;
       --line: #e6e6e6;
       --brand: #003d60;
@@ -19,13 +19,13 @@
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
-    /* Content scrolls if tall; width is forced inline (see JS open handler) */
+    /* Popup content scrolls if taller than viewport. Width is set via the Popup option (JS). */
     .mapboxgl-popup { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content {
       padding: 0;
       border-radius: var(--radius);
       overflow: auto;
-      max-height: calc(100vh - 32px); /* never taller than viewport - margins */
+      max-height: calc(100vh - 32px); /* never taller than viewport minus margins */
     }
 
     /* Header */
@@ -44,7 +44,7 @@
     .photo-wrap { width: 100%; aspect-ratio: 4 / 3; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* Address — bold + wraps */
+    /* Address — bold + wraps, then divider */
     .address-section { padding: var(--pad); padding-top: 0; }
     .address-link {
       color: var(--brand); text-decoration: none; display:block; font-weight: 700;
@@ -53,13 +53,13 @@
     .address-link:hover { text-decoration: underline; }
     .divider { border-top: 1px solid var(--line); }
 
-    /* Stacked meta list; tight bottom pad so divider sits closer */
+    /* Stacked meta; tighter bottom pad so divider sits close to data */
     .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); }
     .meta-row { display:block; margin: 6px 0; }
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
-    /* Button block — tight to meta divider, equal padding */
+    /* Button row: equal padding, tight to meta divider */
     .btnbar { display:flex; padding: var(--pad); border-top: 1px solid var(--line); margin-top: 0; }
     .btn { flex:1; text-align:center; padding: 12px; text-decoration:none; font-weight:600; }
     .btn-primary { background: var(--brand); color:#fff; border-radius:8px; }
@@ -106,12 +106,13 @@
       // Your original token
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      const DESIRED_MAX = 720;     // target width on large screens
-      const VIEW_MARGIN = 16;      // keep at least 16px margin on both sides
+      // Final popup width is determined up-front so Mapbox auto-pans correctly on first open
+      const TARGET_MAX = 720;  // nice wide size on desktops
+      const SIDE_MARGIN = 16;  // min margin on each side
 
-      function popupMaxWidthPx() {
-        const available = window.innerWidth - VIEW_MARGIN * 2;
-        return Math.max(280, Math.min(DESIRED_MAX, available)); // never wider than viewport
+      function computePopupMaxWidth() {
+        const available = window.innerWidth - SIDE_MARGIN * 2;
+        return Math.max(280, Math.min(TARGET_MAX, available)); // px
       }
 
       const map = new mapboxgl.Map({
@@ -150,15 +151,12 @@
         .then(raw => {
           const features = toFeatures(raw);
           if (!features.length) throw new Error('No mappable features found.');
-
-          const geojsonData = { type: "FeatureCollection", features };
-          addMarkersToMap(geojsonData);
-          fitMapToBounds(geojsonData);
+          addMarkersToMap({ type: 'FeatureCollection', features });
+          fitMapToBounds({ type: 'FeatureCollection', features });
           hideLoading();
         })
         .catch(err => setError("Error loading map data: " + err.message));
 
-      // -------- Normalization --------
       function toFeatures(raw) {
         const arr = Array.isArray(raw) ? raw : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
         const parent = Array.isArray(raw) ? {} : (raw || {});
@@ -167,10 +165,8 @@
         for (const item of arr) {
           const isLegacy = ('project_name' in item) || ('photo_url' in item);
           if (isLegacy) {
-            const lon = num(item.longitude);
-            const lat = num(item.latitude);
+            const lon = num(item.longitude), lat = num(item.latitude);
             if (!isFinite(lat) || !isFinite(lon)) continue;
-
             out.push({
               type: "Feature",
               properties: {
@@ -194,16 +190,15 @@
             continue;
           }
 
-          // New mapping
           const lon = num(item.longitude ?? parent.longitude);
           const lat = num(item.latitude ?? parent.latitude);
           if (!isFinite(lat) || !isFinite(lon)) continue;
 
-          const title = item.propertyName || parent.propertyName || "Property";
+          const title   = item.propertyName  || parent.propertyName  || "Property";
           const address = item.propertyAddress || parent.propertyAddress || "";
           const addrUrl = item.addressUrl || parent.addressUrl || createGoogleMapsUrl([lon, lat], title);
-          const navLat = num(item.navLat ?? parent.navLat);
-          const navLon = num(item.navLon ?? parent.navLon);
+          const navLat  = num(item.navLat ?? parent.navLat);
+          const navLon  = num(item.navLon ?? parent.navLon);
           const heading = num(item.heading ?? parent.heading);
 
           out.push({
@@ -225,17 +220,15 @@
             geometry: { type: "Point", coordinates: [lon, lat] }
           });
         }
-
         return out;
       }
 
-      // -------- UI helpers --------
       function assetTypeColor(type){
         const t = String(type || '').toLowerCase();
-        if (t.includes('lead'))         return '#2563eb';
-        if (t.includes('condo'))        return '#a21caf';
-        if (t.includes('building'))     return '#16a34a';
-        if (t.includes('random'))       return '#f59e0b';
+        if (t.includes('lead'))     return '#2563eb';
+        if (t.includes('condo'))    return '#a21caf';
+        if (t.includes('building')) return '#16a34a';
+        if (t.includes('random'))   return '#f59e0b';
         return '#6b7280';
       }
 
@@ -261,8 +254,7 @@
                    <img src="${safe(props.photoUrl)}" alt="Street View">
                  </a>
                </div>
-             </div>`
-          : '';
+             </div>` : '';
 
         const addressBlock = props.address
           ? `<div class="address-section">
@@ -271,7 +263,6 @@
              <div class="divider"></div>`
           : `<div class="divider"></div>`;
 
-        /* Meta (stacked). Order: Category, Sq Ft, Buildings, Units. (Type removed) */
         const meta = `
           <div class="meta">
             ${val('Category', props.assetCategory)}
@@ -292,32 +283,24 @@
           ${meta}
           <div class="btnbar">
             <a class="btn btn-primary" href="${safe(dataUrl)}" target="_blank" rel="noopener">View Property Data</a>
-          </div>
-        `;
-      }
-
-      function makePopup(props, coords) {
-        // Create popup and force width AFTER it opens so we override inline defaults
-        const popup = new mapboxgl.Popup({ offset: 12 })
-          .setHTML(createPopupHTML(props, coords));
-
-        popup.on('open', () => {
-          const el = popup.getElement ? popup.getElement() : popup._container;
-          if (el) {
-            const w = popupMaxWidthPx();
-            el.style.maxWidth = w + 'px';   // override Mapbox inline default
-            el.style.width = 'auto';        // let content size itself up to maxWidth
-          }
-        });
-        return popup;
+          </div>`;
       }
 
       function addMarkersToMap(geojson) {
         geojson.features.forEach(feature => {
           const coords = feature.geometry.coordinates;
           const props = feature.properties;
-          const popup = makePopup(props, coords);
-          new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
+
+          // *** Set maxWidth BEFORE opening so Mapbox auto-pans correctly on first render ***
+          const popup = new mapboxgl.Popup({
+            offset: 12,
+            maxWidth: computePopupMaxWidth() + 'px', // never wider than the viewport
+          }).setHTML(createPopupHTML(props, coords));
+
+          new mapboxgl.Marker({ color: '#3887be' })
+            .setLngLat(coords)
+            .setPopup(popup)
+            .addTo(map);
         });
       }
 
@@ -334,8 +317,7 @@
         if (selected === '3d-terrain') {
           map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
           map.once('styledata', () => {
-            map.setPitch(60);
-            map.setBearing(-17.6);
+            map.setPitch(60); map.setBearing(-17.6);
             map.addSource('mapbox-dem', { type: 'raster-dem', url: 'mapbox://mapbox.terrain-rgb', tileSize: 512, maxzoom: 14 });
             map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
             if (!map.getLayer('sky')) {
@@ -343,19 +325,8 @@
             }
           });
         } else {
-          map.setTerrain(null);
-          map.setPitch(0);
-          map.setBearing(0);
-          map.setStyle(selected);
+          map.setTerrain(null); map.setPitch(0); map.setBearing(0); map.setStyle(selected);
         }
-      });
-
-      // Re-apply width to any open popups on resize
-      window.addEventListener('resize', () => {
-        document.querySelectorAll('.mapboxgl-popup').forEach(el => {
-          el.style.maxWidth = popupMaxWidthPx() + 'px';
-          el.style.width = 'auto';
-        });
       });
 
       // helpers
