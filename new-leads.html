@@ -19,7 +19,7 @@
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
-    /* Make content scroll if tall; final width is set via JS (inline maxWidth) */
+    /* Content scrolls if tall; width is forced inline (see JS open handler) */
     .mapboxgl-popup { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content {
       padding: 0;
@@ -28,7 +28,7 @@
       max-height: calc(100vh - 32px); /* never taller than viewport - margins */
     }
 
-    /* Header with uniform rhythm */
+    /* Header */
     .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: var(--pad); }
     .eyebrow {
       font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
@@ -39,12 +39,12 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Photo — slightly taller (3:2) */
+    /* Photo — taller (4:3) */
     .photo-section { padding: var(--pad); padding-top: 0; }
-    .photo-wrap { width: 100%; aspect-ratio: 3 / 2; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
+    .photo-wrap { width: 100%; aspect-ratio: 4 / 3; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* Address below photo — bold + wraps */
+    /* Address — bold + wraps */
     .address-section { padding: var(--pad); padding-top: 0; }
     .address-link {
       color: var(--brand); text-decoration: none; display:block; font-weight: 700;
@@ -53,7 +53,7 @@
     .address-link:hover { text-decoration: underline; }
     .divider { border-top: 1px solid var(--line); }
 
-    /* Stacked meta list; tightened bottom pad so divider sits closer */
+    /* Stacked meta list; tight bottom pad so divider sits closer */
     .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); }
     .meta-row { display:block; margin: 6px 0; }
     .meta-label { font-weight:700; }
@@ -106,7 +106,7 @@
       // Your original token
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      const DESIRED_MAX = 760;     // target width on large screens
+      const DESIRED_MAX = 720;     // target width on large screens
       const VIEW_MARGIN = 16;      // keep at least 16px margin on both sides
 
       function popupMaxWidthPx() {
@@ -296,15 +296,27 @@
         `;
       }
 
+      function makePopup(props, coords) {
+        // Create popup and force width AFTER it opens so we override inline defaults
+        const popup = new mapboxgl.Popup({ offset: 12 })
+          .setHTML(createPopupHTML(props, coords));
+
+        popup.on('open', () => {
+          const el = popup.getElement ? popup.getElement() : popup._container;
+          if (el) {
+            const w = popupMaxWidthPx();
+            el.style.maxWidth = w + 'px';   // override Mapbox inline default
+            el.style.width = 'auto';        // let content size itself up to maxWidth
+          }
+        });
+        return popup;
+      }
+
       function addMarkersToMap(geojson) {
         geojson.features.forEach(feature => {
           const coords = feature.geometry.coordinates;
           const props = feature.properties;
-
-          // Compute a safe width each time a popup is created
-          const popup = new mapboxgl.Popup({ offset: 12, maxWidth: popupMaxWidthPx() + 'px' })
-            .setHTML(createPopupHTML(props, coords));
-
+          const popup = makePopup(props, coords);
           new mapboxgl.Marker({ color: '#3887be' }).setLngLat(coords).setPopup(popup).addTo(map);
         });
       }
@@ -338,6 +350,14 @@
         }
       });
 
+      // Re-apply width to any open popups on resize
+      window.addEventListener('resize', () => {
+        document.querySelectorAll('.mapboxgl-popup').forEach(el => {
+          el.style.maxWidth = popupMaxWidthPx() + 'px';
+          el.style.width = 'auto';
+        });
+      });
+
       // helpers
       function num(v){ const n = Number(v); return isFinite(n) ? n : undefined; }
       function safe(s){ return (s ?? '').toString()
@@ -355,9 +375,6 @@
       function hideLoading(){
         document.getElementById('loading').style.display = 'none';
       }
-
-      // (Optional) Recompute popup width on window resize for future clicks
-      window.addEventListener('resize', () => {/* next popups will use new width */});
     });
   </script>
 </body>
