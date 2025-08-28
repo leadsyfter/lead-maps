@@ -27,7 +27,7 @@
       padding: var(--pad);
       display: flex;
       flex-direction: column;
-      gap: var(--pad); /* equal space between eyebrow and title */
+      gap: var(--pad);
     }
     .eyebrow {
       font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
@@ -35,20 +35,20 @@
     }
     .title {
       margin: 0; font-size: 20px; line-height: 1.25;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* keep on one line when possible */
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Photo area with same vertical pad */
-    .photo-section { padding: var(--pad); padding-top: 0; } /* top already applied by header */
+    /* Photo area with same vertical pad (top gap provided by header) */
+    .photo-section { padding: var(--pad); padding-top: 0; }
     .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* Address below photo with same pad, single line + ellipsis */
+    /* Address below photo with same pad, single line + ellipsis, then divider */
     .address-section { padding: var(--pad); padding-top: 0; }
     .address-link { color: var(--brand); text-decoration: none; display:block;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .address-link:hover { text-decoration: underline; }
-    .divider { border-top: 1px solid var(--line); } /* the spaces around the line come from the surrounding sections */
+    .divider { border-top: 1px solid var(--line); }
 
     /* Stacked meta list with same vertical pad */
     .meta { padding: var(--pad); }
@@ -56,8 +56,13 @@
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
-    /* Button block with same pad and equal top/bottom spacing */
-    .btnbar { display:flex; padding: var(--pad); border-top: 1px solid var(--line); }
+    /* Bottom button block: equal pad above/below the divider and content */
+    .btnbar {
+      display:flex;
+      margin-top: var(--pad);            /* space ABOVE the divider (equal to --pad) */
+      padding: var(--pad);               /* space BELOW the divider and around button */
+      border-top: 1px solid var(--line); /* the divider itself */
+    }
     .btn { flex:1; text-align:center; padding: 12px; text-decoration:none; font-weight:600; }
     .btn-primary { background: var(--brand); color:#fff; border-radius:8px; }
 
@@ -110,19 +115,26 @@
         zoom: 13
       });
 
-      // ?src= (preferred) or ?t=
+      // ?src= (full URL), or ?file= (filename in /data), or ?t= + optional &leadId=
       const qs = new URLSearchParams(window.location.search);
-      const src = qs.get('src');
-      const timestamp = qs.get('t');
+      const src    = qs.get('src');
+      const file   = qs.get('file');
+      const t      = qs.get('t');
+      const leadId = qs.get('leadId');
 
-      if (!src && !timestamp) {
-        setError('Missing data source. Provide either ?src=<url> or ?t=<timestamp>.');
+      if (!src && !file && !t) {
+        setError('Missing data source. Use ?src=<url> or ?file=<name>.json or ?t=<timestamp>[&leadId=...]');
         return;
       }
 
+      const base = 'https://raw.githubusercontent.com/leadsyfter/images/main/data/';
       const jsonUrl = src
         ? src
-        : `https://raw.githubusercontent.com/leadsyfter/images/main/data/projects_${timestamp}.json`;
+        : file
+          ? base + encodeURIComponent(file)
+          : (leadId
+              ? `${base}projects_${t}_${encodeURIComponent(leadId)}.json`
+              : `${base}projects_${t}.json`);
 
       fetch(jsonUrl, { cache: 'no-store' })
         .then(res => {
@@ -142,6 +154,10 @@
 
       // -------- Normalization --------
       function toFeatures(raw) {
+        // Accept:
+        // 1) Array of legacy items with project_* keys
+        // 2) Object with leadName[] + parent fields (new format)
+        // 3) Array of new-format items
         const arr = Array.isArray(raw) ? raw : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
         const parent = Array.isArray(raw) ? {} : (raw || {});
         const out = [];
@@ -161,8 +177,8 @@
                 assetType: item.asset_class || "",
                 assetCategory: "",
                 sqft: item.sq_ft,
+                buildings: "",          // legacy had no buildings field
                 units: item.units,
-                buildings: "",
                 photoUrl: item.photo_url || "",
                 addressUrl: createGoogleMapsUrl([lon, lat], item.project_name || "Property"),
                 airtableUrl: "",
@@ -196,11 +212,10 @@
               assetType: item.assetType ?? parent.assetType ?? "Lead / Deal",
               assetCategory: item.assetCategory ?? parent.assetCategory ?? "",
               sqft: item.sqft ?? parent.sqft,
-              units: item.units ?? parent.units,
               buildings: item.buildings ?? parent.buildings,
+              units: item.units ?? parent.units,
               photoUrl: item.photoUrl ?? parent.photoUrl ?? "",
               addressUrl: addrUrl,
-              // Prefer explicit Airtable URL, then legacy leadUrl
               airtableUrl: item.airtableUrl ?? parent.airtableUrl ?? item.leadUrl ?? parent.leadUrl ?? "",
               leadUrl: item.leadUrl ?? parent.leadUrl ?? "",
               navLat, navLon, heading
@@ -248,7 +263,10 @@
           : '';
 
         const addressBlock = props.address
-          ? `<div class="address-section"><a class="address-link" href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a></div><div class="divider"></div>`
+          ? `<div class="address-section">
+               <a class="address-link" href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a>
+             </div>
+             <div class="divider"></div>`
           : `<div class="divider"></div>`;
 
         // Meta (stacked). Order: Category, Type, Sq Ft, Buildings, Units.
