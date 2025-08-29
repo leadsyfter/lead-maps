@@ -9,8 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
     :root{
-      --pad: 16px;          /* primary spacing */
-      --pad-tight: 4px;     /* slightly tighter spacing before button divider */
+      --pad: 14px;
+      --pad-tight: 4px;
       --radius: 10px;
       --line: #e6e6e6;
       --brand: #003d60;
@@ -19,52 +19,52 @@
     body { margin: 0; padding: 0; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
-    /* Popup content scrolls if taller than viewport. Width is set via the Popup option (JS). */
+    /* Popup container */
     .mapboxgl-popup { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
     .mapboxgl-popup-content {
       padding: 0;
       border-radius: var(--radius);
       overflow: auto;
-      max-height: calc(100vh - 32px); /* never taller than viewport minus margins */
+      max-height: calc(100vh - 32px);
     }
 
     /* Header */
-    .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: var(--pad); }
+    .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: 10px; }
     .eyebrow {
-      font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
+      font-weight: 700; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .title {
-      margin: 0; font-size: 20px; line-height: 1.25;
+      margin: 0; font-size: 18px; line-height: 1.25;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Photo — taller (4:3) */
+    /* Photo */
     .photo-section { padding: var(--pad); padding-top: 0; }
     .photo-wrap { width: 100%; aspect-ratio: 4 / 3; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
-    /* Address — bold + wraps, then divider */
+    /* Address — single line with ellipsis */
     .address-section { padding: var(--pad); padding-top: 0; }
     .address-link {
       color: var(--brand); text-decoration: none; display:block; font-weight: 700;
-      white-space: normal; overflow-wrap: anywhere;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .address-link:hover { text-decoration: underline; }
     .divider { border-top: 1px solid var(--line); }
 
-    /* Stacked meta; tighter bottom pad so divider sits close to data */
+    /* Meta */
     .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); }
     .meta-row { display:block; margin: 6px 0; }
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
-    /* Button row: equal padding, tight to meta divider */
+    /* Button row */
     .btnbar { display:flex; padding: var(--pad); border-top: 1px solid var(--line); margin-top: 0; }
     .btn { flex:1; text-align:center; padding: 12px; text-decoration:none; font-weight:600; }
     .btn-primary { background: var(--brand); color:#fff; border-radius:8px; }
 
-    /* Style picker (unchanged) */
+    /* Style picker */
     #style-selector {
       position: absolute; top: 10px; right: 10px; z-index: 1; background: white;
       padding: 10px; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -103,16 +103,18 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Your original token
+      // Keep your token as requested
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      // Final popup width is determined up-front so Mapbox auto-pans correctly on first open
-      const TARGET_MAX = 720;  // nice wide size on desktops
-      const SIDE_MARGIN = 16;  // min margin on each side
+      // Tighter popup width so it never feels huge (but wide enough for an address line)
+      const TARGET_MAX = 520;   // reduced from 720
+      const SIDE_MARGIN = 16;
+      const POPUP_MARGIN = 12;  // keep at least this many px inside viewport
+      const popups = [];
 
       function computePopupMaxWidth() {
         const available = window.innerWidth - SIDE_MARGIN * 2;
-        return Math.max(280, Math.min(TARGET_MAX, available)); // px
+        return Math.max(280, Math.min(TARGET_MAX, available));
       }
 
       const map = new mapboxgl.Map({
@@ -122,7 +124,7 @@
         zoom: 13
       });
 
-      // ?src= (full URL), or ?file= (filename in /data), or ?t= + optional &leadId=
+      // Query params: ?src= (full URL), or ?file= (filename in /data), or ?t= + optional &leadId=
       const qs = new URLSearchParams(window.location.search);
       const src    = qs.get('src');
       const file   = qs.get('file');
@@ -258,7 +260,7 @@
 
         const addressBlock = props.address
           ? `<div class="address-section">
-               <a class="address-link" href="${safe(props.addressUrl || '#')}" target="_blank" rel="noopener">${safe(props.address)}</a>
+               <a class="address-link" href="${safe(props.addressUrl || '#')}" title="${safe(props.address)}" target="_blank" rel="noopener">${safe(props.address)}</a>
              </div>
              <div class="divider"></div>`
           : `<div class="divider"></div>`;
@@ -291,11 +293,22 @@
           const coords = feature.geometry.coordinates;
           const props = feature.properties;
 
-          // *** Set maxWidth BEFORE opening so Mapbox auto-pans correctly on first render ***
           const popup = new mapboxgl.Popup({
             offset: 12,
-            maxWidth: computePopupMaxWidth() + 'px', // never wider than the viewport
+            // Set before first open so Mapbox computes auto-pan correctly
+            maxWidth: computePopupMaxWidth() + 'px'
           }).setHTML(createPopupHTML(props, coords));
+
+          // On open, nudge into view in case Mapbox's auto positioning isn't perfect
+          popup.on('open', () => {
+            requestAnimationFrame(() => {
+              // If viewport changed since creation (e.g., rotation or soft keyboard), re-cap width
+              popup.setMaxWidth(computePopupMaxWidth() + 'px');
+              nudgeIntoView(popup);
+            });
+          });
+
+          popups.push(popup);
 
           new mapboxgl.Marker({ color: '#3887be' })
             .setLngLat(coords)
@@ -303,6 +316,33 @@
             .addTo(map);
         });
       }
+
+      // Keep popups on-screen by panning the map by the minimal required delta
+      function nudgeIntoView(popup) {
+        const el = popup.getElement && popup.getElement();
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        let dx = 0, dy = 0;
+
+        if (r.left < POPUP_MARGIN)                 dx = -(POPUP_MARGIN - r.left);               // move content right
+        else if (r.right > w - POPUP_MARGIN)       dx =  (r.right - (w - POPUP_MARGIN));        // move content left
+
+        if (r.top < POPUP_MARGIN)                  dy = -(POPUP_MARGIN - r.top);                // move content down
+        else if (r.bottom > h - POPUP_MARGIN)      dy =  (r.bottom - (h - POPUP_MARGIN));       // move content up
+
+        if (dx || dy) map.panBy([dx, dy], { duration: 250 });
+      }
+
+      // Recompute popup widths & keep them in view on resize/orientation change
+      window.addEventListener('resize', () => {
+        const mw = computePopupMaxWidth() + 'px';
+        popups.forEach(p => {
+          try { p.setMaxWidth(mw); nudgeIntoView(p); } catch(e){}
+        });
+      });
 
       function fitMapToBounds(geojson) {
         const fc = turf.featureCollection(geojson.features);
