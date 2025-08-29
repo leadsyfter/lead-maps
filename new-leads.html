@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
   <style>
     :root{
-      --pad: 14px;
+      --pad: 12px;
       --pad-tight: 4px;
       --radius: 10px;
       --line: #e6e6e6;
@@ -29,19 +29,19 @@
     }
 
     /* Header */
-    .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: 10px; }
+    .popup-header { padding: var(--pad); display: flex; flex-direction: column; gap: 8px; }
     .eyebrow {
-      font-weight: 700; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
+      font-weight: 700; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; margin: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .title {
-      margin: 0; font-size: 18px; line-height: 1.25;
+      margin: 0; font-size: 16px; line-height: 1.2;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Photo */
+    /* Photo — slimmer (16:9) to about half prior height */
     .photo-section { padding: var(--pad); padding-top: 0; }
-    .photo-wrap { width: 100%; aspect-ratio: 4 / 3; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
+    .photo-wrap { width: 100%; aspect-ratio: 16 / 9; background:#f2f2f2; overflow:hidden; border-radius: 8px; }
     .photo-wrap a, .photo-wrap img { display:block; width:100%; height:100%; object-fit:cover; }
 
     /* Address — single line with ellipsis */
@@ -54,14 +54,14 @@
     .divider { border-top: 1px solid var(--line); }
 
     /* Meta */
-    .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); }
-    .meta-row { display:block; margin: 6px 0; }
+    .meta { padding: var(--pad) var(--pad) var(--pad-tight) var(--pad); font-size: 13px; }
+    .meta-row { display:block; margin: 5px 0; }
     .meta-label { font-weight:700; }
     .meta-value { margin-left: 6px; }
 
     /* Button row */
     .btnbar { display:flex; padding: var(--pad); border-top: 1px solid var(--line); margin-top: 0; }
-    .btn { flex:1; text-align:center; padding: 12px; text-decoration:none; font-weight:600; }
+    .btn { flex:1; text-align:center; padding: 10px; text-decoration:none; font-weight:600; font-size: 14px; }
     .btn-primary { background: var(--brand); color:#fff; border-radius:8px; }
 
     /* Style picker */
@@ -103,13 +103,13 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Keep your token as requested
+      // Token preserved
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      // Tighter popup width so it never feels huge (but wide enough for an address line)
-      const TARGET_MAX = 520;   // reduced from 720
-      const SIDE_MARGIN = 16;
-      const POPUP_MARGIN = 12;  // keep at least this many px inside viewport
+      // Smaller popup target width; keeps address mostly one line while shrinking photo ~50%
+      const TARGET_MAX = 380;     // was 520
+      const SIDE_MARGIN = 12;
+      const POPUP_MARGIN = 16;
       const popups = [];
 
       function computePopupMaxWidth() {
@@ -295,14 +295,11 @@
 
           const popup = new mapboxgl.Popup({
             offset: 12,
-            // Set before first open so Mapbox computes auto-pan correctly
             maxWidth: computePopupMaxWidth() + 'px'
           }).setHTML(createPopupHTML(props, coords));
 
-          // On open, nudge into view in case Mapbox's auto positioning isn't perfect
           popup.on('open', () => {
             requestAnimationFrame(() => {
-              // If viewport changed since creation (e.g., rotation or soft keyboard), re-cap width
               popup.setMaxWidth(computePopupMaxWidth() + 'px');
               nudgeIntoView(popup);
             });
@@ -317,7 +314,7 @@
         });
       }
 
-      // Keep popups on-screen by panning the map by the minimal required delta
+      // Keep popups on-screen by panning minimally
       function nudgeIntoView(popup) {
         const el = popup.getElement && popup.getElement();
         if (!el) return;
@@ -327,11 +324,11 @@
 
         let dx = 0, dy = 0;
 
-        if (r.left < POPUP_MARGIN)                 dx = -(POPUP_MARGIN - r.left);               // move content right
-        else if (r.right > w - POPUP_MARGIN)       dx =  (r.right - (w - POPUP_MARGIN));        // move content left
+        if (r.left < POPUP_MARGIN)                 dx = -(POPUP_MARGIN - r.left);
+        else if (r.right > w - POPUP_MARGIN)       dx =  (r.right - (w - POPUP_MARGIN));
 
-        if (r.top < POPUP_MARGIN)                  dy = -(POPUP_MARGIN - r.top);                // move content down
-        else if (r.bottom > h - POPUP_MARGIN)      dy =  (r.bottom - (h - POPUP_MARGIN));       // move content up
+        if (r.top < POPUP_MARGIN)                  dy = -(POPUP_MARGIN - r.top);
+        else if (r.bottom > h - POPUP_MARGIN)      dy =  (r.bottom - (h - POPUP_MARGIN));
 
         if (dx || dy) map.panBy([dx, dy], { duration: 250 });
       }
