@@ -103,11 +103,9 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Token preserved
       mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTd2Z2k3MjYwYjFvMnFvZHd0NmE4M3pvIn0.xHYtpfn9dQa7CZOoY29-cA';
 
-      // Smaller popup target width; keeps address mostly one line while shrinking photo ~50%
-      const TARGET_MAX = 380;     // was 520
+      const TARGET_MAX = 380;
       const SIDE_MARGIN = 12;
       const POPUP_MARGIN = 16;
       const popups = [];
@@ -124,47 +122,120 @@
         zoom: 13
       });
 
-      // Query params: ?src= (full URL), or ?file= (filename in /data), or ?t= + optional &leadId=
+      // ---- URL resolution (handles uuid in filename and GitHub Contents API) ----
       const qs = new URLSearchParams(window.location.search);
-      const src    = qs.get('src');
-      const file   = qs.get('file');
+      const src    = qs.get('src');        // can be a direct RAW URL or a GitHub Contents API URL
+      const file   = qs.get('file');       // filename under /data
       const t      = qs.get('t');
       const leadId = qs.get('leadId');
 
-      if (!src && !file && !t) {
-        setError('Missing data source. Use ?src=<url> or ?file=<name>.json or ?t=<timestamp>[&leadId=...]');
-        return;
+      (async function init(){
+        try {
+          const { url, mode } = await resolveJsonUrl({ src, file, t, leadId });
+          const rawPayload = await fetchJson(url, mode);
+          const features = toFeatures(rawPayload);
+          if (!features.length) throw new Error('No mappable features found.');
+          const fc = { type: 'FeatureCollection', features };
+          addMarkersToMap(fc);
+          fitMapToBounds(fc);
+          hideLoading();
+        } catch (err) {
+          setError("Error loading map data: " + err.message);
+        }
+      })();
+
+      // Decide where to pull JSON from:
+      async function resolveJsonUrl({ src, file, t, leadId }) {
+        const baseRaw = 'https://raw.githubusercontent.com/leadsyfter/images/main/data/';
+
+        // If ?src= points to the GitHub Contents API, we’ll decode its base64 "content"
+        if (src) {
+          const isContents = src.startsWith('https://api.github.com/repos/');
+          return { url: src, mode: isContents ? 'github-contents' : 'raw-json' };
+        }
+
+        if (file) {
+          return { url: baseRaw + encodeURIComponent(file), mode: 'raw-json' };
+        }
+
+        if (!t) throw new Error('Missing "t" or "file" or "src" query parameter.');
+        // First try without uuid (old convention):
+        if (leadId) {
+          const noUuid = `projects_${t}_${encodeURIComponent(leadId)}.json`;
+          const testUrl = baseRaw + noUuid;
+          const ok = await urlExists(testUrl);
+          if (ok) return { url: testUrl, mode: 'raw-json' };
+
+          // Fallback: list /data and find a file with uuid prefix.
+          const listUrl = 'https://api.github.com/repos/leadsyfter/images/contents/data?ref=main';
+          const list = await fetch(listUrl, { cache: 'no-store' }).then(r => {
+            if (!r.ok) throw new Error('Unable to list repo/data directory');
+            return r.json();
+          });
+          const re = new RegExp(`^projects_[^_]+_${escapeRe(String(t))}_${escapeRe(String(leadId))}\\.json$`);
+          const hit = Array.isArray(list) ? list.find(x => re.test(x.name)) : null;
+          if (!hit) throw new Error(`Could not find projects_*_${t}_${leadId}.json in /data`);
+          return { url: hit.download_url || (baseRaw + encodeURIComponent(hit.name)), mode: 'raw-json' };
+        } else {
+          // No leadId: projects_<t>.json (still try)
+          const simple = baseRaw + `projects_${t}.json`;
+          if (await urlExists(simple)) return { url: simple, mode: 'raw-json' };
+          // Fallback to directory scan without leadId (rare)
+          const listUrl = 'https://api.github.com/repos/leadsyfter/images/contents/data?ref=main';
+          const list = await fetch(listUrl, { cache: 'no-store' }).then(r => {
+            if (!r.ok) throw new Error('Unable to list repo/data directory');
+            return r.json();
+          });
+          const re = new RegExp(`^projects_[^_]+_${escapeRe(String(t))}\\.json$`);
+          const hit = Array.isArray(list) ? list.find(x => re.test(x.name)) : null;
+          if (!hit) throw new Error(`Could not find projects_*_${t}.json in /data`);
+          return { url: hit.download_url || (baseRaw + encodeURIComponent(hit.name)), mode: 'raw-json' };
+        }
       }
 
-      const base = 'https://raw.githubusercontent.com/leadsyfter/images/main/data/';
-      const jsonUrl = src
-        ? src
-        : file
-          ? base + encodeURIComponent(file)
-          : (leadId
-              ? `${base}projects_${t}_${encodeURIComponent(leadId)}.json`
-              : `${base}projects_${t}.json`);
+      async function urlExists(url){
+        const r = await fetch(url, { method: 'GET', cache: 'no-store' });
+        return r.ok;
+      }
 
-      fetch(jsonUrl, { cache: 'no-store' })
-        .then(res => {
-          if (!res.ok) throw new Error('Failed to fetch JSON: ' + res.status + ' ' + res.statusText);
-          return res.json();
-        })
-        .then(raw => {
-          const features = toFeatures(raw);
-          if (!features.length) throw new Error('No mappable features found.');
-          addMarkersToMap({ type: 'FeatureCollection', features });
-          fitMapToBounds({ type: 'FeatureCollection', features });
-          hideLoading();
-        })
-        .catch(err => setError("Error loading map data: " + err.message));
+      function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
+      async function fetchJson(url, mode){
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Fetch failed ${res.status} ${res.statusText}`);
+        if (mode === 'github-contents') {
+          const meta = await res.json();
+          if (!meta || !meta.content || meta.encoding !== 'base64') {
+            throw new Error('Invalid GitHub Contents payload');
+          }
+          const text = atob(String(meta.content).replace(/\n/g,''));
+          return JSON.parse(text);
+        }
+        return res.json();
+      }
+
+      // ---- JSON → GeoJSON ----
       function toFeatures(raw) {
-        const arr = Array.isArray(raw) ? raw : (Array.isArray(raw.leadName) ? raw.leadName : [raw]);
-        const parent = Array.isArray(raw) ? {} : (raw || {});
-        const out = [];
+        // Treat anything that isn’t an array of objects as a single record.
+        let arr, parent = {};
+        if (Array.isArray(raw)) {
+          arr = raw;
+          parent = {};
+        } else if (raw && Array.isArray(raw.items)) {
+          arr = raw.items;
+          parent = raw;
+        } else if (raw && raw.type === 'FeatureCollection' && Array.isArray(raw.features)) {
+          // Already GeoJSON
+          return raw.features;
+        } else {
+          arr = [raw];
+          parent = raw || {};
+        }
 
+        const out = [];
         for (const item of arr) {
+          if (!item || typeof item !== 'object') continue; // ignore strings like leadName arrays
+
           const isLegacy = ('project_name' in item) || ('photo_url' in item);
           if (isLegacy) {
             const lon = num(item.longitude), lat = num(item.latitude);
@@ -196,27 +267,27 @@
           const lat = num(item.latitude ?? parent.latitude);
           if (!isFinite(lat) || !isFinite(lon)) continue;
 
-          const title   = item.propertyName  || parent.propertyName  || "Property";
-          const address = item.propertyAddress || parent.propertyAddress || "";
-          const addrUrl = item.addressUrl || parent.addressUrl || createGoogleMapsUrl([lon, lat], title);
-          const navLat  = num(item.navLat ?? parent.navLat);
-          const navLon  = num(item.navLon ?? parent.navLon);
-          const heading = num(item.heading ?? parent.heading);
+          const title   = item.propertyName     ?? parent.propertyName     ?? "Property";
+          const address = item.propertyAddress  ?? parent.propertyAddress  ?? "";
+          const addrUrl = item.addressUrl       ?? parent.addressUrl       ?? createGoogleMapsUrl([lon, lat], title);
+          const navLat  = num(item.navLat       ?? parent.navLat);
+          const navLon  = num(item.navLon       ?? parent.navLon);
+          const heading = num(item.heading      ?? parent.heading);
 
           out.push({
             type: "Feature",
             properties: {
               title,
               address,
-              assetType: item.assetType ?? parent.assetType ?? "Lead / Deal",
-              assetCategory: item.assetCategory ?? parent.assetCategory ?? "",
-              sqft: item.sqft ?? parent.sqft,
-              buildings: item.buildings ?? parent.buildings,
-              units: item.units ?? parent.units,
-              photoUrl: item.photoUrl ?? parent.photoUrl ?? "",
-              addressUrl: addrUrl,
-              airtableUrl: item.airtableUrl ?? parent.airtableUrl ?? item.leadUrl ?? parent.leadUrl ?? "",
-              leadUrl: item.leadUrl ?? parent.leadUrl ?? "",
+              assetType:    item.assetType    ?? parent.assetType    ?? "Lead / Deal",
+              assetCategory:item.assetCategory?? parent.assetCategory ?? "",
+              sqft:         item.sqft         ?? parent.sqft,
+              buildings:    item.buildings    ?? parent.buildings,
+              units:        item.units        ?? parent.units,
+              photoUrl:     item.photoUrl     ?? parent.photoUrl     ?? "",
+              addressUrl:   addrUrl,
+              airtableUrl:  item.airtableUrl  ?? parent.airtableUrl  ?? item.leadUrl ?? parent.leadUrl ?? "",
+              leadUrl:      item.leadUrl      ?? parent.leadUrl      ?? "",
               navLat, navLon, heading
             },
             geometry: { type: "Point", coordinates: [lon, lat] }
