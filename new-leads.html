@@ -267,7 +267,15 @@
           const lat = num(item.latitude ?? parent.latitude);
           if (!isFinite(lat) || !isFinite(lon)) continue;
 
-          const title   = item.propertyName     ?? parent.propertyName     ?? "Property";
+          // ---- CHANGED: prefer leadName for title (supports arrays), fallback to propertyName ----
+          const rawLead = (item.leadName ?? parent.leadName);
+          const leadTitle = Array.isArray(rawLead)
+            ? rawLead.filter(Boolean).join(' • ')
+            : (rawLead ?? '');
+          const fallbackPropName = item.propertyName ?? parent.propertyName;
+          const title   = leadTitle || fallbackPropName || "Property";
+          // -------------------------------------------------------------
+
           const address = item.propertyAddress  ?? parent.propertyAddress  ?? "";
           const addrUrl = item.addressUrl       ?? parent.addressUrl       ?? createGoogleMapsUrl([lon, lat], title);
           const navLat  = num(item.navLat       ?? parent.navLat);
