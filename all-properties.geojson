@@ -1,4 +1,37 @@
 {
   "type": "FeatureCollection",
-  "features": []
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.2187652,
+          32.9217122
+        ]
+      },
+      "properties": {
+        "id": "rec4R0icqVcsIaNse",
+        "propertyType": "Random Loc.",
+        "propertyName": "4486 Vereda Mar de Ponderosa",
+        "propertyAddress": "4486 Vereda Mar De Ponderosa, San Diego, CA 92130",
+        "formattedAddress": "4486 Vereda Mar De Ponderosa, San Diego, CA 92130",
+        "neighborhood": "",
+        "assetClass": "N / A",
+        "construction": "",
+        "year": "2000",
+        "lotArea": 0.155,
+        "zoning": "R-1:SINGLE FAM-RES",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": 2222,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/4486-Vereda-Mar-De_1758065807336",
+        "googleMaps": "https://www.google.com/maps/search/?api=1&query=4486%20Vereda%20Mar%20de%20Ponderosa%2C%20San%20Diego%2C%20CA",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rec4R0icqVcsIaNse",
+        "navLat": 32.92148270853836,
+        "navLon": -117.2187652
+      }
+    }
+  ]
 }
