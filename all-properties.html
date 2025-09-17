@@ -59,17 +59,7 @@
   <div id="table-container">
     <table id="property-table">
       <thead>
-        <tr id="thead-row">
-          <th>Category</th>
-          <th>Address</th>
-          <th class="nowrap">SqFt</th>
-          <th>Year</th>
-          <th>Price</th>
-          <th>Sale Date</th>
-          <th># Units</th>
-          <th>Link</th>
-          <th>Rings</th>
-        </tr>
+        <tr id="thead-row"></tr>
       </thead>
       <tbody></tbody>
     </table>
@@ -78,7 +68,42 @@
   <script>
     // ===== CONFIG =====
     mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
-    const GEOJSON_URL = 'all-properties.geojson'; // same repo as this HTML
+    const GEOJSON_URL = 'all-properties.geojson';
+
+    // CATEGORY_CONFIG drives colors, table columns, and popup fields per category
+    const CATEGORY_CONFIG = {
+      "Current Lead": {
+        color: "#0000FF",
+        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["zoning","Zoning"],["link","Link"]]
+      },
+      "Active Pursuit": {
+        color: "#FFD700",
+        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["link","Link"]]
+      },
+      "Owned Property": {
+        color: "#800080",
+        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
+      },
+      "Completed Project": {
+        color: "#000000",
+        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
+      },
+      "Sale Comp - Active": {
+        color: "#008000",
+        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Ask Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
+      },
+      "Sale Comp - Escrow": {
+        color: "#FFA500",
+        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Ask Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
+      },
+      "Sale Comp - Sold": {
+        color: "#FF0000",
+        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["saleDate","Sale Date"],["price","Price"],["pricePerSqft","$/SF"],["capRate","Cap %"],["dom","DOM"],["link","Link"]]
+      }
+    };
+
+    // Build color map from CATEGORY_CONFIG
+    const categoryColors = Object.fromEntries(Object.entries(CATEGORY_CONFIG).map(([k,v])=>[k, v.color]));
 
     // ===== UTILITIES =====
     function bust(url) { return url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(); }
@@ -92,7 +117,7 @@
     const zoomParam = Number(params.get('zoom'));
     const bufferMeters = Number(params.get('buffer')) || 0;
     const ringsParam = (params.get('rings') || '').toLowerCase(); // 'on' to auto-show
-    const ringDistancesParam = params.get('ringDistances'); // "0.25,0.5,1,2"
+    const ringDistancesParam = params.get('ringDistances');
     const defaultRingMiles = ringDistancesParam ? ringDistancesParam.split(',').map(Number) : [0.25, 0.5, 1, 2];
 
     // ===== MAP =====
@@ -102,42 +127,6 @@
       center: [-118.2437, 34.0522],
       zoom: 8
     });
-
-    // Category colors
-    const categoryColors = {
-      "Current Lead": "#0000FF",
-      "Active Pursuit": "#FFD700",
-      "Owned Property": "#800080",
-      "Completed Project": "#000000",
-      "Sale Comp - Active": "#008000",
-      "Sale Comp - Escrow": "#FFA500",
-      "Sale Comp - Sold": "#FF0000"
-    };
-
-    // Optional: per-category column config (union used for table)
-    const CATEGORY_CONFIG = {
-      "Current Lead": {
-        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["price","Price"],["saleDate","Sale Date"],["link","Link"]]
-      },
-      "Active Pursuit": {
-        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["link","Link"]]
-      },
-      "Owned Property": {
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
-      },
-      "Completed Project": {
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
-      },
-      "Sale Comp - Active": {
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
-      },
-      "Sale Comp - Escrow": {
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
-      },
-      "Sale Comp - Sold": {
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["saleDate","Sale Date"],["price","Price"],["pricePerSqft","$/SF"],["capRate","Cap %"],["dom","DOM"],["link","Link"]]
-      }
-    };
 
     // ===== DATA =====
     let allFeatures = [];
@@ -175,6 +164,7 @@
           const target = findTargetFeatures(allFeatures);
           if (target.length) zoomToFeatures(target);
 
+          // initial table render uses schema-aware headers
           renderTable(filteredForTable(allFeatures));
           if (ringsParam === 'on' && target.length === 1) {
             const ft = target[0];
@@ -227,35 +217,31 @@
       });
     }
 
-    // ===== POPUPS =====
+    // ===== POPUPS (schema-aware) =====
     function popupHtml(p){
-      const photo = p.photoUrl ? `<div style="margin-top:6px;"><img src="${p.photoUrl}" width="220" loading="lazy"></div>` : '';
+      const cat = p.category;
+      const cols = (CATEGORY_CONFIG[cat]?.columns || []);
       const addr = p.propertyAddress || p.address || '';
-      const priceFmt = v => (v||v===0) ? Number(v).toLocaleString() : '';
-      const rows = [
-        ['Category', p.category || ''],
-        ['SqFt', p.sqft ? Number(p.sqft).toLocaleString() : (p.buildingSqft ? Number(p.buildingSqft).toLocaleString(): '')],
-        ['Year', p.year || ''],
-        ['# Units', p.units ?? ''],
-        ['Price', priceFmt(p.price || p.salePrice)],
-        ['Sale Date', p.saleDate || ''],
-        ['DOM', p.dom ?? ''],
-        ['Zoning', p.zoning || '']
-      ].map(([k,v]) => v ? `<div><strong>${k}:</strong> ${v}</div>` : '').join('');
-      const link = p.link ? `<div style="margin-top:6px;"><a href="${p.link}" target="_blank">Open record</a></div>` : '';
-      return `<div style="min-width:240px;"><strong>${addr}</strong>${rows}${link}${photo}</div>`;
+      const rows = cols.map(([key,label]) => {
+        let val = p[key] ?? '';
+        if (key === 'price' || key === 'pricePerSqft') val = (val || val === 0) ? Number(val).toLocaleString() : '';
+        if (key === 'link' && val) val = `<a href="${val}" target="_blank">Link</a>`;
+        return val ? `<div><strong>${label}:</strong> ${val}</div>` : '';
+      }).join('');
+      const photo = p.photoUrl ? `<div style="margin-top:6px;"><img src="${p.photoUrl}" width="220" loading="lazy"></div>` : '';
+      return `<div style="min-width:240px;"><strong>${addr}</strong>${rows}${photo}</div>`;
     }
     function wirePopups(){
       const layerIds = Object.keys(categoryColors).map(layerForCategory);
       map.on('click', (e) => {
         const feats = map.queryRenderedFeatures(e.point, { layers: layerIds });
         if (!feats.length) return;
-        const p = feats[0].properties || {};
+        const p = feats[0].properties ? JSON.parse(JSON.stringify(feats[0].properties)) : {};
         new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHtml(p)).addTo(map);
       });
     }
 
-    // ===== DEEP LINK / VISIBILITY =====
+    // ===== VISIBILITY / DEEP LINK =====
     function initialVisibilityFromShowParam(){
       if (!showParam) return;
       const showList = showParam.split(',').map(s => s.trim());
@@ -358,50 +344,57 @@
       }
     }
 
-    // ===== TABLE =====
+    // ===== TABLE (schema-aware) =====
     const theadRow = document.getElementById('thead-row');
     const tbody = document.querySelector('#property-table tbody');
     const searchInput = document.getElementById('search-input');
 
-    function visibleColumns(){
-      // union of columns across visible categories, preserving order
+    function columnsForVisibleCategories(visibleCats){
+      // union of columns across visible categories, preserving first label seen
       const mapCols = new Map();
-      getVisibleCategories().forEach(cat => {
+      visibleCats.forEach(cat => {
         (CATEGORY_CONFIG[cat]?.columns || []).forEach(([key,label]) => {
           if (!mapCols.has(key)) mapCols.set(key,label);
         });
       });
-      // enforce a baseline order similar to header scaffold
-      const preferred = [['address','Address'],['sqft','SqFt'],['year','Year'],['price','Price'],['saleDate','Sale Date'],['units','# Units'],['link','Link']];
-      preferred.forEach(([k,l])=>{ if (!mapCols.has(k)) mapCols.set(k,l); });
-      return Array.from(mapCols.entries());
+      return Array.from(mapCols.entries()); // [[key,label],...]
     }
-    function renderTable(features){
-      // (Optional) rebuild header dynamically if you want exact union; current header is fine.
 
-      // body
+    function buildThead(cols){
+      theadRow.innerHTML = '';
+      theadRow.insertAdjacentHTML('beforeend', `<th>Category</th>`);
+      cols.forEach(([,label]) => theadRow.insertAdjacentHTML('beforeend', `<th>${label}</th>`));
+      theadRow.insertAdjacentHTML('beforeend', `<th>Rings</th>`);
+    }
+
+    function buildTbody(features, cols){
       tbody.innerHTML = '';
       features.forEach(f => {
         const p = f.properties || {};
+        let cells = `<td>${p.category || ''}</td>`;
+        cols.forEach(([key,label]) => {
+          let val = p[key] ?? '';
+          if (key === 'price' || key === 'pricePerSqft') {
+            val = (val || val === 0) ? Number(val).toLocaleString() : '';
+          }
+          if (key === 'address') {
+            // support either address or propertyAddress
+            val = p.address || p.propertyAddress || '';
+          }
+          if (key === 'sqft') {
+            val = p.sqft || p.buildingSqft || '';
+            val = val ? Number(val).toLocaleString() : '';
+          }
+          if (key === 'link' && val) {
+            val = `<a href="${val}" target="_blank">Link</a>`;
+          }
+          cells += `<td>${val}</td>`;
+        });
         const id = getFeatureKey(f);
-        const ringActive = activeRingIds.has(id);
-        const addr = p.propertyAddress || p.address || '';
-        const sqft = p.sqft || p.buildingSqft;
-        const price = p.price ?? p.salePrice;
-        const row = `
-          <tr data-id="${id}">
-            <td>${p.category || ''}</td>
-            <td>${addr}</td>
-            <td>${sqft ? Number(sqft).toLocaleString() : ''}</td>
-            <td>${p.year || ''}</td>
-            <td>${(price||price===0) ? Number(price).toLocaleString() : ''}</td>
-            <td>${p.saleDate || ''}</td>
-            <td>${p.units ?? ''}</td>
-            <td>${p.link ? `<a href="${p.link}" target="_blank">Link</a>` : ''}</td>
-            <td><button class="btn-ring ${ringActive ? 'active' : ''}" data-id="${id}">${ringActive ? 'Rings On' : 'Rings Off'}</button></td>
-          </tr>`;
-        tbody.insertAdjacentHTML('beforeend', row);
+        const ringBtn = `<button class="btn-ring ${activeRingIds.has(id)?'active':''}" data-id="${id}">${activeRingIds.has(id)?'Rings On':'Rings Off'}</button>`;
+        tbody.insertAdjacentHTML('beforeend', `<tr data-id="${id}">${cells}<td>${ringBtn}</td></tr>`);
       });
+
       // bind ring buttons
       tbody.querySelectorAll('.btn-ring').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -414,12 +407,14 @@
         });
       });
     }
+
     function markRowRingActive(id, active){
       const btn = document.querySelector(`.btn-ring[data-id="${id}"]`);
       if (!btn) return;
       if (active){ btn.classList.add('active'); btn.textContent = 'Rings On'; }
       else { btn.classList.remove('active'); btn.textContent = 'Rings Off'; }
     }
+
     function filteredForTable(all){
       const visibleCats = getVisibleCategories();
       let subset = all.filter(f => visibleCats.includes((f.properties||{}).category));
@@ -446,7 +441,16 @@
       }
       return subset;
     }
-    searchInput.addEventListener('input', e => {
+
+    function renderTable(features){
+      const visibleCats = getVisibleCategories();
+      const cols = columnsForVisibleCategories(visibleCats);
+      buildThead(cols);
+      buildTbody(features, cols);
+    }
+
+    // Search input
+    document.getElementById('search-input').addEventListener('input', e => {
       textFilter = e.target.value || '';
       renderTable(filteredForTable(allFeatures));
     });
