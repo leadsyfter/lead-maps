@@ -64,6 +64,43 @@
         "navLat": 32.92148270853836,
         "navLon": -117.2187652
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1979546,
+          44.4243283
+        ]
+      },
+      "properties": {
+        "id": "recN4EvQ4Hj7T6p3m",
+        "propertyName": "19 Harbor Ridge Rd",
+        "propertyAddress": "19 Harbor Ridge Rd, South Burlington, VT 05403",
+        "formattedAddress": "19 Harbor Ridge Rd, South Burlington, VT 05403",
+        "suite": "",
+        "neighborhood": "",
+        "zoning": "",
+        "assetClass": "N / A",
+        "construction": "",
+        "year": "1984",
+        "buildingSqft": 2528,
+        "assetSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "privateYd": "",
+        "notes": "",
+        "saleStatus": "N / A",
+        "salePrice": null,
+        "saleDate": "",
+        "dom": null,
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/19-Harbor-Ridge-Rd_1758155083873",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recN4EvQ4Hj7T6p3m",
+        "navLat": 44.42422062733703,
+        "navLon": -73.1979546
+      }
     }
   ]
 }
