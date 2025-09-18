@@ -101,6 +101,42 @@
         "navLat": 44.42422062733703,
         "navLon": -73.1979546
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.1363148,
+          33.9748763
+        ]
+      },
+      "properties": {
+        "id": "recOAeniT4V1UJ26v",
+        "propertyType": "Lead / Deal",
+        "projectName": "Commerce - Commerce Center South",
+        "propertyName": "6301 Chalet Drive",
+        "propertyAddress": "6301 Chalet Dr, Commerce, CA 90040",
+        "formattedAddress": "6301 Chalet Dr, Commerce, CA 90040",
+        "neighborhood": "",
+        "assetClass": "Small-Bay",
+        "construction": "Concrete tilt-up",
+        "year": "1978",
+        "lotArea": 0.648,
+        "zoning": "CMM1*",
+        "buildingCount": 0,
+        "units": 5,
+        "buildingSqft": 27930,
+        "clearHts": "24'",
+        "rollUps": 16,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/6300-Chalet-Dr_1758235796109",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recOAeniT4V1UJ26v",
+        "navLat": 33.9745657,
+        "navLon": -118.1361694,
+        "category": "Current Lead"
+      }
     }
   ]
 }
