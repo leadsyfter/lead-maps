@@ -137,6 +137,42 @@
         "navLon": -118.1361694,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.7253095,
+          33.6223659
+        ]
+      },
+      "properties": {
+        "id": "rec8Dg6RjmWX8A7Dy",
+        "propertyType": "Lead / Deal",
+        "projectName": "Laguna Hills - Park Laguna Hills",
+        "propertyName": "Park Laguna Hills",
+        "propertyAddress": "23172, 23182 & 23192 Alcalde Dr, Laguna Hills, CA",
+        "formattedAddress": "23172 Alcalde Dr, Laguna Hills, CA 92653, USA",
+        "neighborhood": "",
+        "assetClass": "Small-Bay",
+        "construction": "Concrete tilt-up",
+        "year": "1989",
+        "lotArea": 3.3,
+        "zoning": "M1",
+        "buildingCount": 3,
+        "units": 32,
+        "buildingSqft": null,
+        "clearHts": "16 feet",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/23182-Alcalde-Dr_1758499165528",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rec8Dg6RjmWX8A7Dy",
+        "navLat": 33.6223659,
+        "navLon": -117.7253095,
+        "category": "Current Lead"
+      }
     }
   ]
 }
