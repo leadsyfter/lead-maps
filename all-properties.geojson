@@ -173,6 +173,42 @@
         "navLon": -117.7253095,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.43158665635171,
+          28.50529958577504
+        ]
+      },
+      "properties": {
+        "id": "rec92bkGTdpZlow8E",
+        "propertyType": "Lead / Deal",
+        "projectName": "Orlando - Vineland Business Center and 34th and Val",
+        "propertyName": "34th & Val Business Center",
+        "propertyAddress": "3506 St Valentine Way, Orlando, FL 32811",
+        "formattedAddress": "3506 St Valentine Way, Orlando, FL 32811, USA",
+        "neighborhood": "",
+        "assetClass": "Small-Bay",
+        "construction": "Masonry unit",
+        "year": "4016",
+        "lotArea": 2.47,
+        "zoning": "ORL-I-P",
+        "buildingCount": 1,
+        "units": 11,
+        "buildingSqft": null,
+        "clearHts": "20 - 24’",
+        "rollUps": 11,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/3506-Saint-Valentine-Way_1758499430953",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rec92bkGTdpZlow8E",
+        "navLat": 28.50499430787747,
+        "navLon": -81.43117338032508,
+        "category": "Current Lead"
+      }
     }
   ]
 }
