@@ -317,6 +317,42 @@
         "navLon": null,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.0486540686244,
+          33.13826355019935
+        ]
+      },
+      "properties": {
+        "id": "rectpvFtT5KExSKsp",
+        "propertyType": "Lead / Deal",
+        "projectName": "Escondido - E Valley Parkway",
+        "propertyName": "2109-2127 E. Valley Parkway",
+        "propertyAddress": "2109-2127 E Valley Parkway, Escondido, CA 92027",
+        "formattedAddress": "2109 E Valley Pkwy, Escondido, CA 92027, USA",
+        "neighborhood": "",
+        "assetClass": "Small-Bay",
+        "construction": "Masonry unit",
+        "year": "3978",
+        "lotArea": 2.33,
+        "zoning": "C-G: General Commercial",
+        "buildingCount": 4,
+        "units": 13,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": 8,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/2109-E-Valley-Pkwy_1758505254038",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rectpvFtT5KExSKsp",
+        "navLat": 33.13868326469525,
+        "navLon": -117.0493049207761,
+        "category": "Current Lead"
+      }
     }
   ]
 }
