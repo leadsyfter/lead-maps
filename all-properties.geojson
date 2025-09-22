@@ -209,6 +209,42 @@
         "navLon": -81.43117338032508,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.43055722242609,
+          28.50281410014363
+        ]
+      },
+      "properties": {
+        "id": "recqS9uBx8wEPuoB6",
+        "propertyType": "Lead / Deal",
+        "projectName": "Orlando - Vineland Business Center and 34th and Val",
+        "propertyName": "Vineland Business Center",
+        "propertyAddress": "3712-3728 Vineland Road, Orlando, FL 32811",
+        "formattedAddress": "3712 Vineland Rd, Orlando, FL 32811, USA",
+        "neighborhood": "",
+        "assetClass": "Small-Bay",
+        "construction": "Masonry unit",
+        "year": "3968",
+        "lotArea": 2.05,
+        "zoning": "ORL-I-P",
+        "buildingCount": 1,
+        "units": 9,
+        "buildingSqft": null,
+        "clearHts": "18 - 20’",
+        "rollUps": 9,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/3712-Vineland-Rd_1758499431235",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recqS9uBx8wEPuoB6",
+        "navLat": 28.50261589530885,
+        "navLon": -81.4305677048342,
+        "category": "Current Lead"
+      }
     }
   ]
 }
