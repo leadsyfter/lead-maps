@@ -353,6 +353,42 @@
         "navLon": -117.0493049207761,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.88078502429826,
+          33.6693358542687
+        ]
+      },
+      "properties": {
+        "id": "recvC5vcIkiJH98lg",
+        "propertyType": "Lead / Deal",
+        "projectName": "Costa Mesa - Stonemill Design Center",
+        "propertyName": "Stonemill Design Center",
+        "propertyAddress": "2915 Red Hill Avenue, Costa Mesa, CA 92626",
+        "formattedAddress": "2915 Red Hill Ave, Costa Mesa, CA 92626, USA",
+        "neighborhood": "",
+        "assetClass": "Flex-Office",
+        "construction": "Concrete tilt-up",
+        "year": "1978",
+        "lotArea": 8.3,
+        "zoning": "Planned Development Industrial (PDI)",
+        "buildingCount": 7,
+        "units": 47,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": 14,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/2915-Red-Hill-Ave_1758505847679",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recvC5vcIkiJH98lg",
+        "navLat": 33.66905232909694,
+        "navLon": -117.8805875856902,
+        "category": "Current Lead"
+      }
     }
   ]
 }
