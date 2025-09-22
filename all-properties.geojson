@@ -251,21 +251,21 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.21875400821006,
+          32.921776177388246,
           32.921776177388246
         ]
       },
       "properties": {
         "id": "rec6EK2ZqTNsq9ypE",
         "propertyType": "Lead / Deal",
-        "projectName": "",
+        "projectName": "Laguna Hills - Laguna 2",
         "propertyName": "",
         "propertyAddress": "4486 Vereda Mar de Ponderosa, San Diego, CA",
         "formattedAddress": "4486 Vereda Mar De Ponderosa, San Diego, CA 92130, USA",
         "neighborhood": "",
         "assetClass": "",
         "construction": "",
-        "year": "2000",
+        "year": "20002000",
         "lotArea": 0.155,
         "zoning": "R-1:SINGLE FAM-RES",
         "buildingCount": 0,
@@ -274,7 +274,7 @@
         "clearHts": "",
         "rollUps": null,
         "notes": "",
-        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/4486-Vereda-Mar-De_1758501358899",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/4486-Vereda-Mar-De_1758501598575",
         "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
         "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rec6EK2ZqTNsq9ypE",
         "navLat": 32.92148270853836,
