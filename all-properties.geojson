@@ -281,6 +281,42 @@
         "navLon": -117.2187147435315,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.75400028894043,
+          36.904178012324266
+        ]
+      },
+      "properties": {
+        "id": "recvK8yPwJI9JphLi",
+        "propertyType": "Lead / Deal",
+        "projectName": "Laguna Hills - Laguna 2",
+        "propertyName": "",
+        "propertyAddress": "5 Main St., Watsonville",
+        "formattedAddress": "5 Main St, Watsonville, CA 95076, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "",
+        "lotArea": 0,
+        "zoning": "",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/101-W-Front-St_1758504140061",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recvK8yPwJI9JphLi",
+        "navLat": null,
+        "navLon": null,
+        "category": "Current Lead"
+      }
     }
   ]
 }
