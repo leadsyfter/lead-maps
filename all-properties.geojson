@@ -605,6 +605,42 @@
         "navLon": -118.0331690290995,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.02819056086703,
+          33.74372777853688
+        ]
+      },
+      "properties": {
+        "id": "recfCBgpBUSy797pA",
+        "propertyType": "Lead / Deal",
+        "projectName": "Huntington Beach - Huntington Commerce Center and Plaza",
+        "propertyName": "",
+        "propertyAddress": "5762-5772 Bolsa Avenue, Huntington Beach, CA",
+        "formattedAddress": "5762 Bolsa Ave, Huntington Beach, CA 92649, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "",
+        "lotArea": 2.866,
+        "zoning": "",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/5762-Bolsa-Ave_1758741404766",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recfCBgpBUSy797pA",
+        "navLat": 33.74392548835547,
+        "navLon": -118.0286036893833,
+        "category": "Current Lead"
+      }
     }
   ]
 }
