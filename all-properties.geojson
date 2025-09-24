@@ -821,6 +821,42 @@
         "navLon": null,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.05542120231014,
+          38.00150941832719
+        ]
+      },
+      "properties": {
+        "id": "recCHqaRb2qwfgxBz",
+        "propertyType": "Lead / Deal",
+        "projectName": "Concord - Business Park Concord",
+        "propertyName": "",
+        "propertyAddress": "5600 Imhoff Dr, Concord, CA",
+        "formattedAddress": "5600 Imhoff Dr, Concord, CA 94520, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "1987",
+        "lotArea": 8.08,
+        "zoning": "",
+        "buildingCount": 6,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/5750-Imhoff-Dr_1758757085193",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recCHqaRb2qwfgxBz",
+        "navLat": 38.00196994749187,
+        "navLon": -122.0565288039553,
+        "category": "Current Lead"
+      }
     }
   ]
 }
