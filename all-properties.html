@@ -15,7 +15,7 @@
     html, body { height:100%; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#1a1a1a;}
     #map { position:absolute; top:0; bottom:360px; width:100%; }
-    #controls { position:absolute; top:10px; left:10px; background:var(--panel-bg); padding:10px; border-radius:8px; box-shadow:var(--panel-shadow); font-size:14px; max-width:320px; z-index:5; }
+    #controls { position:absolute; top:10px; left:10px; background:var(--panel-bg); padding:10px; border-radius:8px; box-shadow:var(--panel-shadow); font-size:14px; max-width:340px; z-index:5; }
     #controls h3{margin:0 0 6px 0; font-size:14px; color:#333;}
     #controls .group{margin-bottom:8px; border-top:1px solid var(--line); padding-top:6px;}
     .legend-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle;}
@@ -37,15 +37,10 @@
   <div id="controls">
     <h3>Layers</h3>
     <div class="group">
-      <label><input type="checkbox" data-category="Current Lead" checked> <span class="legend-dot" style="background:#0000FF"></span>Current Lead</label><br>
-      <label><input type="checkbox" data-category="Active Pursuit" checked> <span class="legend-dot" style="background:#FFD700"></span>Active Pursuit</label><br>
-      <label><input type="checkbox" data-category="Owned Property" checked> <span class="legend-dot" style="background:#800080"></span>Owned Property</label><br>
-      <label><input type="checkbox" data-category="Completed Project" checked> <span class="legend-dot" style="background:#000000"></span>Completed Project</label>
-    </div>
-    <div class="group">
-      <label><input type="checkbox" data-category="Sale Comp - Active" checked> <span class="legend-dot" style="background:#008000"></span>Comp – Active</label><br>
-      <label><input type="checkbox" data-category="Sale Comp - Escrow" checked> <span class="legend-dot" style="background:#FFA500"></span>Comp – Escrow</label><br>
-      <label><input type="checkbox" data-category="Sale Comp - Sold" checked> <span class="legend-dot" style="background:#FF0000"></span>Comp – Sold</label>
+      <label><input type="checkbox" data-category="Lead / Deal" checked> <span class="legend-dot" style="background:#003d60"></span>Lead / Deal</label><br>
+      <label><input type="checkbox" data-category="Building Comp." checked> <span class="legend-dot" style="background:#FF7F0E"></span>Building Comp.</label><br>
+      <label><input type="checkbox" data-category="Condo Comp." checked> <span class="legend-dot" style="background:#2CA02C"></span>Condo Comp.</label><br>
+      <label><input type="checkbox" data-category="Random Loc." checked> <span class="legend-dot" style="background:#666666"></span>Random Loc.</label>
     </div>
     <div class="group">
       <div class="muted">Deep-link params: <code>leadId</code>, <code>compId</code>, <code>address</code>, <code>cat</code>, <code>show</code>, <code>zoom</code>, <code>buffer</code>, <code>rings</code>, <code>ringDistances</code>, <code>t</code></div>
@@ -72,33 +67,21 @@
 
     // CATEGORY_CONFIG drives colors, table columns, and popup fields per category
     const CATEGORY_CONFIG = {
-      "Current Lead": {
-        color: "#0000FF",
+      "Lead / Deal": {
+        color: "#003d60",
         columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["zoning","Zoning"],["link","Link"]]
       },
-      "Active Pursuit": {
-        color: "#FFD700",
-        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["link","Link"]]
+      "Building Comp.": {
+        color: "#FF7F0E",
+        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["saleStatus","Status"],["price","Price"],["link","Link"]]
       },
-      "Owned Property": {
-        color: "#800080",
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
+      "Condo Comp.": {
+        color: "#2CA02C",
+        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["saleStatus","Status"],["price","Price"],["link","Link"]]
       },
-      "Completed Project": {
-        color: "#000000",
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["link","Link"]]
-      },
-      "Sale Comp - Active": {
-        color: "#008000",
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Ask Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
-      },
-      "Sale Comp - Escrow": {
-        color: "#FFA500",
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["price","Ask Price"],["pricePerSqft","$/SF"],["dom","DOM"],["link","Link"]]
-      },
-      "Sale Comp - Sold": {
-        color: "#FF0000",
-        columns: [["address","Address"],["sqft","SqFt"],["status","Status"],["saleDate","Sale Date"],["price","Price"],["pricePerSqft","$/SF"],["capRate","Cap %"],["dom","DOM"],["link","Link"]]
+      "Random Loc.": {
+        color: "#666666",
+        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["link","Link"]]
       }
     };
 
@@ -138,7 +121,17 @@
       throw new Error('Invalid GeoJSON FeatureCollection');
     }
 
-    // ===== LOAD DATA WITH CACHE-BUST =====
+    // Normalize propertyType -> category into the four allowed buckets
+    function normalizeCategory(propType){
+      const s = (propType || "").trim();
+      if (s === "Lead / Deal") return "Lead / Deal";
+      if (s === "Building Comp.") return "Building Comp.";
+      if (s === "Condo Comp.") return "Condo Comp.";
+      if (s === "Random Loc.") return "Random Loc.";
+      return "Random Loc."; // default if missing/unknown
+    }
+
+    // ===== LOAD DATA WITH CACHE-BUST & NORMALIZE =====
     fetch(bust(GEOJSON_URL))
       .then(r => {
         if (!r.ok) throw new Error('Failed to fetch GeoJSON: ' + r.status);
@@ -146,7 +139,22 @@
       })
       .then(fc => {
         fc = ensureFeatureCollection(fc);
-        allFeatures = fc.features.filter(f => f?.geometry?.type === 'Point' && Array.isArray(f.geometry.coordinates));
+
+        function normalizeFeature(f){
+          const p = f.properties || (f.properties = {});
+          // Ensure a category (primary key for layer routing)
+          p.category = normalizeCategory(p.category || p.propertyType);
+
+          // Helpful fallbacks the UI expects
+          if (!p.address) p.address = p.propertyAddress || p.formattedAddress || "";
+          if (!p.sqft) p.sqft = p.buildingSqft || p.assetSqft || "";
+          return f;
+        }
+
+        allFeatures = fc.features
+          .filter(f => f?.geometry?.type === 'Point' && Array.isArray(f.geometry.coordinates))
+          .map(normalizeFeature);
+
         map.on('load', () => {
           addCategoryLayers(allFeatures);
           addRingLayers();
@@ -155,7 +163,7 @@
           if (forcedCat) {
             const targets = findTargetFeatures(allFeatures);
             if (targets.length) {
-              targets.forEach(ft => ft.properties.category = forcedCat);
+              targets.forEach(ft => ft.properties.category = normalizeCategory(forcedCat));
               refreshCategorySources();
             }
           }
@@ -164,8 +172,8 @@
           const target = findTargetFeatures(allFeatures);
           if (target.length) zoomToFeatures(target);
 
-          // initial table render uses schema-aware headers
           renderTable(filteredForTable(allFeatures));
+
           if (ringsParam === 'on' && target.length === 1) {
             const ft = target[0];
             toggleRingsForFeature(ft, defaultRingMiles, true);
@@ -225,10 +233,10 @@
       const rows = cols.map(([key,label]) => {
         let val = p[key] ?? '';
         if (key === 'price' || key === 'pricePerSqft') val = (val || val === 0) ? Number(val).toLocaleString() : '';
-        if (key === 'link' && val) val = `<a href="${val}" target="_blank">Link</a>`;
+        if (key === 'link' && (val || p.link)) val = `<a href="${val || p.link}" target="_blank">Link</a>`;
         return val ? `<div><strong>${label}:</strong> ${val}</div>` : '';
       }).join('');
-      const photo = p.photoUrl ? `<div style="margin-top:6px;"><img src="${p.photoUrl}" width="220" loading="lazy"></div>` : '';
+      const photo = p.photoUrl ? `<div style="margin-top:6px;"><img src="${p.photoUrl}" width="220" loading="lazy" referrerpolicy="no-referrer"></div>` : '';
       return `<div style="min-width:240px;"><strong>${addr}</strong>${rows}${photo}</div>`;
     }
     function wirePopups(){
@@ -378,15 +386,14 @@
             val = (val || val === 0) ? Number(val).toLocaleString() : '';
           }
           if (key === 'address') {
-            // support either address or propertyAddress
             val = p.address || p.propertyAddress || '';
           }
           if (key === 'sqft') {
             val = p.sqft || p.buildingSqft || '';
             val = val ? Number(val).toLocaleString() : '';
           }
-          if (key === 'link' && val) {
-            val = `<a href="${val}" target="_blank">Link</a>`;
+          if (key === 'link' && (val || p.link)) {
+            val = `<a href="${val || p.link}" target="_blank">Link</a>`;
           }
           cells += `<td>${val}</td>`;
         });
@@ -419,7 +426,6 @@
       const visibleCats = getVisibleCategories();
       let subset = all.filter(f => visibleCats.includes((f.properties||{}).category));
 
-      // text filter
       if (textFilter) {
         const q = textFilter.toLowerCase();
         subset = subset.filter(f => {
@@ -433,7 +439,6 @@
         });
       }
 
-      // deep-link narrowing
       const target = findTargetFeatures(all);
       if (target.length){
         const ids = new Set(target.map(getFeatureKey));
