@@ -497,6 +497,42 @@
         "navLon": -118.3738544099286,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.68945199271053,
+          33.35495313203373
+        ]
+      },
+      "properties": {
+        "id": "rec1G2Kp3bwsvf00V",
+        "propertyType": "Lead / Deal",
+        "projectName": "Gilbert - Power Commerce Park",
+        "propertyName": "",
+        "propertyAddress": "3380 S Power Rd, Gilbert, AZ 85234",
+        "formattedAddress": "3380 S Power Rd, Gilbert, AZ 85234, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "2022",
+        "lotArea": 14.187,
+        "zoning": "",
+        "buildingCount": 12,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/3380-S-Power-Rd_1758692809714",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/rec1G2Kp3bwsvf00V",
+        "navLat": null,
+        "navLon": null,
+        "category": "Current Lead"
+      }
     }
   ]
 }
