@@ -677,6 +677,42 @@
         "navLon": -111.9955115764988,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.11107072245352,
+          32.90100584862191
+        ]
+      },
+      "properties": {
+        "id": "recsuWTh5JhGpH2e0",
+        "propertyType": "Lead / Deal",
+        "projectName": "San Diego - Scripps Ranch Business Park",
+        "propertyName": "",
+        "propertyAddress": "10010 Willow Creek Rd, San Diego, CA 92131",
+        "formattedAddress": "10010 Willow Creek Rd, San Diego, CA 92131, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "1981",
+        "lotArea": 3.68,
+        "zoning": "INDUSTRIAL (M ZONE)",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/10021-Willow-Creek-Rd_1758750982619",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recsuWTh5JhGpH2e0",
+        "navLat": 32.90179188522573,
+        "navLon": -117.1115628121064,
+        "category": "Current Lead"
+      }
     }
   ]
 }
