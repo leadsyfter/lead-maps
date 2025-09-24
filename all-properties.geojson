@@ -533,6 +533,42 @@
         "navLon": null,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.99658261166407,
+          33.42486286680372
+        ]
+      },
+      "properties": {
+        "id": "recK19SmQiR3FjeKI",
+        "propertyType": "Lead / Deal",
+        "projectName": "Phoenix - 40th Street Business Park",
+        "propertyName": "",
+        "propertyAddress": "4020 E Watkins St, Phoenix, AZ 85034",
+        "formattedAddress": "4020 E Watkins St, Phoenix, AZ 85034, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "1998",
+        "lotArea": 7.956,
+        "zoning": "I-2",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/3930-E-Watkins-St_1758741246873",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recK19SmQiR3FjeKI",
+        "navLat": 33.42448639755082,
+        "navLon": -111.9955041170281,
+        "category": "Current Lead"
+      }
     }
   ]
 }
