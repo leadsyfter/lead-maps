@@ -641,6 +641,42 @@
         "navLon": -118.0286036893833,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.99578865851987,
+          33.484989661320405
+        ]
+      },
+      "properties": {
+        "id": "recBDBhm7o4Z4Y7Mp",
+        "propertyType": "Lead / Deal",
+        "projectName": "Phoenix - 40th Street Business Park",
+        "propertyName": "",
+        "propertyAddress": "3120 N 40th St, Phoenix, AZ 85018",
+        "formattedAddress": "3120 N 40th St, Phoenix, AZ 85018, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "D",
+        "year": "1951",
+        "lotArea": 0.318,
+        "zoning": "M-M",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/3122-N-40th-St_1758749216431",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recBDBhm7o4Z4Y7Mp",
+        "navLat": 33.48492488446453,
+        "navLon": -111.9955115764988,
+        "category": "Current Lead"
+      }
     }
   ]
 }
