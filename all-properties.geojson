@@ -569,6 +569,42 @@
         "navLon": -111.9955041170281,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.03250757376637,
+          33.74295496777204
+        ]
+      },
+      "properties": {
+        "id": "recEWq03l1tUQa2m8",
+        "propertyType": "Lead / Deal",
+        "projectName": "Huntington Beach - Huntington Commerce Center and Plaza",
+        "propertyName": "",
+        "propertyAddress": "15121 Graham Street, Huntington Beach, CA",
+        "formattedAddress": "15121 Graham St, Huntington Beach, CA 92649, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "1979",
+        "lotArea": 0.484,
+        "zoning": "",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/5501-Engineer-Dr_1758741404395",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recEWq03l1tUQa2m8",
+        "navLat": 33.74313843832106,
+        "navLon": -118.0331690290995,
+        "category": "Current Lead"
+      }
     }
   ]
 }
