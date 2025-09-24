@@ -461,6 +461,42 @@
         "navLon": -117.0493049207761,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.37304583157255,
+          34.226596337148926
+        ]
+      },
+      "properties": {
+        "id": "reccLZtL9fLxJSP96",
+        "propertyType": "Lead / Deal",
+        "projectName": "Sun Valley - Penrose Street",
+        "propertyName": "",
+        "propertyAddress": "11144 Penrose Street, Sun Valley, CA 91352",
+        "formattedAddress": "11144 Penrose St., Sun Valley, CA 91352, USA",
+        "neighborhood": "",
+        "assetClass": "",
+        "construction": "",
+        "year": "",
+        "lotArea": 0.115,
+        "zoning": "LAM2",
+        "buildingCount": 0,
+        "units": null,
+        "buildingSqft": null,
+        "clearHts": "",
+        "rollUps": null,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/11144-Penrose-St_1758692417174",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/new-leads.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/reccLZtL9fLxJSP96",
+        "navLat": 34.2274395694639,
+        "navLon": -118.3738544099286,
+        "category": "Current Lead"
+      }
     }
   ]
 }
