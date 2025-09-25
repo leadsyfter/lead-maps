@@ -857,6 +857,42 @@
         "navLon": -122.0565288039553,
         "category": "Current Lead"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          42.37527375033488,
+          -89.03077281247515
+        ]
+      },
+      "properties": {
+        "id": "recyxc5almUxlbTFP",
+        "propertyType": "Lead / Deal",
+        "projectName": "Machesney Park - Anvil Road",
+        "propertyName": "Anvil Road Business Park",
+        "propertyAddress": "1275-1295 Anvil Rd, Machesney Park, IL 61115",
+        "formattedAddress": "1275 Anvil Rd, Machesney Park, IL 61115, USA",
+        "neighborhood": "",
+        "assetClass": "Warehouse",
+        "construction": "Concrete tilt-up",
+        "year": "2006",
+        "lotArea": 2.08,
+        "zoning": "",
+        "buildingCount": 2,
+        "units": 8,
+        "buildingSqft": 23500,
+        "clearHts": "16 FT",
+        "rollUps": 12,
+        "notes": "",
+        "photoUrl": "https://raw.githubusercontent.com/leadsyfter/images/main/1275-Anvil-Rd_1758769955134",
+        "googleMaps": "https://leadsyfter.github.io/lead-maps/all-properties.html",
+        "link": "https://airtable.com/appMPJF8EIQfpWaWO/tblc9yHaPV9IZQN6f/viwt0aEfyiI2pFbKO/recyxc5almUxlbTFP",
+        "navLat": 42.37527375033488,
+        "navLon": -89.03077281247515,
+        "category": "Current Lead"
+      }
     }
   ]
 }
