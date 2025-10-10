@@ -1,465 +1,384 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>All Properties Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
-  <style>
-    :root{
-      --panel-bg:#fff; --panel-shadow:0 2px 10px rgba(0,0,0,.08);
-      --line:#e6e6e6; --pad:12px;
-    }
-    html, body { height:100%; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#1a1a1a;}
-    #map { position:absolute; top:0; bottom:360px; width:100%; }
-    #controls { position:absolute; top:10px; left:10px; background:var(--panel-bg); padding:10px; border-radius:8px; box-shadow:var(--panel-shadow); font-size:14px; max-width:340px; z-index:5; }
-    #controls h3{margin:0 0 6px 0; font-size:14px; color:#333;}
-    #controls .group{margin-bottom:8px; border-top:1px solid var(--line); padding-top:6px;}
-    .legend-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle;}
-    .muted { color:#777; font-size:12px; }
-    #table-container { position:absolute; bottom:0; width:100%; max-height:360px; overflow:auto; background:#fff; border-top:1px solid var(--line); }
-    table { width:100%; border-collapse:collapse; font-size:13px;}
-    th, td { border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
-    th { background:#f7f7f7; position:sticky; top:0; z-index:2;}
-    .btn-ring { cursor:pointer; padding:4px 8px; border:1px solid #bbb; border-radius:6px; background:#fafafa; font-size:12px; }
-    .btn-ring.active { background:#e6f2ff; border-color:#7fb3ff; }
-    .nowrap { white-space:nowrap; }
-    .searchbar { position:absolute; top:10px; right:10px; background:#fff; padding:8px; border-radius:8px; box-shadow:var(--panel-shadow); z-index:5; width:280px; }
-    .searchbar input { width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:6px; font-size:13px; }
-  </style>
+<meta charset="utf-8" />
+<title>Projects & Comps Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+  html, body { height:100%; margin:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+  .controls {
+    position:absolute; z-index:2; top:10px; left:10px;
+    background:#fff; padding:10px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:13px;
+    max-width:280px;
+  }
+  .controls h3 { margin:0 0 6px; font-size:14px; }
+  .legend { display:grid; grid-template-columns:18px 1fr; gap:6px 8px; align-items:center; margin-top:6px; }
+  .swatch { width:18px; height:18px; border:1px solid #00000022; border-radius:3px; }
+  .popup { max-width:320px; }
+  .popup img { width:100%; height:auto; display:block; border-radius:4px; margin-bottom:8px; }
+  .popup .title { font-weight:600; margin-bottom:4px; }
+  .popup .meta { color:#444; margin-bottom:6px; }
+  .popup .btns a {
+    display:inline-block; margin-right:8px; margin-top:6px; padding:6px 10px; border-radius:4px;
+    border:1px solid #00000022; text-decoration:none; font-weight:600;
+  }
+</style>
 </head>
 <body>
-  <div id="map"></div>
+<div id="map"></div>
 
-  <div id="controls">
-    <h3>Layers</h3>
-    <div class="group">
-      <label><input type="checkbox" data-category="Lead / Deal" checked> <span class="legend-dot" style="background:#003d60"></span>Lead / Deal</label><br>
-      <label><input type="checkbox" data-category="Building Comp." checked> <span class="legend-dot" style="background:#FF7F0E"></span>Building Comp.</label><br>
-      <label><input type="checkbox" data-category="Condo Comp." checked> <span class="legend-dot" style="background:#2CA02C"></span>Condo Comp.</label><br>
-      <label><input type="checkbox" data-category="Random Loc." checked> <span class="legend-dot" style="background:#666666"></span>Random Loc.</label>
-    </div>
-    <div class="group">
-      <div class="muted">Deep-link params: <code>leadId</code>, <code>compId</code>, <code>address</code>, <code>cat</code>, <code>show</code>, <code>zoom</code>, <code>buffer</code>, <code>rings</code>, <code>ringDistances</code>, <code>t</code></div>
-    </div>
+<div class="controls">
+  <h3>Map Options</h3>
+  <label>Style:
+    <select id="styleSelect">
+      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
+      <option value="mapbox://styles/mapbox/light-v11">Light</option>
+      <option value="mapbox://styles/mapbox/dark-v11">Dark (Night)</option>
+      <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite</option>
+      <option value="mapbox://styles/mapbox/navigation-day-v1">Navigation Day</option>
+      <option value="mapbox://styles/mapbox/navigation-night-v1">Navigation Night</option>
+    </select>
+  </label>
+  <div>
+    <label><input type="checkbox" id="terrainToggle"> Terrain</label>
+    <label style="margin-left:10px;"><input type="checkbox" id="bldg3dToggle"> 3D Buildings</label>
   </div>
 
-  <div class="searchbar">
-    <input id="search-input" type="text" placeholder="Filter table by address, category, notes…" />
+  <hr>
+
+  <h3>Layers</h3>
+  <div>
+    <label><input type="checkbox" class="groupToggle" data-group="projects" checked> Projects</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Leads" checked> Leads</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Deals" checked> Deals</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Closed" checked> Closed</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Archive" checked> Archive</label>
+  </div>
+  <div style="margin-top:6px;">
+    <label><input type="checkbox" class="groupToggle" data-group="comps" checked> Comps</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Active" checked> Active</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Escrow" checked> Escrow</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Sold" checked> Sold</label><br/>
+    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Withdrawn" checked> Withdrawn</label>
   </div>
 
-  <div id="table-container">
-    <table id="property-table">
-      <thead>
-        <tr id="thead-row"></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <hr>
+
+  <h3>Rings (on selected)</h3>
+  <label><input type="checkbox" class="ringToggle" data-miles="1"> 1 mile</label>
+  <label style="margin-left:8px;"><input type="checkbox" class="ringToggle" data-miles="5"> 5 miles</label>
+  <label style="margin-left:8px;"><input type="checkbox" class="ringToggle" data-miles="10"> 10 miles</label>
+
+  <div class="legend" style="margin-top:10px;">
+    <div class="swatch" style="background:#1E90FF"></div><div>Projects: Leads</div>
+    <div class="swatch" style="background:#FFA500"></div><div>Projects: Deals</div>
+    <div class="swatch" style="background:#2ECC71"></div><div>Projects: Closed</div>
+    <div class="swatch" style="background:#95A5A6"></div><div>Projects: Archive</div>
+    <div class="swatch" style="background:#16A085"></div><div>Comps: Active</div>
+    <div class="swatch" style="background:#F39C12"></div><div>Comps: Escrow</div>
+    <div class="swatch" style="background:#C0392B"></div><div>Comps: Sold</div>
+    <div class="swatch" style="background:#7F8C8D"></div><div>Comps: Withdrawn</div>
   </div>
+</div>
 
-  <script>
-    // ===== CONFIG =====
-    mapboxgl.accessToken = 'sk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbTl2bHZwY2MwbXBtMmpwcjU0aTRtaDBjIn0.qFV2ea2ioSfQaAoDqffygA';
-    const GEOJSON_URL = 'all-properties.geojson';
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script>
+  // ====== CONFIG ======
+  mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+  const PROJECT_STATUS = ['Leads','Deals','Closed','Archive'];
+  const COMP_STATUS = ['Active','Escrow','Sold','Withdrawn'];
 
-    // CATEGORY_CONFIG drives colors, table columns, and popup fields per category
-    const CATEGORY_CONFIG = {
-      "Lead / Deal": {
-        color: "#003d60",
-        columns: [["address","Address"],["sqft","SqFt"],["units","# Units"],["year","Year"],["zoning","Zoning"],["link","Link"]]
-      },
-      "Building Comp.": {
-        color: "#FF7F0E",
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["saleStatus","Status"],["price","Price"],["link","Link"]]
-      },
-      "Condo Comp.": {
-        color: "#2CA02C",
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["saleStatus","Status"],["price","Price"],["link","Link"]]
-      },
-      "Random Loc.": {
-        color: "#666666",
-        columns: [["address","Address"],["sqft","SqFt"],["year","Year"],["zoning","Zoning"],["link","Link"]]
-      }
-    };
+  const PROJECT_COLORS = {
+    'Leads':'#1E90FF',
+    'Deals':'#FFA500',
+    'Closed':'#2ECC71',
+    'Archive':'#95A5A6'
+  };
+  const COMP_COLORS = {
+    'Active':'#16A085',
+    'Escrow':'#F39C12',
+    'Sold':'#C0392B',
+    'Withdrawn':'#7F8C8D'
+  };
 
-    // Build color map from CATEGORY_CONFIG
-    const categoryColors = Object.fromEntries(Object.entries(CATEGORY_CONFIG).map(([k,v])=>[k, v.color]));
+  // Different marker "style":
+  // - Projects: solid circles
+  // - Comps: hollow circles (thick outline)
+  const PROJECT_PAINT = (status)=>({
+    'circle-radius': 7,
+    'circle-color': PROJECT_COLORS[status],
+    'circle-stroke-color': '#00000066',
+    'circle-stroke-width': 1.25
+  });
+  const COMP_PAINT = (status)=>({
+    'circle-radius': 7,
+    'circle-color': '#00000000',
+    'circle-stroke-color': COMP_COLORS[status],
+    'circle-stroke-width': 2.25
+  });
 
-    // ===== UTILITIES =====
-    function bust(url) { return url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+  // ====== MAP INIT ======
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [-117.15, 32.78],
+    zoom: 10
+  });
 
-    const params = new URLSearchParams(location.search);
-    const targetLeadId = params.get('leadId');
-    const targetCompId = params.get('compId');
-    const targetAddress = params.get('address');
-    const forcedCat = params.get('cat');
-    const showParam = params.get('show'); // comma list
-    const zoomParam = Number(params.get('zoom'));
-    const bufferMeters = Number(params.get('buffer')) || 0;
-    const ringsParam = (params.get('rings') || '').toLowerCase(); // 'on' to auto-show
-    const ringDistancesParam = params.get('ringDistances');
-    const defaultRingMiles = ringDistancesParam ? ringDistancesParam.split(',').map(Number) : [0.25, 0.5, 1, 2];
+  map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}), 'bottom-right');
+  map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
+  map.addControl(new mapboxgl.ScaleControl({maxWidth:100, unit:'imperial'}));
 
-    // ===== MAP =====
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-118.2437, 34.0522],
-      zoom: 8
+  // ====== SOURCES ======
+  async function ensureSources() {
+    if (!map.getSource('projects')) {
+      map.addSource('projects', {type:'geojson', data:'projects.geojson'});
+    }
+    if (!map.getSource('comps')) {
+      map.addSource('comps', {type:'geojson', data:'comps.geojson'});
+    }
+    if (!map.getSource('rings')) {
+      map.addSource('rings', {type:'geojson', data: {"type":"FeatureCollection","features":[]}});
+    }
+  }
+
+  // ====== LAYERS (with status sublayers) ======
+  function addProjectLayers() {
+    PROJECT_STATUS.forEach((s, idx) => {
+      const id = `projects-${s}`;
+      if (map.getLayer(id)) return;
+      map.addLayer({
+        id,
+        type: 'circle',
+        source: 'projects',
+        filter: ['all', ['==', ['get','status'], s], ['==', ['get','type'], 'Project']],
+        paint: PROJECT_PAINT(s)
+      }, firstSymbolId()); // insert before first symbol layer for clarity
+      map.on('click', id, e => onFeatureClick(e));
+      map.on('mouseenter', id, ()=> map.getCanvas().style.cursor='pointer');
+      map.on('mouseleave', id, ()=> map.getCanvas().style.cursor='');
+    });
+  }
+
+  function addCompLayers() {
+    COMP_STATUS.forEach((s, idx) => {
+      const id = `comps-${s}`;
+      if (map.getLayer(id)) return;
+      map.addLayer({
+        id,
+        type: 'circle',
+        source: 'comps',
+        filter: ['all', ['==', ['get','status'], s], ['==', ['get','type'], 'Comp']],
+        paint: COMP_PAINT(s)
+      }, firstSymbolId());
+      map.on('click', id, e => onFeatureClick(e));
+      map.on('mouseenter', id, ()=> map.getCanvas().style.cursor='pointer');
+      map.on('mouseleave', id, ()=> map.getCanvas().style.cursor='');
+    });
+  }
+
+  function firstSymbolId() {
+    const layers = map.getStyle().layers;
+    for (const l of layers) {
+      if (l.type === 'symbol') return l.id;
+    }
+    return undefined;
+  }
+
+  // ====== POPUP & RINGS ======
+  let popup;
+  let selectedLngLat = null;
+
+  function onFeatureClick(e) {
+    const f = e.features[0];
+    const p = f.properties;
+    const coord = f.geometry.type === 'Point'
+      ? f.geometry.coordinates.slice()
+      : e.lngLat.toArray();
+
+    selectedLngLat = coord;
+
+    const fmt = (v)=> (v===null||typeof v==="undefined"||v==="") ? "—" : v;
+    const img = p.streetViewImgUrl ? `<img src="${fmt(p.streetViewImgUrl)}" alt="Street View">` : "";
+    const title = `${fmt(p.name)} (${fmt(p.type)} — ${fmt(p.status)})`;
+    const meta = `${fmt(p.address)}<br>${Number(p.sqft||0).toLocaleString()} sf · $${Number(p.price||0).toLocaleString()} · $${Number(p.ppsf||0).toFixed(2)}/sf`;
+
+    const btns = `
+      <div class="btns">
+        <a href="${fmt(p.navUrl)}" target="_blank" rel="noopener">Navigate</a>
+        <a href="${fmt(p.recordUrl)}" target="_blank" rel="noopener">View Info</a>
+      </div>`;
+
+    const viewStreet = p.streetViewUrl ? `<div><a href="${fmt(p.streetViewUrl)}" target="_blank" rel="noopener">Open Street View</a></div>` : "";
+
+    const html = `
+      <div class="popup">
+        ${img}
+        <div class="title">${title}</div>
+        <div class="meta">${meta}</div>
+        ${btns}
+        ${viewStreet}
+      </div>`;
+
+    if (popup) popup.remove();
+    popup = new mapboxgl.Popup({offset:15, maxWidth:"360px"})
+      .setLngLat(coord)
+      .setHTML(html)
+      .addTo(map);
+
+    updateRings(); // refresh rings in case toggles are on
+  }
+
+  function updateRings() {
+    if (!selectedLngLat) return;
+    const milesOn = Array.from(document.querySelectorAll('.ringToggle'))
+      .filter(cb => cb.checked)
+      .map(cb => Number(cb.dataset.miles));
+
+    const features = milesOn.map(m => {
+      const poly = turf.circle([selectedLngLat[0], selectedLngLat[1]], m, {steps: 128, units:'miles'});
+      poly.properties = { miles: m };
+      return poly;
     });
 
-    // ===== DATA =====
-    let allFeatures = [];
-    const activeRingIds = new Set();
-    let textFilter = '';
+    const fc = { type:'FeatureCollection', features };
+    map.getSource('rings').setData(fc);
 
-    function ensureFeatureCollection(obj){
-      if (obj?.type === 'FeatureCollection' && Array.isArray(obj.features)) return obj;
-      throw new Error('Invalid GeoJSON FeatureCollection');
+    // Add/ensure ring layers (fill + outline)
+    if (!map.getLayer('rings-fill')) {
+      map.addLayer({
+        id:'rings-fill', type:'fill', source:'rings',
+        paint:{ 'fill-color':'#4a90e2', 'fill-opacity':0.08 }
+      }, firstSymbolId());
     }
-
-    // Normalize propertyType -> category into the four allowed buckets
-    function normalizeCategory(propType){
-      const s = (propType || "").trim();
-      if (s === "Lead / Deal") return "Lead / Deal";
-      if (s === "Building Comp.") return "Building Comp.";
-      if (s === "Condo Comp.") return "Condo Comp.";
-      if (s === "Random Loc.") return "Random Loc.";
-      return "Random Loc."; // default if missing/unknown
+    if (!map.getLayer('rings-line')) {
+      map.addLayer({
+        id:'rings-line', type:'line', source:'rings',
+        paint:{ 'line-color':'#4a90e2', 'line-width':2, 'line-dasharray':[2,2] }
+      }, firstSymbolId());
     }
+  }
 
-    // ===== LOAD DATA WITH CACHE-BUST & NORMALIZE =====
-    fetch(bust(GEOJSON_URL))
-      .then(r => {
-        if (!r.ok) throw new Error('Failed to fetch GeoJSON: ' + r.status);
-        return r.json();
-      })
-      .then(fc => {
-        fc = ensureFeatureCollection(fc);
-
-        function normalizeFeature(f){
-          const p = f.properties || (f.properties = {});
-          // Ensure a category (primary key for layer routing)
-          p.category = normalizeCategory(p.category || p.propertyType);
-
-          // Helpful fallbacks the UI expects
-          if (!p.address) p.address = p.propertyAddress || p.formattedAddress || "";
-          if (!p.sqft) p.sqft = p.buildingSqft || p.assetSqft || "";
-          return f;
-        }
-
-        allFeatures = fc.features
-          .filter(f => f?.geometry?.type === 'Point' && Array.isArray(f.geometry.coordinates))
-          .map(normalizeFeature);
-
-        map.on('load', () => {
-          addCategoryLayers(allFeatures);
-          addRingLayers();
-          wirePopups();
-
-          if (forcedCat) {
-            const targets = findTargetFeatures(allFeatures);
-            if (targets.length) {
-              targets.forEach(ft => ft.properties.category = normalizeCategory(forcedCat));
-              refreshCategorySources();
-            }
-          }
-
-          initialVisibilityFromShowParam();
-          const target = findTargetFeatures(allFeatures);
-          if (target.length) zoomToFeatures(target);
-
-          renderTable(filteredForTable(allFeatures));
-
-          if (ringsParam === 'on' && target.length === 1) {
-            const ft = target[0];
-            toggleRingsForFeature(ft, defaultRingMiles, true);
-            markRowRingActive(getFeatureKey(ft), true);
-          }
-          console.log('Loaded features:', allFeatures.length);
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Could not load data. See console for details.');
-      });
-
-    // ===== LAYERS & SOURCES =====
-    function srcForCategory(cat){ return `src:${cat}`; }
-    function layerForCategory(cat){ return `layer:${cat}`; }
-
-    function addCategoryLayers(features){
-      Object.keys(categoryColors).forEach(cat => {
-        const srcId = srcForCategory(cat);
-        const layerId = layerForCategory(cat);
-        map.addSource(srcId, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: features.filter(f => (f.properties||{}).category === cat)
-          }
-        });
-        map.addLayer({
-          id: layerId,
-          type: 'circle',
-          source: srcId,
-          paint: {
-            'circle-radius': 6,
-            'circle-color': categoryColors[cat],
-            'circle-stroke-width': 1,
-            'circle-stroke-color': '#ffffff'
-          }
-        });
+  // ====== STYLE / TERRAIN / 3D ======
+  function addTerrainAndSky() {
+    if (!map.getSource('mapbox-dem')) {
+      map.addSource('mapbox-dem', {
+        type: 'raster-dem',
+        url: 'mapbox://mapbox.terrain-rgb',
+        tileSize: 512
       });
     }
-    function refreshCategorySources(){
-      Object.keys(categoryColors).forEach(cat => {
-        const src = map.getSource(srcForCategory(cat));
-        if (src){
-          const subset = allFeatures.filter(f => (f.properties||{}).category === cat);
-          src.setData({ type:'FeatureCollection', features: subset });
+    map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.2 });
+    if (!map.getLayer('sky')) {
+      map.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun-intensity': 15
         }
       });
     }
+  }
 
-    // ===== POPUPS (schema-aware) =====
-    function popupHtml(p){
-      const cat = p.category;
-      const cols = (CATEGORY_CONFIG[cat]?.columns || []);
-      const addr = p.propertyAddress || p.address || '';
-      const rows = cols.map(([key,label]) => {
-        let val = p[key] ?? '';
-        if (key === 'price' || key === 'pricePerSqft') val = (val || val === 0) ? Number(val).toLocaleString() : '';
-        if (key === 'link' && (val || p.link)) val = `<a href="${val || p.link}" target="_blank">Link</a>`;
-        return val ? `<div><strong>${label}:</strong> ${val}</div>` : '';
-      }).join('');
-      const photo = p.photoUrl ? `<div style="margin-top:6px;"><img src="${p.photoUrl}" width="220" loading="lazy" referrerpolicy="no-referrer"></div>` : '';
-      return `<div style="min-width:240px;"><strong>${addr}</strong>${rows}${photo}</div>`;
-    }
-    function wirePopups(){
-      const layerIds = Object.keys(categoryColors).map(layerForCategory);
-      map.on('click', (e) => {
-        const feats = map.queryRenderedFeatures(e.point, { layers: layerIds });
-        if (!feats.length) return;
-        const p = feats[0].properties ? JSON.parse(JSON.stringify(feats[0].properties)) : {};
-        new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(popupHtml(p)).addTo(map);
-      });
-    }
+  function removeTerrainAndSky() {
+    map.setTerrain(null);
+    if (map.getLayer('sky')) map.removeLayer('sky');
+    if (map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
+  }
 
-    // ===== VISIBILITY / DEEP LINK =====
-    function initialVisibilityFromShowParam(){
-      if (!showParam) return;
-      const showList = showParam.split(',').map(s => s.trim());
-      document.querySelectorAll('#controls input[type="checkbox"]').forEach(cb => {
-        const cat = cb.dataset.category;
-        const visible = showList.includes(cat);
-        cb.checked = visible;
-        const layerId = layerForCategory(cat);
-        if (map.getLayer(layerId)){
-          map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
-        }
-      });
-    }
-    function getVisibleCategories(){
-      return Array.from(document.querySelectorAll('#controls input:checked')).map(cb => cb.dataset.category);
-    }
-    document.addEventListener('change', (e) => {
-      if (e.target.matches('#controls input[type="checkbox"]')){
-        const cat = e.target.dataset.category;
-        const layerId = layerForCategory(cat);
-        if (map.getLayer(layerId)){
-          map.setLayoutProperty(layerId, 'visibility', e.target.checked ? 'visible' : 'none');
-        }
-        renderTable(filteredForTable(allFeatures));
+  function add3DBuildings() {
+    // insert 3D buildings just above labels
+    const labelLayerId = firstSymbolId();
+    if (map.getLayer('3d-buildings')) return;
+    map.addLayer({
+      'id': '3d-buildings',
+      'source': 'composite',
+      'source-layer': 'building',
+      'filter': ['==', ['get', 'extrude'], 'true'],
+      'type': 'fill-extrusion',
+      'minzoom': 15,
+      'paint': {
+        'fill-extrusion-color': '#aaa',
+        'fill-extrusion-height': ['get', 'height'],
+        'fill-extrusion-base': ['get', 'min_height'],
+        'fill-extrusion-opacity': 0.6
       }
+    }, labelLayerId);
+  }
+
+  function remove3DBuildings() {
+    if (map.getLayer('3d-buildings')) map.removeLayer('3d-buildings');
+  }
+
+  // Handle style switching: re-add sources/layers after each style load
+  async function rebuildAfterStyleLoad() {
+    await ensureSources();
+    addProjectLayers();
+    addCompLayers();
+
+    // Rebuild rings source/layers (if any toggles are checked)
+    if (!map.getSource('rings')) {
+      map.addSource('rings', {type:'geojson', data: {"type":"FeatureCollection","features":[]}});
+    }
+    if (selectedLngLat) updateRings();
+
+    // Respect toggles
+    document.querySelectorAll('.sublayerToggle').forEach(cb=>{
+      const id = cb.dataset.layer;
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked?'visible':'none');
+    });
+    document.querySelectorAll('.groupToggle').forEach(cb=>{
+      const grp = cb.dataset.group;
+      const ids = (grp === 'projects') ? PROJECT_STATUS.map(s=>`projects-${s}`) : COMP_STATUS.map(s=>`comps-${s}`);
+      ids.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id,'visibility',cb.checked?'visible':'none'); });
     });
 
-    // ===== TARGETING & ZOOM =====
-    function getFeatureKey(f){ const p = f.properties || {}; return p.id || p.leadId || p.compId || p._sid; }
-    function getFeatureCoord(f){ return (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates : null; }
-    function findTargetFeatures(features){
-      const res = [];
-      if (targetLeadId || targetCompId){
-        features.forEach(f => {
-          const p = f.properties || {};
-          if ((targetLeadId && p.leadId === targetLeadId) || (targetCompId && p.compId === targetCompId)) res.push(f);
-        });
-        if (res.length) return res;
-      }
-      if (targetAddress){
-        const needle = targetAddress.toLowerCase();
-        features.forEach(f => {
-          const addr = ((f.properties||{}).propertyAddress || (f.properties||{}).address || '').toLowerCase();
-          if (addr && addr.includes(needle)) res.push(f);
-        });
-      }
-      return res;
-    }
-    function zoomToFeatures(features){
-      if (!features.length) return;
-      const pts = features.filter(f => getFeatureCoord(f));
-      if (!pts.length) return;
-      const fc = {type:'FeatureCollection', features: pts};
-      let bbox;
-      if (bufferMeters > 0){
-        const buffered = turf.buffer(fc, bufferMeters, {units:'meters'});
-        bbox = turf.bbox(buffered);
-      } else {
-        bbox = turf.bbox(fc);
-      }
-      if (zoomParam && features.length === 1){
-        map.flyTo({ center: getFeatureCoord(features[0]), zoom: zoomParam });
-      } else {
-        map.fitBounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]], { padding: 60, maxZoom: 16 });
-      }
-    }
+    // Terrain / 3D checkboxes
+    if (document.getElementById('terrainToggle').checked) addTerrainAndSky();
+    if (document.getElementById('bldg3dToggle').checked) add3DBuildings();
+  }
 
-    // ===== RINGS =====
-    function addRingLayers(){
-      if (!map.getSource('rings')) {
-        map.addSource('rings', { type:'geojson', data: emptyFC() });
-        map.addLayer({ id:'rings-fill', type:'fill', source:'rings', paint:{ 'fill-color':'#1E90FF', 'fill-opacity':0.08 }});
-        map.addLayer({ id:'rings-line', type:'line', source:'rings', paint:{ 'line-color':'#1E90FF', 'line-width':1.2, 'line-dasharray':[2,2] }});
-      }
-    }
-    function emptyFC(){ return {type:'FeatureCollection', features:[]}; }
-    function toggleRingsForFeature(feature, milesArray, turnOn){
-      const id = getFeatureKey(feature);
-      const coord = getFeatureCoord(feature);
-      if (!coord) return;
-      const ringsSrc = map.getSource('rings');
-      const existing = ringsSrc._data || emptyFC();
-      const others = existing.features.filter(ft => (ft.properties||{})._ringOf !== id);
+  map.on('load', rebuildAfterStyleLoad);
 
-      if (turnOn){
-        const newRings = [];
-        milesArray.forEach(mi => {
-          const km = mi * 1.60934;
-          const circle = turf.circle(coord, km, {steps: 128, units:'kilometers'});
-          circle.properties = circle.properties || {};
-          circle.properties._ringOf = id;
-          circle.properties._miles = mi;
-          newRings.push(circle);
-        });
-        ringsSrc.setData({ type:'FeatureCollection', features: others.concat(newRings) });
-        activeRingIds.add(id);
-      } else {
-        ringsSrc.setData({ type:'FeatureCollection', features: others });
-        activeRingIds.delete(id);
-      }
-    }
+  // ====== UI EVENTS ======
+  document.getElementById('styleSelect').addEventListener('change', (e)=>{
+    map.setStyle(e.target.value);
+    map.once('styledata', rebuildAfterStyleLoad);
+  });
 
-    // ===== TABLE (schema-aware) =====
-    const theadRow = document.getElementById('thead-row');
-    const tbody = document.querySelector('#property-table tbody');
-    const searchInput = document.getElementById('search-input');
+  document.getElementById('terrainToggle').addEventListener('change', (e)=>{
+    if (e.target.checked) addTerrainAndSky(); else removeTerrainAndSky();
+  });
 
-    function columnsForVisibleCategories(visibleCats){
-      // union of columns across visible categories, preserving first label seen
-      const mapCols = new Map();
-      visibleCats.forEach(cat => {
-        (CATEGORY_CONFIG[cat]?.columns || []).forEach(([key,label]) => {
-          if (!mapCols.has(key)) mapCols.set(key,label);
-        });
-      });
-      return Array.from(mapCols.entries()); // [[key,label],...]
-    }
+  document.getElementById('bldg3dToggle').addEventListener('change', (e)=>{
+    if (e.target.checked) add3DBuildings(); else remove3DBuildings();
+  });
 
-    function buildThead(cols){
-      theadRow.innerHTML = '';
-      theadRow.insertAdjacentHTML('beforeend', `<th>Category</th>`);
-      cols.forEach(([,label]) => theadRow.insertAdjacentHTML('beforeend', `<th>${label}</th>`));
-      theadRow.insertAdjacentHTML('beforeend', `<th>Rings</th>`);
-    }
-
-    function buildTbody(features, cols){
-      tbody.innerHTML = '';
-      features.forEach(f => {
-        const p = f.properties || {};
-        let cells = `<td>${p.category || ''}</td>`;
-        cols.forEach(([key,label]) => {
-          let val = p[key] ?? '';
-          if (key === 'price' || key === 'pricePerSqft') {
-            val = (val || val === 0) ? Number(val).toLocaleString() : '';
-          }
-          if (key === 'address') {
-            val = p.address || p.propertyAddress || '';
-          }
-          if (key === 'sqft') {
-            val = p.sqft || p.buildingSqft || '';
-            val = val ? Number(val).toLocaleString() : '';
-          }
-          if (key === 'link' && (val || p.link)) {
-            val = `<a href="${val || p.link}" target="_blank">Link</a>`;
-          }
-          cells += `<td>${val}</td>`;
-        });
-        const id = getFeatureKey(f);
-        const ringBtn = `<button class="btn-ring ${activeRingIds.has(id)?'active':''}" data-id="${id}">${activeRingIds.has(id)?'Rings On':'Rings Off'}</button>`;
-        tbody.insertAdjacentHTML('beforeend', `<tr data-id="${id}">${cells}<td>${ringBtn}</td></tr>`);
-      });
-
-      // bind ring buttons
-      tbody.querySelectorAll('.btn-ring').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          const ft = allFeatures.find(x => getFeatureKey(x) === id);
-          if (!ft || !getFeatureCoord(ft)) return;
-          const turningOn = !activeRingIds.has(id);
-          toggleRingsForFeature(ft, defaultRingMiles, turningOn);
-          markRowRingActive(id, turningOn);
-        });
-      });
-    }
-
-    function markRowRingActive(id, active){
-      const btn = document.querySelector(`.btn-ring[data-id="${id}"]`);
-      if (!btn) return;
-      if (active){ btn.classList.add('active'); btn.textContent = 'Rings On'; }
-      else { btn.classList.remove('active'); btn.textContent = 'Rings Off'; }
-    }
-
-    function filteredForTable(all){
-      const visibleCats = getVisibleCategories();
-      let subset = all.filter(f => visibleCats.includes((f.properties||{}).category));
-
-      if (textFilter) {
-        const q = textFilter.toLowerCase();
-        subset = subset.filter(f => {
-          const p = f.properties || {};
-          const hay = [
-            p.propertyAddress || p.address || '',
-            p.category || '',
-            p.notes || ''
-          ].join(' ').toLowerCase();
-          return hay.includes(q);
-        });
-      }
-
-      const target = findTargetFeatures(all);
-      if (target.length){
-        const ids = new Set(target.map(getFeatureKey));
-        subset = subset.filter(f => ids.has(getFeatureKey(f)));
-      }
-      return subset;
-    }
-
-    function renderTable(features){
-      const visibleCats = getVisibleCategories();
-      const cols = columnsForVisibleCategories(visibleCats);
-      buildThead(cols);
-      buildTbody(features, cols);
-    }
-
-    // Search input
-    document.getElementById('search-input').addEventListener('input', e => {
-      textFilter = e.target.value || '';
-      renderTable(filteredForTable(allFeatures));
+  document.querySelectorAll('.sublayerToggle').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      const id = cb.dataset.layer;
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked?'visible':'none');
     });
+  });
 
-  </script>
+  document.querySelectorAll('.groupToggle').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      const grp = cb.dataset.group;
+      const ids = (grp === 'projects') ? PROJECT_STATUS.map(s=>`projects-${s}`) : COMP_STATUS.map(s=>`comps-${s}`);
+      ids.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id,'visibility', cb.checked?'visible':'none'); });
+    });
+  });
+
+  document.querySelectorAll('.ringToggle').forEach(cb=>{
+    cb.addEventListener('change', ()=> updateRings());
+  });
+
+</script>
 </body>
 </html>
