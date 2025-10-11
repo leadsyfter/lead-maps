@@ -7,18 +7,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -81.4304159,
-          28.5028427
+          -81.431594,
+          28.5052254
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Orlando - Vineland Business Center",
-        "recordId": "reccjeBxOKtbdQvkI",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccjeBxOKtbdQvkI",
-        "navLat": 28.5026776,
-        "navLon": -81.4305437
+        "name": "Orlando - 34th & Val Business Center",
+        "recordId": "recEtgFynrB1vP1um",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recEtgFynrB1vP1um",
+        "navLat": 28.5048233,
+        "navLon": -81.43165549999999
       }
     },
     {
@@ -34,8 +34,8 @@
         "type": "Project",
         "status": "Leads",
         "name": "Orlando - Vineland Business Center",
-        "recordId": "recluy8UefW9Q8OgO",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recluy8UefW9Q8OgO",
+        "recordId": "reccjeBxOKtbdQvkI",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccjeBxOKtbdQvkI",
         "navLat": 28.5026776,
         "navLon": -81.4305437
       }
