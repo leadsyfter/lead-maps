@@ -4,7 +4,13 @@
   "features": [
     {
       "type": "Feature",
-      "geometry": { "type": "Point", "coordinates": [-117.23456, 32.98765] },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.23456,
+          32.98765
+        ]
+      },
       "properties": {
         "type": "Project",
         "status": "Leads",
@@ -13,6 +19,25 @@
         "recordUrl": "https://airtable.com/rec123abc",
         "lat": 32.98765,
         "lon": -117.23456
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.2240223,
+          33.1067983
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Marcos - La Costa Meadows Business Center",
+        "recordId": "recUknMFPTBMD5ApN",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recUknMFPTBMD5ApN",
+        "navLat": 33.1068181,
+        "navLon": -117.2240198
       }
     }
   ]
