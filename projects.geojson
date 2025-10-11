@@ -102,6 +102,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          34.0514736,
+          -118.2433154
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "recpOYYSfxWD8f6Gj, recpOYYSfxWD8f6Gj",
+        "recordId": "rec68WwlkCPsJ5hQi",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec68WwlkCPsJ5hQi",
+        "navLat": 34.0517461,
+        "navLon": -118.2437375
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.23456,
           32.98765
         ]
