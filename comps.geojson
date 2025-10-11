@@ -1,1 +1,19 @@
-
+{
+  "type": "FeatureCollection",
+  "name": "projects",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-117.23456, 32.98765] },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sample Business Park",
+        "recordId": "rec123abc",
+        "recordUrl": "https://airtable.com/rec123abc",
+        "lat": 32.98765,
+        "lon": -117.23456
+      }
+    }
+  ]
+}
