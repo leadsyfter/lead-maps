@@ -26,6 +26,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -81.4304159,
+          28.5028427
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Orlando - Vineland Business Center",
+        "recordId": "recluy8UefW9Q8OgO",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recluy8UefW9Q8OgO",
+        "navLat": 28.5026776,
+        "navLon": -81.4305437
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.23456,
           32.98765
         ]
