@@ -137,10 +137,10 @@
   // ====== SOURCES ======
   async function ensureSources() {
     if (!map.getSource('projects')) {
-      map.addSource('projects', {type:'geojson', data:'projects.geojson'});
+      map.addSource('projects', {type:'geojson', data:'projects.json'});
     }
     if (!map.getSource('comps')) {
-      map.addSource('comps', {type:'geojson', data:'comps.geojson'});
+      map.addSource('comps', {type:'geojson', data:'comps.json'});
     }
     if (!map.getSource('rings')) {
       map.addSource('rings', {type:'geojson', data: {"type":"FeatureCollection","features":[]}});
