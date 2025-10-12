@@ -52,6 +52,25 @@
       "properties": {
         "type": "Project",
         "status": "Leads",
+        "name": "Irvine - 15281 Barranca",
+        "recordId": "reczgL3WSTN9Pq7f6",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reczgL3WSTN9Pq7f6",
+        "navLat": 33.6577279,
+        "navLon": -117.736451
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.7361601,
+          33.657968
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
         "name": "Irvine - Barranca Business Park",
         "recordId": "rec6Y7WUkyqN5SEzg",
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec6Y7WUkyqN5SEzg",
