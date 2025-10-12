@@ -26,25 +26,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.0491813,
-          33.1383925
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Escondido - 2109-2127 E Valley Parkway",
-        "recordId": "recedKcvYHDwVBkzv",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recedKcvYHDwVBkzv",
-        "navLat": 33.1384572,
-        "navLon": -117.0491428
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -245,6 +226,25 @@
         "name": "San Jose - 780 Montague",
         "recordId": "rec5yXN7Tz5et9Phl",
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec5yXN7Tz5et9Phl",
+        "navLat": 37.3962963,
+        "navLon": -121.9130658
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.9130055,
+          37.3962225
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Jose - 780 Montague",
+        "recordId": "recgrDFxSkZqrwDDY",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recgrDFxSkZqrwDDY",
         "navLat": 37.3962963,
         "navLon": -121.9130658
       }
