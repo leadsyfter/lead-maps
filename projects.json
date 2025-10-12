@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -111.6881462,
+          33.3557314
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Gilbert - Power Commerce Park",
+        "recordId": "rec2h23q8H9IM7lff",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec2h23q8H9IM7lff",
+        "navLat": 33.3556286,
+        "navLon": -111.6883152
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.7361601,
           33.657968
         ]
