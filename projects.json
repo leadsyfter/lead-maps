@@ -292,6 +292,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.9130055,
+          37.3962225
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Jose - 780 Montague",
+        "recordId": "recGl1U39NRQ0Oi7D",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recGl1U39NRQ0Oi7D",
+        "navLat": 37.3962963,
+        "navLon": -121.9130658
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.2240223,
           33.1067983
         ]
