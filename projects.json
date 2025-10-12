@@ -229,6 +229,25 @@
         "navLat": 33.1068181,
         "navLon": -117.2240198
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.0475654,
+          37.3835377
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sunnyvale - 1058 West Evelyn Ave",
+        "recordId": "recJDbIra5ftrOQz6",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJDbIra5ftrOQz6",
+        "navLat": 37.3838505,
+        "navLon": -122.0473886
+      }
     }
   ]
 }
