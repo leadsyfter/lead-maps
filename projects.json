@@ -691,6 +691,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.9582426,
+          37.3838573
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Clara - 3501-3511 Thomas Road",
+        "recordId": "recPSQeuL4xTTJocB",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recPSQeuL4xTTJocB",
+        "navLat": 37.3840279,
+        "navLon": -121.9583542
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0475654,
           37.3835377
         ]
