@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8851462,
+          33.8592253
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Anaheim - 2350 E. Orangethorpe Ave",
+        "recordId": "recehp28gxiDf8l08",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recehp28gxiDf8l08",
+        "navLat": 33.8593521,
+        "navLon": -117.8851537
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
