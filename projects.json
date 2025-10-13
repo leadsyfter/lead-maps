@@ -45,18 +45,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.0282775,
-          33.7438094
+          -118.0324893,
+          33.743006
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Huntington Beach - Huntington Plaza",
-        "recordId": "recgs3XDOLMQS7IOy",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recgs3XDOLMQS7IOy",
-        "navLat": 33.7438314,
-        "navLon": -118.0284754
+        "name": "Huntington Beach - Huntington Commerce Center",
+        "recordId": "recQylkgLQqcY4d6L",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recQylkgLQqcY4d6L",
+        "navLat": 33.7429127,
+        "navLon": -118.0324935
       }
     },
     {
