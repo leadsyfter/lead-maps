@@ -7,25 +7,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.8807825,
-          33.6693337
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Costa Mesa - Stonemill Design Center",
-        "recordId": "recg3s4m5dB9AAyxN",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recg3s4m5dB9AAyxN",
-        "navLat": 33.6692976,
-        "navLon": -117.8808192
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -117.0491813,
           33.1383925
         ]
@@ -665,6 +646,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJDbIra5ftrOQz6",
         "navLat": 37.3838505,
         "navLon": -122.0473886
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.2471346,
+          33.7818449
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Wilmington - Wilmington Industrial Park",
+        "recordId": "recBN2LrXeKfBFKJW",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recBN2LrXeKfBFKJW",
+        "navLat": 33.78191109999999,
+        "navLon": -118.2471404
       }
     }
   ]
