@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8807825,
+          33.6693337
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Costa Mesa - Stonemill Design Center",
+        "recordId": "recg3s4m5dB9AAyxN",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recg3s4m5dB9AAyxN",
+        "navLat": 33.6692976,
+        "navLon": -117.8808192
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
@@ -342,25 +361,6 @@
         "recordUrl": "https://airtable.com/rec123abc",
         "lat": 32.98765,
         "lon": -117.23456
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -121.9076127,
-          37.3914531
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "San Jose - 2109 OToole Ave",
-        "recordId": "recbQFV7w7HKAFw4a",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbQFV7w7HKAFw4a",
-        "navLat": 37.3914081,
-        "navLon": -121.9073871
       }
     },
     {
