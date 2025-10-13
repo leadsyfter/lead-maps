@@ -235,6 +235,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.711175,
+          33.6477015
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Goodyear Business Park",
+        "recordId": "recbgb7QBbkg6x4B2",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbgb7QBbkg6x4B2",
+        "navLat": 33.6478436,
+        "navLon": -117.7113555
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
@@ -684,25 +703,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recBN2LrXeKfBFKJW",
         "navLat": 33.78191109999999,
         "navLon": -118.2471404
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.8368042,
-          33.9055198
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Yorba Linda - Yorba Linda Commerce Center",
-        "recordId": "recXFhGGcqG9I8ZR5",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recXFhGGcqG9I8ZR5",
-        "navLat": 33.9055267,
-        "navLon": -117.8371601
       }
     }
   ]
