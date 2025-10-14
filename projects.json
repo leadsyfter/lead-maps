@@ -368,18 +368,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.2029879,
-          37.4808773
+          -122.2018748,
+          37.4812054
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Redwood City - 2975-2999 Spring St and 815 & 837 2nd Ave",
-        "recordId": "recXvggWCzVLiVUs7",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recXvggWCzVLiVUs7",
-        "navLat": 37.4809634,
-        "navLon": -122.2028971
+        "name": "Redwood City - 3005 Spring St",
+        "recordId": "recZhm9n7WL1qBQri",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recZhm9n7WL1qBQri",
+        "navLat": 37.4810151,
+        "navLon": -122.2021422
       }
     },
     {
