@@ -2,383 +2,436 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Projects & Comps Map</title>
+<title>Projects & Comps — Modern Map</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
+<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <style>
-  html, body { height:100%; margin:0; }
-  #map { position:absolute; top:0; bottom:0; width:100%; }
-  .controls {
-    position:absolute; z-index:2; top:10px; left:10px;
-    background:#fff; padding:10px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,.15);
-    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:13px;
-    max-width:280px;
+  :root{
+    --bg: #0b1220; --panel: rgba(255,255,255,.9); --ink:#0f172a; --muted:#475569;
+    --accent:#003d60; --glass: rgba(255,255,255,.72);
   }
-  .controls h3 { margin:0 0 6px; font-size:14px; }
-  .legend { display:grid; grid-template-columns:18px 1fr; gap:6px 8px; align-items:center; margin-top:6px; }
-  .swatch { width:18px; height:18px; border:1px solid #00000022; border-radius:3px; }
-  .popup { max-width:320px; }
-  .popup img { width:100%; height:auto; display:block; border-radius:4px; margin-bottom:8px; }
-  .popup .title { font-weight:600; margin-bottom:4px; }
-  .popup .meta { color:#444; margin-bottom:6px; }
-  .popup .btns a {
-    display:inline-block; margin-right:8px; margin-top:6px; padding:6px 10px; border-radius:4px;
-    border:1px solid #00000022; text-decoration:none; font-weight:600;
+  html,body{height:100%;margin:0}
+  #map{position:absolute;inset:0}
+  /* Glass panel */
+  .panel{
+    position:absolute; z-index:3; top:16px; left:16px; width:320px;
+    background: var(--glass); backdrop-filter: blur(10px);
+    border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    color: var(--ink); overflow: hidden; border: 1px solid rgba(15,23,42,.06);
   }
+  .panel header{padding:14px 16px 10px; border-bottom:1px solid rgba(15,23,42,.06)}
+  .title{font-weight:700; font-size:15px}
+  .subtitle{font-size:12px; color:var(--muted)}
+  .section{padding:12px 16px; border-top:1px solid rgba(15,23,42,.06)}
+  .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  .row label{font-size:13px; color:var(--ink); display:flex; align-items:center; gap:6px}
+  select, .chip{
+    border:1px solid rgba(15,23,42,.12); border-radius:10px; padding:6px 10px; font-size:13px; background:#fff;
+  }
+  .legend{display:grid; grid-template-columns:16px 1fr; gap:6px 8px; align-items:center; margin-top:8px}
+  .sw{width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.12)}
+  .footer{padding:10px 16px 14px; border-top:1px solid rgba(15,23,42,.06); font-size:12px; color:var(--muted)}
+  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; background:#eef2ff; padding:1px 6px; border-radius:6px; border:1px solid #c7d2fe}
+  /* Popup */
+  .popup{max-width:360px}
+  .popup .h{font-weight:700; font-size:15px; margin:0 0 6px}
+  .popup .m{color:#475569; font-size:12px; margin-bottom:8px}
+  .btns a{display:inline-block; padding:6px 10px; border-radius:8px; font-weight:600; text-decoration:none; border:1px solid rgba(15,23,42,.12); margin-right:8px}
+  .btns a:hover{border-color: rgba(15,23,42,.3)}
+  /* Hover highlight */
+  #hover-cursor{position:absolute; pointer-events:none; z-index:2}
+  /* Geocoder container (right, stacked with nav controls) */
+  .geocoder{position:absolute; z-index:3; top:16px; right:16px; width:320px}
+  @media (max-width:900px){ .panel{width:calc(100% - 32px)} .geocoder{width:calc(100% - 32px); left:16px; right:16px; top:auto; bottom:16px} }
 </style>
 </head>
 <body>
 <div id="map"></div>
 
-<div class="controls">
-  <h3>Map Options</h3>
-  <label>Style:
-    <select id="styleSelect">
-      <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
-      <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
-      <option value="mapbox://styles/mapbox/light-v11">Light</option>
-      <option value="mapbox://styles/mapbox/dark-v11">Dark (Night)</option>
-      <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite</option>
-      <option value="mapbox://styles/mapbox/navigation-day-v1">Navigation Day</option>
-      <option value="mapbox://styles/mapbox/navigation-night-v1">Navigation Night</option>
-    </select>
-  </label>
-  <div>
-    <label><input type="checkbox" id="terrainToggle"> Terrain</label>
-    <label style="margin-left:10px;"><input type="checkbox" id="bldg3dToggle"> 3D Buildings</label>
+<!-- Glass control panel -->
+<div class="panel" id="panel">
+  <header>
+    <div class="title">Projects & Comps</div>
+    <div class="subtitle">Search, filter, cluster, rings</div>
+  </header>
+
+  <div class="section">
+    <div class="row" style="justify-content:space-between">
+      <label>Style
+        <select id="styleSelect">
+          <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+          <option value="mapbox://styles/mapbox/outdoors-v12">Outdoors</option>
+          <option value="mapbox://styles/mapbox/light-v11">Light</option>
+          <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+          <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite</option>
+          <option value="mapbox://styles/mapbox/navigation-day-v1">Nav Day</option>
+          <option value="mapbox://styles/mapbox/navigation-night-v1">Nav Night</option>
+        </select>
+      </label>
+      <label class="chip"><input type="checkbox" id="terrainToggle"> Terrain</label>
+      <label class="chip"><input type="checkbox" id="bldg3dToggle"> 3D</label>
+    </div>
   </div>
 
-  <hr>
-
-  <h3>Layers</h3>
-  <div>
-    <label><input type="checkbox" class="groupToggle" data-group="projects" checked> Projects</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Leads" checked> Leads</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Deals" checked> Deals</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Closed" checked> Closed</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Archive" checked> Archive</label>
+  <div class="section">
+    <div class="row" style="justify-content:space-between">
+      <strong style="font-size:13px">Layers</strong>
+      <div>
+        <label class="chip"><input type="checkbox" class="groupToggle" data-group="projects" checked> Projects</label>
+        <label class="chip"><input type="checkbox" class="groupToggle" data-group="comps" checked> Comps</label>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px; gap:12px">
+      <div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:4px">Projects</div>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Leads" checked> Leads</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Deals" checked> Deals</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Closed" checked> Closed</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="projects-Archive" checked> Archive</label>
+      </div>
+      <div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:4px">Comps</div>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Active" checked> Active</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Escrow" checked> Escrow</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Sold" checked> Sold</label>
+        <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Withdrawn" checked> Withdrawn</label>
+      </div>
+    </div>
+    <div class="legend" style="margin-top:10px">
+      <div class="sw" style="background:#1E90FF"></div><div>Proj: Leads</div>
+      <div class="sw" style="background:#FFA500"></div><div>Proj: Deals</div>
+      <div class="sw" style="background:#2ECC71"></div><div>Proj: Closed</div>
+      <div class="sw" style="background:#95A5A6"></div><div>Proj: Archive</div>
+      <div class="sw" style="background:#16A085"></div><div>Comps: Active</div>
+      <div class="sw" style="background:#F39C12"></div><div>Comps: Escrow</div>
+      <div class="sw" style="background:#C0392B"></div><div>Comps: Sold</div>
+      <div class="sw" style="background:#7F8C8D"></div><div>Comps: Withdrawn</div>
+    </div>
   </div>
-  <div style="margin-top:6px;">
-    <label><input type="checkbox" class="groupToggle" data-group="comps" checked> Comps</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Active" checked> Active</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Escrow" checked> Escrow</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Sold" checked> Sold</label><br/>
-    <label><input type="checkbox" class="sublayerToggle" data-layer="comps-Withdrawn" checked> Withdrawn</label>
+
+  <div class="section">
+    <strong style="font-size:13px">Rings (on selected)</strong>
+    <div class="row" style="margin-top:6px">
+      <label class="chip"><input type="checkbox" class="ringToggle" data-miles="1"> 1 mi</label>
+      <label class="chip"><input type="checkbox" class="ringToggle" data-miles="5"> 5 mi</label>
+      <label class="chip"><input type="checkbox" class="ringToggle" data-miles="10"> 10 mi</label>
+    </div>
   </div>
 
-  <hr>
-
-  <h3>Rings (on selected)</h3>
-  <label><input type="checkbox" class="ringToggle" data-miles="1"> 1 mile</label>
-  <label style="margin-left:8px;"><input type="checkbox" class="ringToggle" data-miles="5"> 5 miles</label>
-  <label style="margin-left:8px;"><input type="checkbox" class="ringToggle" data-miles="10"> 10 miles</label>
-
-  <div class="legend" style="margin-top:10px;">
-    <div class="swatch" style="background:#1E90FF"></div><div>Projects: Leads</div>
-    <div class="swatch" style="background:#FFA500"></div><div>Projects: Deals</div>
-    <div class="swatch" style="background:#2ECC71"></div><div>Projects: Closed</div>
-    <div class="swatch" style="background:#95A5A6"></div><div>Projects: Archive</div>
-    <div class="swatch" style="background:#16A085"></div><div>Comps: Active</div>
-    <div class="swatch" style="background:#F39C12"></div><div>Comps: Escrow</div>
-    <div class="swatch" style="background:#C0392B"></div><div>Comps: Sold</div>
-    <div class="swatch" style="background:#7F8C8D"></div><div>Comps: Withdrawn</div>
+  <div class="footer">
+    Tip: press <span class="kbd">G</span> to toggle geocoder, <span class="kbd">F</span> to fit bounds.
   </div>
 </div>
 
+<div class="geocoder" id="geocoder"></div>
+
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.2/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.2/mapbox-gl-geocoder.css" />
+
 <script>
-  // ====== CONFIG ======
+  // ===== CONFIG =====
   mapboxgl.accessToken = 'pk.eyJ1IjoibGVhZHN5ZnRlciIsImEiOiJjbWdsbDFzMTAxNzM2MnJuMnBhaG4zdjIzIn0.DoK-vOBajHoFXDIKK9HyGg';
   const PROJECT_STATUS = ['Leads','Deals','Closed','Archive'];
-  const COMP_STATUS = ['Active','Escrow','Sold','Withdrawn'];
+  const COMP_STATUS    = ['Active','Escrow','Sold','Withdrawn'];
+  const PROJECT_COLORS = {Leads:'#1E90FF', Deals:'#FFA500', Closed:'#2ECC71', Archive:'#95A5A6'};
+  const COMP_COLORS    = {Active:'#16A085', Escrow:'#F39C12', Sold:'#C0392B', Withdrawn:'#7F8C8D'};
 
-  const PROJECT_COLORS = {
-    'Leads':'#1E90FF',
-    'Deals':'#FFA500',
-    'Closed':'#2ECC71',
-    'Archive':'#95A5A6'
-  };
-  const COMP_COLORS = {
-    'Active':'#16A085',
-    'Escrow':'#F39C12',
-    'Sold':'#C0392B',
-    'Withdrawn':'#7F8C8D'
-  };
+  // Circle paints
+  const PROJECT_PAINT = (s)=>({'circle-radius': 7,'circle-color': PROJECT_COLORS[s],'circle-stroke-color': '#00000040','circle-stroke-width': 1.25});
+  const COMP_PAINT    = (s)=>({'circle-radius': 7,'circle-color': '#00000000','circle-stroke-color': COMP_COLORS[s],'circle-stroke-width': 2.25});
 
-  // Different marker "style":
-  // - Projects: solid circles
-  // - Comps: hollow circles (thick outline)
-  const PROJECT_PAINT = (status)=>({
-    'circle-radius': 7,
-    'circle-color': PROJECT_COLORS[status],
-    'circle-stroke-color': '#00000066',
-    'circle-stroke-width': 1.25
-  });
-  const COMP_PAINT = (status)=>({
-    'circle-radius': 7,
-    'circle-color': '#00000000',
-    'circle-stroke-color': COMP_COLORS[status],
-    'circle-stroke-width': 2.25
-  });
-
-  // ====== MAP INIT ======
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [-117.15, 32.78],
-    zoom: 10
-  });
-
+  // ===== MAP =====
+  const map = new mapboxgl.Map({container:'map', style:'mapbox://styles/mapbox/streets-v12', center:[-117.15,32.78], zoom:10});
   map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}), 'bottom-right');
   map.addControl(new mapboxgl.FullscreenControl(), 'bottom-right');
-  map.addControl(new mapboxgl.ScaleControl({maxWidth:100, unit:'imperial'}));
+  map.addControl(new mapboxgl.ScaleControl({maxWidth:120, unit:'imperial'}));
 
-  // ====== SOURCES ======
-  async function ensureSources() {
-    if (!map.getSource('projects')) {
-      map.addSource('projects', {type:'geojson', data:'projects.json'});
+  const geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken, mapboxgl, marker:false, placeholder:'Search address or place...' });
+  document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
+  // ===== DATA LOAD + REPAIR =====
+  async function fetchJSON(path){ const r=await fetch(path, {cache:'no-cache'}); if(!r.ok) throw new Error(`Fetch ${path} ${r.status}`); return r.json(); }
+
+  function normalizeFeature(f, group){
+    const p = f.properties = {...(f.properties||{})};
+    // Group tag
+    p._group = group; // 'projects' | 'comps'
+    // Type
+    if(!p.type) p.type = (group === 'comps' ? 'Comp' : 'Project');
+    if(group === 'comps' && p.type !== 'Comp') p.type = 'Comp';
+    if(group === 'projects' && p.type !== 'Project') p.type = 'Project';
+    // Status fallback
+    if(group==='projects' && !PROJECT_STATUS.includes(p.status)) p.status = 'Leads';
+    if(group==='comps' && !COMP_STATUS.includes(p.status)) p.status = 'Active';
+    // Nav URL
+    if(!p.navUrl && p.navLat != null && p.navLon != null){
+      p.navUrl = `https://www.google.com/maps/dir/?api=1&destination=${p.navLat},${p.navLon}&travelmode=driving`;
     }
-    if (!map.getSource('comps')) {
-      map.addSource('comps', {type:'geojson', data:'comps.json'});
-    }
-    if (!map.getSource('rings')) {
-      map.addSource('rings', {type:'geojson', data: {"type":"FeatureCollection","features":[]}});
-    }
+    return f;
   }
 
-  // ====== LAYERS (with status sublayers) ======
-  function addProjectLayers() {
-    PROJECT_STATUS.forEach((s, idx) => {
-      const id = `projects-${s}`;
-      if (map.getLayer(id)) return;
-      map.addLayer({
-        id,
-        type: 'circle',
-        source: 'projects',
-        filter: ['all', ['==', ['get','status'], s], ['==', ['get','type'], 'Project']],
-        paint: PROJECT_PAINT(s)
-      }, firstSymbolId()); // insert before first symbol layer for clarity
-      map.on('click', id, e => onFeatureClick(e));
-      map.on('mouseenter', id, ()=> map.getCanvas().style.cursor='pointer');
-      map.on('mouseleave', id, ()=> map.getCanvas().style.cursor='');
+  function bboxOf(fc){
+    const b = new mapboxgl.LngLatBounds();
+    fc.features.forEach(f=>{
+      if(f.geometry?.type === 'Point'){
+        const [lng,lat] = f.geometry.coordinates;
+        if(Number.isFinite(lng) && Number.isFinite(lat)) b.extend([lng,lat]);
+      }
     });
+    return b;
   }
 
-  function addCompLayers() {
-    COMP_STATUS.forEach((s, idx) => {
-      const id = `comps-${s}`;
-      if (map.getLayer(id)) return;
-      map.addLayer({
-        id,
-        type: 'circle',
-        source: 'comps',
-        filter: ['all', ['==', ['get','status'], s], ['==', ['get','type'], 'Comp']],
-        paint: COMP_PAINT(s)
-      }, firstSymbolId());
-      map.on('click', id, e => onFeatureClick(e));
-      map.on('mouseenter', id, ()=> map.getCanvas().style.cursor='pointer');
-      map.on('mouseleave', id, ()=> map.getCanvas().style.cursor='');
-    });
+  let dataProjects = null, dataComps = null;
+
+  async function loadData(){
+    const [p,c] = await Promise.all([
+      fetchJSON('projects.json'),
+      fetchJSON('comps.json')
+    ]);
+    p.features.forEach(f=>normalizeFeature(f,'projects'));
+    c.features.forEach(f=>normalizeFeature(f,'comps'));
+    dataProjects = p; dataComps = c;
   }
 
-  function firstSymbolId() {
+  // ===== SOURCES + LAYERS (with CLUSTERS) =====
+  function addOrUpdateSource(id, data){
+    if(map.getSource(id)){
+      map.getSource(id).setData(data);
+      return;
+    }
+    map.addSource(id, { type:'geojson', data, cluster:true, clusterMaxZoom:14, clusterRadius:40 });
+  }
+
+  function firstSymbolId(){
     const layers = map.getStyle().layers;
-    for (const l of layers) {
-      if (l.type === 'symbol') return l.id;
-    }
+    for(const l of layers){ if(l.type === 'symbol') return l.id; }
     return undefined;
   }
 
-  // ====== POPUP & RINGS ======
-  let popup;
-  let selectedLngLat = null;
-
-  function onFeatureClick(e) {
-    const f = e.features[0];
-    const p = f.properties;
-    const coord = f.geometry.type === 'Point'
-      ? f.geometry.coordinates.slice()
-      : e.lngLat.toArray();
-
-    selectedLngLat = coord;
-
-    const fmt = (v)=> (v===null||typeof v==="undefined"||v==="") ? "—" : v;
-    const img = p.streetViewImgUrl ? `<img src="${fmt(p.streetViewImgUrl)}" alt="Street View">` : "";
-    const title = `${fmt(p.name)} (${fmt(p.type)} — ${fmt(p.status)})`;
-    const meta = `${fmt(p.address)}<br>${Number(p.sqft||0).toLocaleString()} sf · $${Number(p.price||0).toLocaleString()} · $${Number(p.ppsf||0).toFixed(2)}/sf`;
-
-    const btns = `
-      <div class="btns">
-        <a href="${fmt(p.navUrl)}" target="_blank" rel="noopener">Navigate</a>
-        <a href="${fmt(p.recordUrl)}" target="_blank" rel="noopener">View Info</a>
-      </div>`;
-
-    const viewStreet = p.streetViewUrl ? `<div><a href="${fmt(p.streetViewUrl)}" target="_blank" rel="noopener">Open Street View</a></div>` : "";
-
-    const html = `
-      <div class="popup">
-        ${img}
-        <div class="title">${title}</div>
-        <div class="meta">${meta}</div>
-        ${btns}
-        ${viewStreet}
-      </div>`;
-
-    if (popup) popup.remove();
-    popup = new mapboxgl.Popup({offset:15, maxWidth:"360px"})
-      .setLngLat(coord)
-      .setHTML(html)
-      .addTo(map);
-
-    updateRings(); // refresh rings in case toggles are on
+  function addClusterLayers(baseId, circleColor){
+    // clusters
+    const clusterId = `${baseId}-clusters`;
+    if(!map.getLayer(clusterId)){
+      map.addLayer({
+        id: clusterId, type:'circle', source: baseId, filter:['has','point_count'],
+        paint:{ 'circle-color': circleColor, 'circle-radius': ['interpolate',['linear'],['get','point_count'], 10,14, 50,20, 250,28], 'circle-opacity':0.85 }
+      }, firstSymbolId());
+    }
+    // counts
+    const countId = `${baseId}-count`;
+    if(!map.getLayer(countId)){
+      map.addLayer({
+        id: countId, type:'symbol', source: baseId, filter:['has','point_count'],
+        layout:{ 'text-field':['to-string',['get','point_count']], 'text-font':['Open Sans Bold','Arial Unicode MS Bold'], 'text-size':12 }
+      });
+    }
+    // click to zoom in
+    map.on('click', clusterId, (e)=>{
+      const fs = map.queryRenderedFeatures(e.point, {layers:[clusterId]});
+      const clusterIdVal = fs[0].properties.cluster_id;
+      map.getSource(baseId).getClusterExpansionZoom(clusterIdVal, (err, zoom)=>{
+        if(err) return;
+        map.easeTo({center: fs[0].geometry.coordinates, zoom});
+      });
+    });
+    map.on('mouseenter', clusterId, ()=> map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave', clusterId, ()=> map.getCanvas().style.cursor='');
   }
 
-  function updateRings() {
-    if (!selectedLngLat) return;
-    const milesOn = Array.from(document.querySelectorAll('.ringToggle'))
-      .filter(cb => cb.checked)
-      .map(cb => Number(cb.dataset.miles));
+  function addStatusLayers(){
+    // Unclustered points only
+    PROJECT_STATUS.forEach(s=>{
+      const id = `projects-${s}`;
+      if(!map.getLayer(id)){
+        map.addLayer({
+          id, type:'circle', source:'projects',
+          filter:['all', ['!',['has','point_count']], ['==',['get','status'], s], ['==',['get','type'],'Project']],
+          paint: PROJECT_PAINT(s)
+        }, firstSymbolId());
+        wireFeatureEvents(id);
+      }
+    });
+    COMP_STATUS.forEach(s=>{
+      const id = `comps-${s}`;
+      if(!map.getLayer(id)){
+        map.addLayer({
+          id, type:'circle', source:'comps',
+          filter:['all', ['!',['has','point_count']], ['==',['get','status'], s], ['==',['get','type'],'Comp']],
+          paint: COMP_PAINT(s)
+        }, firstSymbolId());
+        wireFeatureEvents(id);
+      }
+    });
+  }
 
-    const features = milesOn.map(m => {
-      const poly = turf.circle([selectedLngLat[0], selectedLngLat[1]], m, {steps: 128, units:'miles'});
-      poly.properties = { miles: m };
+  // ===== POPUPS / RINGS / HOVER =====
+  let popup, selectedLngLat=null;
+
+  function fmt(v){ return (v==null || v==="") ? "—" : v; }
+
+  function popupHTML(p){
+    const title = `${fmt(p.name)} ${p._group==='comps' ? '(Comp)' : ''}`;
+    const sub = [fmt(p.address), fmt(p.status)].filter(Boolean).join(' • ');
+    const meta = [];
+    if(p.sqft) meta.push(`${Number(p.sqft).toLocaleString()} sf`);
+    if(p.price) meta.push(`$${Number(p.price).toLocaleString()}`);
+    if(p.ppsf) meta.push(`$${Number(p.ppsf).toFixed(2)}/sf`);
+
+    return `
+      <div class="popup">
+        <div class="h">${title}</div>
+        <div class="m">${sub}</div>
+        ${meta.length ? `<div class="m">${meta.join(' · ')}</div>` : ``}
+        <div class="btns">
+          ${p.navUrl ? `<a href="${p.navUrl}" target="_blank" rel="noopener">Navigate</a>` : ``}
+          ${p.recordUrl ? `<a href="${p.recordUrl}" target="_blank" rel="noopener">View Info</a>` : ``}
+        </div>
+      </div>`;
+  }
+
+  function wireFeatureEvents(layerId){
+    map.on('click', layerId, (e)=>{
+      const f = e.features[0];
+      const coord = f.geometry.coordinates.slice();
+      selectedLngLat = coord;
+
+      if(popup) popup.remove();
+      popup = new mapboxgl.Popup({offset:15, maxWidth:"360px"})
+        .setLngLat(coord)
+        .setHTML(popupHTML(f.properties))
+        .addTo(map);
+
+      updateRings();
+    });
+    map.on('mouseenter', layerId, ()=> map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave', layerId, ()=> map.getCanvas().style.cursor='');
+  }
+
+  function updateRings(){
+    if(!selectedLngLat) return;
+    const milesOn = Array.from(document.querySelectorAll('.ringToggle')).filter(cb=>cb.checked).map(cb=>Number(cb.dataset.miles));
+    const features = milesOn.map(m=>{
+      const poly = turf.circle([selectedLngLat[0], selectedLngLat[1]], m, {steps:128, units:'miles'});
+      poly.properties = {miles:m};
       return poly;
     });
+    const fc = {type:'FeatureCollection', features};
+    if(!map.getSource('rings')) map.addSource('rings', {type:'geojson', data: fc});
+    else map.getSource('rings').setData(fc);
 
-    const fc = { type:'FeatureCollection', features };
-    map.getSource('rings').setData(fc);
-
-    // Add/ensure ring layers (fill + outline)
-    if (!map.getLayer('rings-fill')) {
-      map.addLayer({
-        id:'rings-fill', type:'fill', source:'rings',
-        paint:{ 'fill-color':'#4a90e2', 'fill-opacity':0.08 }
-      }, firstSymbolId());
+    if(!map.getLayer('rings-fill')){
+      map.addLayer({ id:'rings-fill', type:'fill', source:'rings', paint:{'fill-color':'#4a90e2','fill-opacity':0.08} }, firstSymbolId());
     }
-    if (!map.getLayer('rings-line')) {
-      map.addLayer({
-        id:'rings-line', type:'line', source:'rings',
-        paint:{ 'line-color':'#4a90e2', 'line-width':2, 'line-dasharray':[2,2] }
-      }, firstSymbolId());
+    if(!map.getLayer('rings-line')){
+      map.addLayer({ id:'rings-line', type:'line', source:'rings', paint:{'line-color':'#4a90e2','line-width':2,'line-dasharray':[2,2]} }, firstSymbolId());
     }
   }
 
-  // ====== STYLE / TERRAIN / 3D ======
-  function addTerrainAndSky() {
-    if (!map.getSource('mapbox-dem')) {
-      map.addSource('mapbox-dem', {
-        type: 'raster-dem',
-        url: 'mapbox://mapbox.terrain-rgb',
-        tileSize: 512
-      });
+  // ===== TERRAIN / 3D =====
+  function addTerrainAndSky(){
+    if(!map.getSource('mapbox-dem')){
+      map.addSource('mapbox-dem',{type:'raster-dem', url:'mapbox://mapbox.terrain-rgb', tileSize:512});
     }
-    map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.2 });
-    if (!map.getLayer('sky')) {
-      map.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun-intensity': 15
-        }
-      });
+    map.setTerrain({source:'mapbox-dem', exaggeration:1.2});
+    if(!map.getLayer('sky')){
+      map.addLayer({id:'sky', type:'sky', paint:{'sky-type':'atmosphere','sky-atmosphere-sun-intensity':15}});
     }
   }
-
-  function removeTerrainAndSky() {
-    map.setTerrain(null);
-    if (map.getLayer('sky')) map.removeLayer('sky');
-    if (map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
+  function removeTerrainAndSky(){
+    map.setTerrain(null); if(map.getLayer('sky')) map.removeLayer('sky'); if(map.getSource('mapbox-dem')) map.removeSource('mapbox-dem');
   }
-
-  function add3DBuildings() {
-    // insert 3D buildings just above labels
-    const labelLayerId = firstSymbolId();
-    if (map.getLayer('3d-buildings')) return;
+  function add3DBuildings(){
+    const labelId = firstSymbolId();
+    if(map.getLayer('3d-buildings')) return;
     map.addLayer({
-      'id': '3d-buildings',
-      'source': 'composite',
-      'source-layer': 'building',
-      'filter': ['==', ['get', 'extrude'], 'true'],
-      'type': 'fill-extrusion',
-      'minzoom': 15,
-      'paint': {
-        'fill-extrusion-color': '#aaa',
-        'fill-extrusion-height': ['get', 'height'],
-        'fill-extrusion-base': ['get', 'min_height'],
-        'fill-extrusion-opacity': 0.6
-      }
-    }, labelLayerId);
+      id:'3d-buildings', source:'composite', 'source-layer':'building', type:'fill-extrusion', minzoom:15,
+      filter:['==',['get','extrude'],'true'],
+      paint:{ 'fill-extrusion-color':'#aaa','fill-extrusion-height':['get','height'],'fill-extrusion-base':['get','min_height'],'fill-extrusion-opacity':0.6 }
+    }, labelId);
   }
+  function remove3DBuildings(){ if(map.getLayer('3d-buildings')) map.removeLayer('3d-buildings'); }
 
-  function remove3DBuildings() {
-    if (map.getLayer('3d-buildings')) map.removeLayer('3d-buildings');
-  }
+  // ===== BUILD / REBUILD =====
+  async function rebuild(){
+    await loadData();
 
-  // Handle style switching: re-add sources/layers after each style load
-  async function rebuildAfterStyleLoad() {
-    await ensureSources();
-    addProjectLayers();
-    addCompLayers();
+    addOrUpdateSource('projects', dataProjects);
+    addOrUpdateSource('comps',    dataComps);
 
-    // Rebuild rings source/layers (if any toggles are checked)
-    if (!map.getSource('rings')) {
-      map.addSource('rings', {type:'geojson', data: {"type":"FeatureCollection","features":[]}});
+    // Cluster layers
+    addClusterLayers('projects', '#60a5fa'); // blue-ish
+    addClusterLayers('comps',    '#34d399'); // green-ish
+
+    // Unclustered status layers
+    addStatusLayers();
+
+    // Fit to both datasets
+    const b1 = bboxOf(dataProjects), b2 = bboxOf(dataComps);
+    let bounds = null;
+    if(!b1.isEmpty() && !b2.isEmpty()){ bounds = b1; bounds.extend(b2.getSouthWest()); bounds.extend(b2.getNorthEast()); }
+    else if(!b1.isEmpty()){ bounds = b1; }
+    else if(!b2.isEmpty()){ bounds = b2; }
+    if(bounds && !bounds.isEmpty()){
+      map.fitBounds(bounds, {padding:{top:80,bottom:80,left:80,right:380}, maxZoom:14, duration:600});
     }
-    if (selectedLngLat) updateRings();
-
-    // Respect toggles
-    document.querySelectorAll('.sublayerToggle').forEach(cb=>{
-      const id = cb.dataset.layer;
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked?'visible':'none');
-    });
-    document.querySelectorAll('.groupToggle').forEach(cb=>{
-      const grp = cb.dataset.group;
-      const ids = (grp === 'projects') ? PROJECT_STATUS.map(s=>`projects-${s}`) : COMP_STATUS.map(s=>`comps-${s}`);
-      ids.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id,'visibility',cb.checked?'visible':'none'); });
-    });
-
-    // Terrain / 3D checkboxes
-    if (document.getElementById('terrainToggle').checked) addTerrainAndSky();
-    if (document.getElementById('bldg3dToggle').checked) add3DBuildings();
   }
 
-  map.on('load', rebuildAfterStyleLoad);
+  map.on('load', rebuild);
 
-  // ====== UI EVENTS ======
+  // Rebuild layers when style changes
   document.getElementById('styleSelect').addEventListener('change', (e)=>{
     map.setStyle(e.target.value);
-    map.once('styledata', rebuildAfterStyleLoad);
+    map.once('styledata', rebuild);
   });
 
-  document.getElementById('terrainToggle').addEventListener('change', (e)=>{
-    if (e.target.checked) addTerrainAndSky(); else removeTerrainAndSky();
-  });
-
-  document.getElementById('bldg3dToggle').addEventListener('change', (e)=>{
-    if (e.target.checked) add3DBuildings(); else remove3DBuildings();
-  });
+  // UI toggles
+  document.getElementById('terrainToggle').addEventListener('change', e=> e.target.checked ? addTerrainAndSky() : removeTerrainAndSky());
+  document.getElementById('bldg3dToggle').addEventListener('change', e=> e.target.checked ? add3DBuildings() : remove3DBuildings());
 
   document.querySelectorAll('.sublayerToggle').forEach(cb=>{
     cb.addEventListener('change', ()=>{
       const id = cb.dataset.layer;
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked?'visible':'none');
+      if(map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked?'visible':'none');
     });
   });
-
   document.querySelectorAll('.groupToggle').forEach(cb=>{
     cb.addEventListener('change', ()=>{
       const grp = cb.dataset.group;
-      const ids = (grp === 'projects') ? PROJECT_STATUS.map(s=>`projects-${s}`) : COMP_STATUS.map(s=>`comps-${s}`);
-      ids.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id,'visibility', cb.checked?'visible':'none'); });
+      const ids = (grp==='projects' ? ['Leads','Deals','Closed','Archive'].map(s=>`projects-${s}`) : ['Active','Escrow','Sold','Withdrawn'].map(s=>`comps-${s}`));
+      ids.forEach(id=>{ if(map.getLayer(id)) map.setLayoutProperty(id,'visibility', cb.checked?'visible':'none'); });
+      // Also hide clusters
+      const base = grp==='projects' ? 'projects' : 'comps';
+      ['clusters','count'].forEach(sfx=>{
+        const lid = `${base}-${sfx}`;
+        if(map.getLayer(lid)) map.setLayoutProperty(lid, 'visibility', cb.checked?'visible':'none');
+      });
     });
   });
+  document.querySelectorAll('.ringToggle').forEach(cb=> cb.addEventListener('change', updateRings));
 
-  document.querySelectorAll('.ringToggle').forEach(cb=>{
-    cb.addEventListener('change', ()=> updateRings());
+  // Keyboard helpers
+  window.addEventListener('keydown', (e)=>{
+    if(e.key.toLowerCase()==='f'){
+      // Refit bounds
+      if(dataProjects || dataComps){
+        const b1 = dataProjects ? bboxOf(dataProjects) : new mapboxgl.LngLatBounds();
+        const b2 = dataComps ? bboxOf(dataComps) : new mapboxgl.LngLatBounds();
+        let bounds = null;
+        if(!b1.isEmpty() && !b2.isEmpty()){ bounds = b1; bounds.extend(b2.getSouthWest()); bounds.extend(b2.getNorthEast()); }
+        else if(!b1.isEmpty()){ bounds = b1; }
+        else if(!b2.isEmpty()){ bounds = b2; }
+        if(bounds && !bounds.isEmpty()) map.fitBounds(bounds,{padding:{top:80,bottom:80,left:80,right:380}, maxZoom:14});
+      }
+    }
+    if(e.key.toLowerCase()==='g'){
+      const el = document.getElementById('geocoder');
+      el.style.display = (el.style.display==='none'?'block':'none');
+    }
   });
-
 </script>
 </body>
 </html>
