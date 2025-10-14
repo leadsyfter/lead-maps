@@ -368,18 +368,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.2018748,
-          37.4812054
+          -122.2107512,
+          37.4838448
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Redwood City - 3005 Spring St",
-        "recordId": "recZhm9n7WL1qBQri",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recZhm9n7WL1qBQri",
-        "navLat": 37.4810151,
-        "navLon": -122.2021422
+        "name": "Redwood City - 831 Sweeney Ave",
+        "recordId": "recvJAa31AZxjgKJ8",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recvJAa31AZxjgKJ8",
+        "navLat": 37.4838322,
+        "navLon": -122.2107737
       }
     },
     {
