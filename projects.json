@@ -311,18 +311,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.5085542,
-          34.0057147
+          -117.5066095,
+          34.0065621
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Jurupa Valley - Bellegrave Business Park (Small-Bay Collection)",
-        "recordId": "recaCjuN8KiSbL5t6",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recaCjuN8KiSbL5t6",
-        "navLat": 34.0056169,
-        "navLon": -117.5087092
+        "name": "Jurupa Valley - Bellegrave Business Park (Building 18)",
+        "recordId": "recWu90g6OPMCKj6r",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recWu90g6OPMCKj6r",
+        "navLat": 34.0063811,
+        "navLon": -117.5068963
       }
     },
     {
