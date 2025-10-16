@@ -330,25 +330,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -121.2565561,
-          38.6154962
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Rancho Cordova - Gold River Business Park",
-        "recordId": "recjrGSeaWpn6re7E",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recjrGSeaWpn6re7E",
-        "navLat": 38.6155017,
-        "navLon": -121.2565376
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
@@ -418,6 +399,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recvJAa31AZxjgKJ8",
         "navLat": 37.4838322,
         "navLon": -122.2107737
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.4611825,
+          38.4987419
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sacramento - Franklin Business Park",
+        "recordId": "rec3TwvpsIz4jPARj",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec3TwvpsIz4jPARj",
+        "navLat": 38.4988129,
+        "navLon": -121.4609638
       }
     },
     {
