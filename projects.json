@@ -824,18 +824,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.4509444,
-          33.9967242
+          -118.1626381,
+          33.8059431
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Signal Hill - 2300 Walnut Ave",
-        "recordId": "recm8HUjTEJrWXAQ6",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recm8HUjTEJrWXAQ6",
-        "navLat": 33.9966589,
-        "navLon": -118.4510653
+        "name": "Signal Hill - 2698 Junipero Ave",
+        "recordId": "recF8avaVPYyS3dCw",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recF8avaVPYyS3dCw",
+        "navLat": 33.8059629,
+        "navLon": -118.1631947
       }
     },
     {
