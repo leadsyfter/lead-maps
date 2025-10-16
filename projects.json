@@ -45,25 +45,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.0491813,
-          33.1383925
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Escondido - 2109-2127 E. Valley Parkway",
-        "recordId": "recGs1UpOQWJvKkv1",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recGs1UpOQWJvKkv1",
-        "navLat": 33.1384572,
-        "navLon": -117.0491428
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -874,6 +855,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recPSQeuL4xTTJocB",
         "navLat": 37.3840279,
         "navLon": -121.9583542
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7079018,
+          38.4127034
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Rosa - 468 Yolanda Ave",
+        "recordId": "recLeLvzsJzuasrqY",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recLeLvzsJzuasrqY",
+        "navLat": 38.412659,
+        "navLon": -122.7079004
       }
     },
     {
