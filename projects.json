@@ -45,6 +45,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.0491813,
+          33.1383925
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Escondido - 2109-2127 E. Valley Parkway",
+        "recordId": "recGs1UpOQWJvKkv1",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recGs1UpOQWJvKkv1",
+        "navLat": 33.1384572,
+        "navLon": -117.0491428
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -111.6881462,
           33.3557314
         ]
