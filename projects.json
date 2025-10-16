@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.6480897,
+          34.1557185
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Calabasas - Craftsman 1",
+        "recordId": "recnNPEKvT9c3Rfxt",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recnNPEKvT9c3Rfxt",
+        "navLat": 34.1556921,
+        "navLon": -118.6480837
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.1346925,
           33.9747099
         ]
@@ -342,25 +361,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccjeBxOKtbdQvkI",
         "navLat": 28.5026776,
         "navLon": -81.4305437
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -121.2774001,
-          38.5916011
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Rancho Cordova - Prospect Industrial/Flex Center",
-        "recordId": "recA0c8eC2JviKu6G",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recA0c8eC2JviKu6G",
-        "navLat": 38.591349,
-        "navLon": -121.2769479
       }
     },
     {
