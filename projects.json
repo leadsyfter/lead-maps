@@ -368,6 +368,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.0737232,
+          37.9488979
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Pleasant Hill - Valley Center Medical & Dental",
+        "recordId": "recXoqmPwlvlVY6J7",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recXoqmPwlvlVY6J7",
+        "navLat": 37.9487028,
+        "navLon": -122.073601
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
