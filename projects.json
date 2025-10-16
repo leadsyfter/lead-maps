@@ -824,6 +824,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.169134,
+          33.8070045
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Signal Hill - 2700 Rose Ave",
+        "recordId": "rec0iyyHnxFSlcH42",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec0iyyHnxFSlcH42",
+        "navLat": 33.8070084,
+        "navLon": -118.1693077
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0475654,
           37.3835377
         ]
