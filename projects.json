@@ -330,6 +330,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.2633703,
+          38.598252
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Cordova - Sunrise Gold I",
+        "recordId": "recfu3UwPXDXCxiWR",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recfu3UwPXDXCxiWR",
+        "navLat": 38.5980541,
+        "navLon": -121.2632531
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
@@ -399,25 +418,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recvJAa31AZxjgKJ8",
         "navLat": 37.4838322,
         "navLon": -122.2107737
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -121.3103305,
-          38.5656363
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Sacramento - Skyway Commerce Center",
-        "recordId": "recHfSw4O4SOcBM0p",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recHfSw4O4SOcBM0p",
-        "navLat": 38.5657395,
-        "navLon": -121.3097616
       }
     },
     {
