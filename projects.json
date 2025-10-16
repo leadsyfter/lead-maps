@@ -824,18 +824,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.169134,
-          33.8070045
+          -118.4509444,
+          33.9967242
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Signal Hill - 2700 Rose Ave",
-        "recordId": "rec0iyyHnxFSlcH42",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec0iyyHnxFSlcH42",
-        "navLat": 33.8070084,
-        "navLon": -118.1693077
+        "name": "Signal Hill - 2300 Walnut Ave",
+        "recordId": "recm8HUjTEJrWXAQ6",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recm8HUjTEJrWXAQ6",
+        "navLat": 33.9966589,
+        "navLon": -118.4510653
       }
     },
     {
