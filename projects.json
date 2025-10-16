@@ -45,6 +45,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.3073358,
+          33.9148453
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Gardena - Bugatti Business Park",
+        "recordId": "recRNQgTkJ1kazTc0",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recRNQgTkJ1kazTc0",
+        "navLat": 33.9146172,
+        "navLon": -118.3073359
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -399,25 +418,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recvJAa31AZxjgKJ8",
         "navLat": 37.4838322,
         "navLon": -122.2107737
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -121.4611825,
-          38.4987419
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Sacramento - Franklin Business Park",
-        "recordId": "rec3TwvpsIz4jPARj",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec3TwvpsIz4jPARj",
-        "navLat": 38.4988129,
-        "navLon": -121.4609638
       }
     },
     {
