@@ -406,6 +406,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.3103305,
+          38.5656363
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sacramento - Skyway Commerce Center",
+        "recordId": "recHfSw4O4SOcBM0p",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recHfSw4O4SOcBM0p",
+        "navLat": 38.5657395,
+        "navLon": -121.3097616
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.23456,
           32.98765
         ]
