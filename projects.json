@@ -45,25 +45,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.3073358,
-          33.9148453
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Gardena - Bugatti Business Park",
-        "recordId": "recRNQgTkJ1kazTc0",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recRNQgTkJ1kazTc0",
-        "navLat": 33.9146172,
-        "navLon": -118.3073359
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -342,6 +323,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccjeBxOKtbdQvkI",
         "navLat": 28.5026776,
         "navLon": -81.4305437
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.5901631,
+          34.0913292
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Cucamonga - 9851 8th St",
+        "recordId": "reclfRoAQ2wp6ktxM",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclfRoAQ2wp6ktxM",
+        "navLat": 34.0913324,
+        "navLon": -117.590016
       }
     },
     {
