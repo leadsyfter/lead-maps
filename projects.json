@@ -7,18 +7,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.6480897,
-          34.1557185
+          -118.6490237,
+          34.1573984
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Calabasas - Craftsman 1",
-        "recordId": "recnNPEKvT9c3Rfxt",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recnNPEKvT9c3Rfxt",
-        "navLat": 34.1556921,
-        "navLon": -118.6480837
+        "name": "Calabasas - Craftsman 2 & 3",
+        "recordId": "recJKVuM7pfmjDqK1",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJKVuM7pfmjDqK1",
+        "navLat": 34.1568608,
+        "navLon": -118.6480374
       }
     },
     {
