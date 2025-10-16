@@ -349,6 +349,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.2774001,
+          38.5916011
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Cordova - Prospect Industrial/Flex Center",
+        "recordId": "recA0c8eC2JviKu6G",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recA0c8eC2JviKu6G",
+        "navLat": 38.591349,
+        "navLon": -121.2769479
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
@@ -817,25 +836,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recPSQeuL4xTTJocB",
         "navLat": 37.3840279,
         "navLon": -121.9583542
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -118.1626381,
-          33.8059431
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Signal Hill - 2698 Junipero Ave",
-        "recordId": "recF8avaVPYyS3dCw",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recF8avaVPYyS3dCw",
-        "navLat": 33.8059629,
-        "navLon": -118.1631947
       }
     },
     {
