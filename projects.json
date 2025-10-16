@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.1346925,
+          33.9747099
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Commerce - Commerce Center South",
+        "recordId": "reclyCpZkHbCznm6r",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclyCpZkHbCznm6r",
+        "navLat": 33.9747686,
+        "navLon": -118.1348483
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
@@ -266,25 +285,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbgb7QBbkg6x4B2",
         "navLat": 33.6478436,
         "navLon": -117.7113555
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.7229212,
-          33.6398057
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Irvine - Rockfield Business Center",
-        "recordId": "recBO4RzM4ne4OjdZ",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recBO4RzM4ne4OjdZ",
-        "navLat": 33.6398058,
-        "navLon": -117.7229645
       }
     },
     {
