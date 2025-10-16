@@ -273,6 +273,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.7229212,
+          33.6398057
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Rockfield Business Center",
+        "recordId": "recBO4RzM4ne4OjdZ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recBO4RzM4ne4OjdZ",
+        "navLat": 33.6398058,
+        "navLon": -117.7229645
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
