@@ -83,6 +83,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.9964406,
+          33.700933
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Huntington Beach - Talbert Industrial Park",
+        "recordId": "recwnZNIWJf8FfzZX",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recwnZNIWJf8FfzZX",
+        "navLat": 33.7009574,
+        "navLon": -117.9964793
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.7361601,
           33.657968
         ]
@@ -323,25 +342,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccjeBxOKtbdQvkI",
         "navLat": 28.5026776,
         "navLon": -81.4305437
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.5901631,
-          34.0913292
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Rancho Cucamonga - 9851 8th St",
-        "recordId": "reclfRoAQ2wp6ktxM",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclfRoAQ2wp6ktxM",
-        "navLat": 34.0913324,
-        "navLon": -117.590016
       }
     },
     {
