@@ -330,18 +330,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -121.2633703,
-          38.598252
+          -121.2565561,
+          38.6154962
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Rancho Cordova - Sunrise Gold I",
-        "recordId": "recfu3UwPXDXCxiWR",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recfu3UwPXDXCxiWR",
-        "navLat": 38.5980541,
-        "navLon": -121.2632531
+        "name": "Rancho Cordova - Gold River Business Park",
+        "recordId": "recjrGSeaWpn6re7E",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recjrGSeaWpn6re7E",
+        "navLat": 38.6155017,
+        "navLon": -121.2565376
       }
     },
     {
