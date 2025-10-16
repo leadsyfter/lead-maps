@@ -7,25 +7,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.6497469,
-          34.1562946
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Calabasas - 23961 Craftsman Rd",
-        "recordId": "recRZFRfsVvcV2c5T",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recRZFRfsVvcV2c5T",
-        "navLat": 34.1562799,
-        "navLon": -118.6495537
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -118.1346925,
           33.9747099
         ]
@@ -323,6 +304,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbgb7QBbkg6x4B2",
         "navLat": 33.6478436,
         "navLon": -117.7113555
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.5098651,
+          34.005897
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Jurupa Valley - Bellegrave Business Park (Mid-Bay Collection)",
+        "recordId": "recbopOG1AKLRHFX9",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbopOG1AKLRHFX9",
+        "navLat": 34.0058467,
+        "navLon": -117.5094721
       }
     },
     {
