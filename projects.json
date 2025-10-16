@@ -729,6 +729,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8510476,
+          33.7405064
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Ana - Grand Commerce Center",
+        "recordId": "reck6RsWgcKEf4iii",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reck6RsWgcKEf4iii",
+        "navLat": 33.740502,
+        "navLon": -117.8506765
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.9582426,
           37.3838573
         ]
