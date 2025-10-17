@@ -368,6 +368,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.4014808,
+          34.2534274
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Pacoima - 12350 Montague St",
+        "recordId": "recJHnlkgiB2mjf0o",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJHnlkgiB2mjf0o",
+        "navLat": 34.2533244,
+        "navLon": -118.4011461
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0737232,
           37.9488979
         ]
