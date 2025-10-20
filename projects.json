@@ -508,6 +508,25 @@
       "properties": {
         "type": "Project",
         "status": "Leads",
+        "name": "San Diego - Camino Santa Fe Business Park",
+        "recordId": "rec36dJtf4S2mzHve",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec36dJtf4S2mzHve",
+        "navLat": 32.8874118,
+        "navLon": -117.1844807
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.1844417,
+          32.8874462
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
         "name": "San Diego - Camino Santa Fe Business Park 7",
         "recordId": "reccTho9nczTpmovf",
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reccTho9nczTpmovf",
