@@ -957,6 +957,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.3734142,
+          34.2269863
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sun Valley - 11144 Penrose St",
+        "recordId": "recE0UeW7pQVx8mk5",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recE0UeW7pQVx8mk5",
+        "navLat": 34.2271377,
+        "navLon": -118.3737316
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0475654,
           37.3835377
         ]
