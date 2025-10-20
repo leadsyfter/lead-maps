@@ -919,6 +919,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -116.9573486,
+          32.8473331
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santee - HWY 67 Industrial Park",
+        "recordId": "rec1Ql9X02Pn6x26c",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec1Ql9X02Pn6x26c",
+        "navLat": 32.8472247,
+        "navLon": -116.9572128
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0475654,
           37.3835377
         ]
