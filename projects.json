@@ -349,6 +349,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.9358221,
+          33.6312524
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Newport Beach - 881-899 Production Pl",
+        "recordId": "recWYcK501vPta028",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recWYcK501vPta028",
+        "navLat": 33.6311621,
+        "navLon": -117.9358286
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
