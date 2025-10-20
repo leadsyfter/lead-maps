@@ -330,18 +330,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.7238285,
-          33.6219605
+          -117.7281685,
+          33.6224123
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Laguna Hills - Laguna Ridge Business Center",
-        "recordId": "recyGanu07HszVKBk",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recyGanu07HszVKBk",
-        "navLat": 33.6219341,
-        "navLon": -117.7238282
+        "name": "Laguna Hills - Lakeside Business Center",
+        "recordId": "recNm3SkaNsKc0Apy",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recNm3SkaNsKc0Apy",
+        "navLat": 33.6223359,
+        "navLon": -117.7281941
       }
     },
     {
