@@ -957,6 +957,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1820555,
+          32.9657805
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Tester123",
+        "recordId": "recS4PGJXmjnDLVgI",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recS4PGJXmjnDLVgI",
+        "navLat": 32.9658401,
+        "navLon": -117.1821771
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2471346,
           33.7818449
         ]
