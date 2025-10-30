@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.2690231,
+          33.8836512
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Carson - South Bay Trade Center",
+        "recordId": "recIUkCaRgn6MGhKV",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recIUkCaRgn6MGhKV",
+        "navLat": 33.8836933,
+        "navLon": -118.2687557
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.1346925,
           33.9747099
         ]
