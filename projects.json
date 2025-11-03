@@ -349,6 +349,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.725897,
+          33.623178
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Laguna Hills - Alcalde Business Center",
+        "recordId": "recKRN2ZtNwwNAS5L",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recKRN2ZtNwwNAS5L",
+        "navLat": 33.6231456,
+        "navLon": -117.7258993
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.7281685,
           33.6224123
         ]
