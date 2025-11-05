@@ -900,6 +900,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.4983597,
+          37.9567084
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Rafael - 3060 Kerner Blvd",
+        "recordId": "recXd5o7JY0YdgfTD",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recXd5o7JY0YdgfTD",
+        "navLat": 37.95651710000001,
+        "navLon": -122.4988618
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.8535326,
           33.7226871
         ]
