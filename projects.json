@@ -1071,6 +1071,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1562666,
+          33.4966974
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Temecula - 28545 Felix Valdez",
+        "recordId": "recHwFermEnaSYs3S",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recHwFermEnaSYs3S",
+        "navLat": 33.4967296,
+        "navLon": -117.1563467
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.1820555,
           32.9657805
         ]
