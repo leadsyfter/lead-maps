@@ -387,6 +387,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.3351982,
+          33.6319109
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Lake Elsinore - 18273 Grand Avenue",
+        "recordId": "recy2x3sAXBlbWfDg",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recy2x3sAXBlbWfDg",
+        "navLat": 33.6317329,
+        "navLon": -117.3343469
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
@@ -1064,25 +1083,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJDbIra5ftrOQz6",
         "navLat": 37.3838505,
         "navLon": -122.0473886
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.1562666,
-          33.4966974
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Temecula - 28545 Felix Valdez",
-        "recordId": "recHwFermEnaSYs3S",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recHwFermEnaSYs3S",
-        "navLat": 33.4967296,
-        "navLon": -117.1563467
       }
     },
     {
