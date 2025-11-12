@@ -349,6 +349,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.724921,
+          33.6220296
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Laguna Hills - 23172-23192 Alcalde Dr",
+        "recordId": "recKgtxeldIumAyBk",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recKgtxeldIumAyBk",
+        "navLat": 33.6220296,
+        "navLon": -117.7247968
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.725897,
           33.623178
         ]
