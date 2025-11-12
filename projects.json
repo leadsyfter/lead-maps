@@ -425,6 +425,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.7511138,
+          37.6905998
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Livermore - First Street Business Park",
+        "recordId": "reclwMxuCUkUMgEWC",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclwMxuCUkUMgEWC",
+        "navLat": 37.6905047,
+        "navLon": -121.7507719
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
