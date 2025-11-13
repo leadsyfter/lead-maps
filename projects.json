@@ -1071,6 +1071,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.0816562,
+          33.9460584
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Fe Springs - Santa Fe Springs Business Park",
+        "recordId": "reciAxwbN2Kffs60c",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reciAxwbN2Kffs60c",
+        "navLat": 33.9459033,
+        "navLon": -118.0817446
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.7079018,
           38.4127034
         ]
