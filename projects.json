@@ -1166,6 +1166,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1588041,
+          33.5282442
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Temecula - County Center Industrial Park",
+        "recordId": "reci029S7SxTMOpEZ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reci029S7SxTMOpEZ",
+        "navLat": 33.5280977,
+        "navLon": -117.1588396
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.1820555,
           32.9657805
         ]
