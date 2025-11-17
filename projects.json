@@ -330,6 +330,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8263789,
+          33.6861511
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Hammond Off-Market",
+        "recordId": "rec0kcbtKpBzkEHcn",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec0kcbtKpBzkEHcn",
+        "navLat": 33.6865393,
+        "navLon": -117.8258779
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.5066095,
           34.0065621
         ]
