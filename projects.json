@@ -691,6 +691,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1614885,
+          32.8260021
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Diego - Kearny Mesa West Business Park",
+        "recordId": "recwIfhSaIj90S9yC",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recwIfhSaIj90S9yC",
+        "navLat": 32.8257415,
+        "navLon": -117.1613335
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.9130055,
           37.3962225
         ]
