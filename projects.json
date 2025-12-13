@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.2520684,
+          33.8227549
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Carson - 1210-1250 E 223rd St",
+        "recordId": "rec0G5lnJpupYW2Jr",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec0G5lnJpupYW2Jr",
+        "navLat": 33.8228728,
+        "navLon": -118.2519439
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2690231,
           33.8836512
         ]
