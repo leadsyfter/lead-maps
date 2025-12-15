@@ -102,6 +102,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -115.0660905,
+          36.0722637
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Henderson - 12 Sunset Way",
+        "recordId": "recfWWHwzkjEV1KUL",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recfWWHwzkjEV1KUL",
+        "navLat": 36.0724879,
+        "navLon": -115.0661303
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.0324893,
           33.743006
         ]
