@@ -26,6 +26,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.2551987,
+          33.841029
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Carson - Carson Industrial Center",
+        "recordId": "rec5kAx1JT5abEiiG",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec5kAx1JT5abEiiG",
+        "navLat": 33.8411356,
+        "navLon": -118.2551888
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2690231,
           33.8836512
         ]
