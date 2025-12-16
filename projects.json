@@ -406,6 +406,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.0162081,
+          33.8737857
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "La Mirada - La Mirada Commerce Center",
+        "recordId": "recbDmcStSktT2g6W",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recbDmcStSktT2g6W",
+        "navLat": 33.8737125,
+        "navLon": -118.0161325
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.724921,
           33.6220296
         ]
