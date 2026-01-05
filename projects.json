@@ -121,6 +121,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.2955073,
+          34.1681859
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Glendale - 820-830 Thompson Ave",
+        "recordId": "reckrzCpRi1L9GmTk",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reckrzCpRi1L9GmTk",
+        "navLat": 34.1682302,
+        "navLon": -118.29546
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -115.0660905,
           36.0722637
         ]
