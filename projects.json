@@ -83,25 +83,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -104.9227546,
-          39.7733049
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Denver - 4001 Holly St",
-        "recordId": "recAz1sIkxGGZhiiZ",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recAz1sIkxGGZhiiZ",
-        "navLat": 39.7729123,
-        "navLon": -104.9226637
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -117.0491813,
           33.1383925
         ]
@@ -532,6 +513,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recNm3SkaNsKc0Apy",
         "navLat": 33.6223359,
         "navLon": -117.7281941
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.675385,
+          33.5620736
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Laguna Niguel - Three Flags Center",
+        "recordId": "recuFqi2zrvSef2rQ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recuFqi2zrvSef2rQ",
+        "navLat": 33.5620402,
+        "navLon": -117.6753867
       }
     },
     {
