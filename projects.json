@@ -83,6 +83,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -104.9227546,
+          39.7733049
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Denver - 4001 Holly St",
+        "recordId": "recAz1sIkxGGZhiiZ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recAz1sIkxGGZhiiZ",
+        "navLat": 39.7729123,
+        "navLon": -104.9226637
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
