@@ -64,6 +64,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -111.8389774,
+          33.3515917
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Chandler - Eastpoint Business Center I & II",
+        "recordId": "recJe1q3irUmwVS20",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recJe1q3irUmwVS20",
+        "navLat": 33.3521106,
+        "navLon": -111.8394434
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.1346925,
           33.9747099
         ]
