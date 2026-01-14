@@ -1280,6 +1280,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.1725551,
+          33.8162942
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Signal Hill - Walnut Avenue Business Park",
+        "recordId": "recpXnzLJ4nqNUc1t",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recpXnzLJ4nqNUc1t",
+        "navLat": 33.8162941,
+        "navLon": -118.1720047
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.3734142,
           34.2269863
         ]
