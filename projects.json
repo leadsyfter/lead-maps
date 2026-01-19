@@ -672,18 +672,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.3794074,
-          34.2258594
+          -118.2914555,
+          34.1731758
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Los Angeles - San Fernando Rd",
-        "recordId": "recPfIcBxldrajZJY",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recPfIcBxldrajZJY",
-        "navLat": 34.2259554,
-        "navLon": -118.3793449
+        "name": "Los Angeles - Thompson Ave",
+        "recordId": "recWxitlXV5HZ3AA7",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recWxitlXV5HZ3AA7",
+        "navLat": 34.1730112,
+        "navLon": -118.2912278
       }
     },
     {
