@@ -159,6 +159,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.1097538,
+          37.6205648
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Hayward - 3466 Arden Road",
+        "recordId": "receiNy8NxiE9JPEO",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/receiNy8NxiE9JPEO",
+        "navLat": 37.6208811,
+        "navLon": -122.1097677
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -115.0660905,
           36.0722637
         ]
