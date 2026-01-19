@@ -596,6 +596,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.7334233,
+          33.6287249
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Laguna Hills - Triton Way Industrial Park",
+        "recordId": "recZB94xAfyK19fK1",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recZB94xAfyK19fK1",
+        "navLat": 33.6285612,
+        "navLon": -117.7332933
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.675385,
           33.5620736
         ]
