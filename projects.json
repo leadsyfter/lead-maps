@@ -672,6 +672,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.3794074,
+          34.2258594
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Los Angeles - San Fernando Rd",
+        "recordId": "recPfIcBxldrajZJY",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recPfIcBxldrajZJY",
+        "navLat": 34.2259554,
+        "navLon": -118.3793449
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
