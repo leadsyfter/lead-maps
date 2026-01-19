@@ -102,6 +102,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8755334,
+          33.6711354
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Costa Mesa - 2990 + 3000 Airway Avenue",
+        "recordId": "recitId34mQBzxWaF",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recitId34mQBzxWaF",
+        "navLat": 33.6713644,
+        "navLon": -117.8761331
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
