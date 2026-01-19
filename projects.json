@@ -121,6 +121,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.0060512,
+          33.7986358
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Garden Grove",
+        "recordId": "recQHHNL6XfYOWFGv",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recQHHNL6XfYOWFGv",
+        "navLat": 33.7986569,
+        "navLon": -118.0060534
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -608,25 +627,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclwMxuCUkUMgEWC",
         "navLat": 37.6905047,
         "navLon": -121.7507719
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.9984624,
-          33.728357
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Lorge Circle",
-        "recordId": "recni3nTzah01mRG5",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recni3nTzah01mRG5",
-        "navLat": 33.7283471,
-        "navLon": -117.9986579
       }
     },
     {
