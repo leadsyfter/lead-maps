@@ -425,6 +425,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8473066,
+          33.6983489
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Gilette",
+        "recordId": "receTs2YK6GsFFeX9",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/receTs2YK6GsFFeX9",
+        "navLat": 33.6982678,
+        "navLon": -117.8471898
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.711175,
           33.6477015
         ]
@@ -798,25 +817,6 @@
         "recordUrl": "https://airtable.com/rec123abc",
         "lat": 32.98765,
         "lon": -117.23456
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.590393,
-          33.4475546
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "San Clemente - Calle Iglesia",
-        "recordId": "receD8YyQ63Jtt5rz",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/receD8YyQ63Jtt5rz",
-        "navLat": 33.4477844,
-        "navLon": -117.5901477
       }
     },
     {
