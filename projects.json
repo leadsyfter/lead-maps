@@ -102,6 +102,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.878948,
+          33.6772264
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Costa Mesa - Briggs Ave",
+        "recordId": "recQV2HlteQNUYN7D",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recQV2HlteQNUYN7D",
+        "navLat": 33.6774074,
+        "navLon": -117.8789778
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
