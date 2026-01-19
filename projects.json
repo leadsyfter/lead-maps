@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8972297,
+          33.8017856
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Anaheim - Lewis Street",
+        "recordId": "recB3SyMh56Uck0Bt",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recB3SyMh56Uck0Bt",
+        "navLat": 33.8018472,
+        "navLon": -117.8972317
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2520684,
           33.8227549
         ]
@@ -95,25 +114,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reclyCpZkHbCznm6r",
         "navLat": 33.9747686,
         "navLon": -118.1348483
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.8755334,
-          33.6711354
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Costa Mesa - 2990 + 3000 Airway Avenue",
-        "recordId": "recitId34mQBzxWaF",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recitId34mQBzxWaF",
-        "navLat": 33.6713644,
-        "navLon": -117.8761331
       }
     },
     {
