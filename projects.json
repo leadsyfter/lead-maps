@@ -121,25 +121,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -118.0060512,
-          33.7986358
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Garden Grove",
-        "recordId": "recQHHNL6XfYOWFGv",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recQHHNL6XfYOWFGv",
-        "navLat": 33.7986569,
-        "navLon": -118.0060534
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -817,6 +798,25 @@
         "recordUrl": "https://airtable.com/rec123abc",
         "lat": 32.98765,
         "lon": -117.23456
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.590393,
+          33.4475546
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Clemente - Calle Iglesia",
+        "recordId": "receD8YyQ63Jtt5rz",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/receD8YyQ63Jtt5rz",
+        "navLat": 33.4477844,
+        "navLon": -117.5901477
       }
     },
     {
