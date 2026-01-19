@@ -1394,6 +1394,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.3582488,
+          34.2125145
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sun Valley - Airport Industrial Park",
+        "recordId": "recb7wEFt6nTgjN1c",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recb7wEFt6nTgjN1c",
+        "navLat": 34.2124317,
+        "navLon": -118.3583165
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.0475654,
           37.3835377
         ]
