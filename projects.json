@@ -121,6 +121,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.9145097,
+          37.7069582
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Dublin - Sierra Trinity Business Park",
+        "recordId": "rec4kdN08owDEc3LZ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec4kdN08owDEc3LZ",
+        "navLat": 37.7070178,
+        "navLon": -121.9147176
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
