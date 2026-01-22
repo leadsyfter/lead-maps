@@ -520,6 +520,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8562808,
+          33.6968849
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Reynold Business Park",
+        "recordId": "rec11YBHlAQiJsfnF",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec11YBHlAQiJsfnF",
+        "navLat": 33.6973548,
+        "navLon": -117.8563981
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.5066095,
           34.0065621
         ]
