@@ -824,6 +824,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.6017436,
+          34.0943293
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Cucamonga - 9311 Jersey Blvd.",
+        "recordId": "receh6U8diqBGFYMQ",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/receh6U8diqBGFYMQ",
+        "navLat": 34.0942674,
+        "navLon": -117.6017127
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
