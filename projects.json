@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.8400711,
+          33.8581022
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Anaheim - 1188 N Grove St",
+        "recordId": "recNZmZ2GDg3hMTst",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recNZmZ2GDg3hMTst",
+        "navLat": 33.8581609,
+        "navLon": -117.840069
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2520684,
           33.8227549
         ]
