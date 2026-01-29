@@ -7,25 +7,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.8400711,
-          33.8581022
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Anaheim - 1188 N Grove St",
-        "recordId": "recNZmZ2GDg3hMTst",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recNZmZ2GDg3hMTst",
-        "navLat": 33.8581609,
-        "navLon": -117.840069
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -118.2520684,
           33.8227549
         ]
@@ -1349,6 +1330,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recUkWm8OA79QTpf0",
         "navLat": 33.7227931,
         "navLon": -117.8535305
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -117.8990165,
+          33.7462022
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Ana - 2222-2308 W. 2nd St.",
+        "recordId": "rec6z2GSh5f8tMrJt",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec6z2GSh5f8tMrJt",
+        "navLat": 33.7464133,
+        "navLon": -117.8989541
       }
     },
     {
