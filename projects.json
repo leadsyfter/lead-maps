@@ -824,6 +824,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.7257405,
+          34.058106
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Pomona - Pomona Multi-Tenant Industrial",
+        "recordId": "recVLZOh1YK0mNruW",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recVLZOh1YK0mNruW",
+        "navLat": 34.0581037,
+        "navLon": -117.7255155
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.6017436,
           34.0943293
         ]
