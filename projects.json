@@ -1337,25 +1337,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.8990165,
-          33.7462022
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Santa Ana - 2222-2308 W. 2nd St.",
-        "recordId": "rec6z2GSh5f8tMrJt",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec6z2GSh5f8tMrJt",
-        "navLat": 33.7464133,
-        "navLon": -117.8989541
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -117.8510476,
           33.7405064
         ]
