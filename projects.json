@@ -824,6 +824,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.5718008,
+          45.5778018
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Portland - PDX Junction",
+        "recordId": "recNVCTzUh2HRLqbj",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recNVCTzUh2HRLqbj",
+        "navLat": 45.5778432,
+        "navLon": -122.5713192
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.6017436,
           34.0943293
         ]
