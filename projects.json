@@ -729,6 +729,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1003728,
+          32.6541649
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "National City - 131 W. 33rd St.",
+        "recordId": "recIpm2OkWFgxYOYG",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recIpm2OkWFgxYOYG",
+        "navLat": 32.6540375,
+        "navLon": -117.1001684
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -81.431594,
           28.5052254
         ]
