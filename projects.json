@@ -140,6 +140,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.1215117,
+          33.1277468
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Escondido - 1991 Don Lee Place",
+        "recordId": "recZ1vQZad6YbdKuX",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recZ1vQZad6YbdKuX",
+        "navLat": 33.1277072,
+        "navLon": -117.1215305
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.0491813,
           33.1383925
         ]
