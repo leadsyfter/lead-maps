@@ -976,6 +976,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.4398742,
+          38.6045113
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sacramento - 2151 Blumenfeld Drive",
+        "recordId": "recLp9sAyy4E3YHrv",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recLp9sAyy4E3YHrv",
+        "navLat": 38.6044788,
+        "navLon": -121.4399093
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.23456,
           32.98765
         ]
