@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.2436004,
+          33.1307171
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Carlsbad - Palomar Forum",
+        "recordId": "rec084X2eIV80j8JU",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec084X2eIV80j8JU",
+        "navLat": 33.130698,
+        "navLon": -117.2435412
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2520684,
           33.8227549
         ]
@@ -703,25 +722,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recy2x3sAXBlbWfDg",
         "navLat": 33.6317329,
         "navLon": -117.3343469
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -117.6924575,
-          33.6645998
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Lake Forest - Lake Forest Business Center",
-        "recordId": "recUHloGGLjImK3qY",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recUHloGGLjImK3qY",
-        "navLat": 33.6645917,
-        "navLon": -117.6922915
       }
     },
     {
