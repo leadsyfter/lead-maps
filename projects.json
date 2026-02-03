@@ -995,6 +995,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.4590348,
+          38.6382524
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sacramento - North Point Business Park",
+        "recordId": "recaPbIybTk1YoN3K",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recaPbIybTk1YoN3K",
+        "navLat": 38.6385921,
+        "navLon": -121.4591365
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.23456,
           32.98765
         ]
