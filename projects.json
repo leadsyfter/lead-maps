@@ -710,6 +710,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.6924575,
+          33.6645998
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Lake Forest - Lake Forest Business Center",
+        "recordId": "recUHloGGLjImK3qY",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recUHloGGLjImK3qY",
+        "navLat": 33.6645917,
+        "navLon": -117.6922915
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.7511138,
           37.6905998
         ]
@@ -988,25 +1007,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recLp9sAyy4E3YHrv",
         "navLat": 38.6044788,
         "navLon": -121.4399093
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -121.4590348,
-          38.6382524
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Sacramento - North Point Business Park",
-        "recordId": "recaPbIybTk1YoN3K",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recaPbIybTk1YoN3K",
-        "navLat": 38.6385921,
-        "navLon": -121.4591365
       }
     },
     {
