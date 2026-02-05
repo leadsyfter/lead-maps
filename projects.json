@@ -7,6 +7,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -80.1129346,
+          26.4077853
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Boca Raton - 1200 Clint Moore Rd",
+        "recordId": "recd2Zn1F1Hzg6DKC",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recd2Zn1F1Hzg6DKC",
+        "navLat": 26.4075634,
+        "navLon": -80.11372659999999
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.2520684,
           33.8227549
         ]
@@ -1653,25 +1672,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recS4PGJXmjnDLVgI",
         "navLat": 32.9658401,
         "navLon": -117.1821771
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -80.07893519999999,
-          26.7051757
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "West Palm Beach - 1023 N Florida Mango Rd",
-        "recordId": "reck35VbQ1DiASvfD",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reck35VbQ1DiASvfD",
-        "navLat": 26.7050694,
-        "navLon": -80.0789413
       }
     },
     {
