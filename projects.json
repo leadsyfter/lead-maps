@@ -7,25 +7,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -80.1129346,
-          26.4077853
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Boca Raton - 1200 Clint Moore Rd",
-        "recordId": "recd2Zn1F1Hzg6DKC",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recd2Zn1F1Hzg6DKC",
-        "navLat": 26.4075634,
-        "navLon": -80.11372659999999
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -118.2520684,
           33.8227549
         ]
@@ -760,6 +741,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recWxitlXV5HZ3AA7",
         "navLat": 34.1730112,
         "navLon": -118.2912278
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.3169511,
+          25.8203824
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Miami - 5149 NW 74th Ave",
+        "recordId": "recVsx7g9MBPT86ZX",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recVsx7g9MBPT86ZX",
+        "navLat": 25.8204609,
+        "navLon": -80.3173628
       }
     },
     {
