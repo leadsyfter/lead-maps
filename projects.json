@@ -900,6 +900,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.6061595,
+          33.6275284
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Santa Margarita - Brookhollow Business Park",
+        "recordId": "recYQfte23i60SCKP",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recYQfte23i60SCKP",
+        "navLat": 33.6275482,
+        "navLon": -117.6061351
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -89.65047750000001,
           39.7803157
         ]
