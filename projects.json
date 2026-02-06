@@ -1508,6 +1508,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.9566124,
+          37.3897565
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Clara - Mission Park Business Center",
+        "recordId": "recjDrvaXi6RJwFX7",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recjDrvaXi6RJwFX7",
+        "navLat": 37.3898806,
+        "navLon": -121.956545
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.0816562,
           33.9460584
         ]
