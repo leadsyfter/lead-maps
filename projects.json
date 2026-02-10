@@ -1489,18 +1489,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -121.9539378,
-          37.3855276
+          -121.9356241,
+          37.3577958
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "Santa Clara - 1190 & 1250 Norman",
-        "recordId": "rectLUyqSxzmzHgbj",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rectLUyqSxzmzHgbj",
-        "navLat": 37.3857047,
-        "navLon": -121.9540104
+        "name": "Santa Clara - 1400 Coleman Ave",
+        "recordId": "recveX0cjtxOfb7G9",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recveX0cjtxOfb7G9",
+        "navLat": 37.3574088,
+        "navLon": -121.9359726
       }
     },
     {
