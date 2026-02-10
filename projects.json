@@ -1489,6 +1489,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -121.9539378,
+          37.3855276
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Clara - 1190 & 1250 Norman",
+        "recordId": "rectLUyqSxzmzHgbj",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rectLUyqSxzmzHgbj",
+        "navLat": 37.3857047,
+        "navLon": -121.9540104
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.9582426,
           37.3838573
         ]
