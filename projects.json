@@ -1603,6 +1603,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.9923517,
+          33.8031873
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Stanton - Hollander Industrial Park",
+        "recordId": "rec7SYyQrnXl2CkDe",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec7SYyQrnXl2CkDe",
+        "navLat": 33.8032103,
+        "navLon": -117.992221
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -118.3734142,
           34.2269863
         ]
