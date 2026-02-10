@@ -1432,6 +1432,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.5060344,
+          37.9547368
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Rafael - 517 Jacoby Street",
+        "recordId": "recGshnMC3qPV9Gha",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recGshnMC3qPV9Gha",
+        "navLat": 37.9548756,
+        "navLon": -122.5062484
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.8535326,
           33.7226871
         ]
