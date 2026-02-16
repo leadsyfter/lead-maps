@@ -178,6 +178,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -119.7052365,
+          36.7601384
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Fresno - 5494 E. Lamona Ave",
+        "recordId": "recRvdZ4UJNlU3PAc",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recRvdZ4UJNlU3PAc",
+        "navLat": 36.7601397,
+        "navLon": -119.70509
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -111.6881462,
           33.3557314
         ]
