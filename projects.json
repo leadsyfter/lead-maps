@@ -482,6 +482,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.7361601,
+          33.657968
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Irvine - Barranca Business Park",
+        "recordId": "reciy2prrMt2WGgB8",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/reciy2prrMt2WGgB8",
+        "navLat": 33.6579098,
+        "navLon": -117.7361395
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.8473066,
           33.6983489
         ]
@@ -1634,25 +1653,6 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recpXnzLJ4nqNUc1t",
         "navLat": 33.8162941,
         "navLon": -118.1720047
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -119.7489664,
-          39.52094779999999
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Sparks - 1550-1574 Linda Way",
-        "recordId": "rec6glnUC48J5tdV2",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec6glnUC48J5tdV2",
-        "navLat": 39.5210914,
-        "navLon": -119.7483378
       }
     },
     {
