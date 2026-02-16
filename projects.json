@@ -178,25 +178,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -119.7052365,
-          36.7601384
-        ]
-      },
-      "properties": {
-        "type": "Project",
-        "status": "Leads",
-        "name": "Fresno - 5494 E. Lamona Ave",
-        "recordId": "recRvdZ4UJNlU3PAc",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recRvdZ4UJNlU3PAc",
-        "navLat": 36.7601397,
-        "navLon": -119.70509
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -111.6881462,
           33.3557314
         ]
@@ -1653,6 +1634,25 @@
         "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recpXnzLJ4nqNUc1t",
         "navLat": 33.8162941,
         "navLon": -118.1720047
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.7489664,
+          39.52094779999999
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Sparks - 1550-1574 Linda Way",
+        "recordId": "rec6glnUC48J5tdV2",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec6glnUC48J5tdV2",
+        "navLat": 39.5210914,
+        "navLon": -119.7483378
       }
     },
     {
