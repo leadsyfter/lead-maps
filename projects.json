@@ -577,6 +577,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -104.9916633,
+          40.402161
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Johnstown - Premier Flex",
+        "recordId": "recl2Xz3Y87VLaTWG",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recl2Xz3Y87VLaTWG",
+        "navLat": 40.4021605,
+        "navLon": -104.9916224
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.5066095,
           34.0065621
         ]
