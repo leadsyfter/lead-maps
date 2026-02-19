@@ -1622,6 +1622,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -122.7228138,
+          38.3913245
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Santa Rosa - 285 Sutton Place",
+        "recordId": "recEgE1aiyiT5Cn8o",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recEgE1aiyiT5Cn8o",
+        "navLat": 38.3909753,
+        "navLon": -122.7228105
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.7079018,
           38.4127034
         ]
