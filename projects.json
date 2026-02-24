@@ -919,6 +919,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -112.103756,
+          33.5874175
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Phoenix - 11200 N 21st Ave & 2101 & 2115 W Shangri La Rd",
+        "recordId": "rec0SNQvYfwe8t5aH",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec0SNQvYfwe8t5aH",
+        "navLat": 33.587421,
+        "navLon": -112.1033822
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -112.1091739,
           33.5720135
         ]
