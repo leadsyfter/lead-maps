@@ -767,6 +767,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.7012773,
+          33.6561476
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Lake Forest - Spectrum Centre Business Park",
+        "recordId": "recBmRjpDkSdUAx0D",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recBmRjpDkSdUAx0D",
+        "navLat": 33.6562461,
+        "navLon": -117.7014547
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.7511138,
           37.6905998
         ]
