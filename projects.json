@@ -235,6 +235,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.000699,
+          33.7315823
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Gothard Centre",
+        "recordId": "recA3peMqaGY8ssP0",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recA3peMqaGY8ssP0",
+        "navLat": 33.731316,
+        "navLon": -118.0004261
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -122.1097538,
           37.6205648
         ]
