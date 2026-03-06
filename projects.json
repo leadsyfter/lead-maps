@@ -1033,6 +1033,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.6089967,
+          34.0986946
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "Rancho Cucamonga - Arrow Business Park",
+        "recordId": "recVLOb70pHzyJXpI",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recVLOb70pHzyJXpI",
+        "navLat": 34.0988302,
+        "navLon": -117.6087795
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -117.6061595,
           33.6275284
         ]
