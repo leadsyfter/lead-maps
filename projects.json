@@ -1223,18 +1223,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -117.2164886,
-          32.904266
+          -121.8732292,
+          37.30574530000001
         ]
       },
       "properties": {
         "type": "Project",
         "status": "Leads",
-        "name": "San Diego - Sorrento Pines Business Park",
-        "recordId": "rec1or42MsCje7Zqj",
-        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec1or42MsCje7Zqj",
-        "navLat": 32.9042613,
-        "navLon": -117.2166926
+        "name": "San Jose - 1805 Little Orchard St",
+        "recordId": "recdsYaUBGqU0dprz",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/recdsYaUBGqU0dprz",
+        "navLat": 37.3056324,
+        "navLon": -121.8731746
       }
     },
     {
