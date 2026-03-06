@@ -1223,6 +1223,25 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -117.2164886,
+          32.904266
+        ]
+      },
+      "properties": {
+        "type": "Project",
+        "status": "Leads",
+        "name": "San Diego - Sorrento Pines Business Park",
+        "recordId": "rec1or42MsCje7Zqj",
+        "recordUrl": "https://airtable.com/appMPJF8EIQfpWaWO/appQRfMtLTVVs4fNJ/tblLkMjyoGXeqsSMD/rec1or42MsCje7Zqj",
+        "navLat": 32.9042613,
+        "navLon": -117.2166926
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -121.9130055,
           37.3962225
         ]
